@@ -20,6 +20,12 @@ $content = file_get_contents("http://comnhaviet.net/");
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+    <script src="js/DC.Config.js"></script>
+    <script src="js/DC.Data.Common.js"></script>
+    <script src="js/DC.Data.js"></script>
+    <script src="js/RequestMessage.js"></script>
+
     <style type="text/css">
         .sbzoff {
             display: none;
@@ -54,41 +60,8 @@ $content = file_get_contents("http://comnhaviet.net/");
 <h1 class="text-center">Menu</h1>
 
 <div class="col-sm-10" id="menu" style="text-align: center">
-<script type="text/javascript">
-    // debugger;
-    //document.write(text);
-    $(document).ready(function () {
-        console.log('ready');
-        var text = '';
-        $.each($(".monan [data-name=thuc-don]"), function (index, item) {
-            var monan1 = $(item).attr('data-title');
 
-            var monan2 = monan1.toLowerCase();
-            var monan = monan2.substr(0, 1).toUpperCase() + monan2.substr(1, monan2.length);
-
-            text += monan + '<br/>';
-        });
-        $('#menu').html(text);
-    });
-
-</script>
 </div>
-    <script type="text/javascript">
-        // debugger;
-        //document.write(text);
-        $(document).ready(function () {
-            console.log('ready');
-            var text = '';
-            $.each($(".monan [data-name=thuc-don]"), function (index, item) {
-                var monan1 = $(item).attr('data-title');
-
-                var monan2 = monan1.toLowerCase();
-                var monan = monan2.substr(0, 1).toUpperCase() + monan2.substr(1, monan2.length);
-
-            });
-        });
-
-    </script>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -127,5 +100,37 @@ $content = file_get_contents("http://comnhaviet.net/");
     </table>
 
 </div>
+
+<script>
+    var dsMonAn = [];
+    $(document).ready(function () {
+        var text = '';
+        $.each($(".monan [data-name=thuc-don]"), function (index, item) {
+            var monan1 = $(item).attr('data-title');
+
+            var monan2 = monan1.toLowerCase();
+            var monan = monan2.substr(0, 1).toUpperCase() + monan2.substr(1, monan2.length);
+
+            text += monan + '<br/>';
+
+            dsMonAn.push(monan);
+        });
+        $('#menu').html(text);
+    });
+    
+    function createDsMonAn() {
+        
+    }
+    
+    
+    function createHeaderByGroupCode() {
+        
+    }
+
+    function test() {
+
+    }
+</script>
+
 </body>
 </html>
