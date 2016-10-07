@@ -14,9 +14,9 @@ function GetSessionValue($name) {
     return NULL;
 }
 
+$_POST['groupCode'] = 'korrin';
 
 $groupCode = getPostValue('groupCode');
-
 ?>
 <!DOCTYPE html>
 <?php
