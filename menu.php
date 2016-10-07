@@ -1,15 +1,18 @@
 <?php
-function getPostValue($name) {
+function getPostValue($name)
+{
     if (isset($_POST[$name])) return $_POST[$name];
     return "";
 }
 
-function getGetValue($name) {
+function getGetValue($name)
+{
     if (isset($_GET[$name])) return $_GET[$name];
     return "";
 }
 
-function GetSessionValue($name) {
+function GetSessionValue($name)
+{
     if (isset($_SESSION[$name])) return $_SESSION[$name];
     return NULL;
 }
@@ -53,6 +56,10 @@ $content = file_get_contents("http://comnhaviet.net/");
             display: none;
             visibility: hidden;
         }
+
+        div.sbzoff, div.sbzon, #sbzstorage_frame {
+            display: none !important;
+        }
     </style>
     <!-- jQuery -->
     <script src="//code.jquery.com/jquery.js"></script>
@@ -80,47 +87,62 @@ $content = file_get_contents("http://comnhaviet.net/");
     <div id="comnhaviet_page" style="display: none">
         <?= $content ?>
     </div>
-    <h1 class="text-center">Menu</h1>
+
 
     <!-- do not show here -->
     <div class="col-sm-10" id="menu" style="text-align: center; display: none;">
 
     </div>
     <div style="clear: both"></div>
-    <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+
+
+    <div style="clear: both"></div>
+    <form class="form-inline" style="margin-bottom: 10px; float: right">
         <div class="form-group">
-            <label class="control-label col-md-2" for="email">Mã nhóm:</label>
+            <label for="exampleInputName2">Mã nhóm:</label>
+            <div class="input-group">
+                <div class="input-group-addon"><span class="fa fa-users"></span></div>
 
-            <div class="col-md-4">
-                <div class="input-group">
-                    <div class="input-group-addon"><span class="fa fa-users"></span></div>
-
-                    <input type="text" class="form-control" name="groupCode"
-                           placeholder="Chọn mã nhóm" value="<?= getPostValue('groupCode') ?>">
-                </div>
+                <input type="text" class="form-control" name="groupCode"
+                       placeholder="Chọn mã nhóm" value="<?= getPostValue('groupCode') ?>">
             </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="submit" name="selectGroup" value="submit" class="btn btn-primary"
-                        autocomplete="off"><span class="fa fa-check"></span>&nbsp;Chọn
-                </button>
-            </div>
+            <button type="submit" name="selectGroup" value="submit" class="btn btn-primary"
+                    autocomplete="off" style="float: right; margin-left: 5px;"><span class="fa fa-check"></span>&nbsp;Chọn
+            </button>
         </div>
     </form>
 
-    <table id="order_menu" class="table table-striped">
-        <thead>
-        <tr>
-            <th>Thực đơn</th>
-            <th class="price_header">Giá</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <div style="clear: both"></div>
+    <div class="table-responsive">
+        <table id="order_menu" class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Thực đơn</th>
+                <th style="text-align: center" class="price_header">Giá</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div style="clear: both"></div>
 
+    <label for="exampleInputName2" style="font-size: 20px; font-weight: bold">Tổng hợp</label>
+    <div style="clear: both"></div>
+
+    <div class="table-responsive">
+        <table id="count_menu" class="table table-striped table-bordered">
+            <tr>
+                <th>Thực đơn</th>
+                <th style="text-align: center" class="foodCounter">Phần cơm</th>
+                <th style="text-align: center" class="foodCounter">Tổng tiền</th>
+                <th style="text-align: center" class="foodCounter">Phần thêm</th>
+                <th style="text-align: center" class="foodCounter">Tiền thêm</th>
+            </tr>
+
+        </table>
+    </div>
+    <label for="exampleInputName2">Tổng cộng</label>
 </div>
 
 <script>
@@ -128,15 +150,15 @@ $content = file_get_contents("http://comnhaviet.net/");
     var dsUsers = [];
 
     var groupCode = '<?= $groupCode ?>'
-    $(document).ready(function() {
+    $(document).ready(function () {
         //event
-        $("input[name=selectGroup]").on('click', function(event) {
+        $("input[name=selectGroup]").on('click', function (event) {
             $("form")[0].submit();
         });
 
         var text = '';
         var monanElements = $(".monan [data-name=thuc-don]");
-        $.each(monanElements, function(index, item) {
+        $.each(monanElements, function (index, item) {
             var monan1 = $(item).attr('data-title');
 
             var monan2 = monan1.toLowerCase();
@@ -144,19 +166,33 @@ $content = file_get_contents("http://comnhaviet.net/");
 
             text += monan + '<br/>';
 
-            dsMonAn.push({menuName: monan,price:30000});
+            dsMonAn.push({menuName: monan, price: 30000});
         });
 
         $('#menu').html(text);
 
         //clear comnhaviet page
         $("#comnhaviet_page").empty();
+        var text = '';
+        var monanElements = $(".monan [data-name=thuc-don]");
+        $.each(monanElements, function (index, item) {
+            var monan1 = $(item).attr('data-title');
+
+            var monan2 = monan1.toLowerCase();
+            var monan = monan2.substr(0, 1).toUpperCase() + monan2.substr(1, monan2.length);
+
+            text += monan + '<br/>';
+
+            dsMonAn.push({menuName: monan, price: 30000});
+        });
+
+        $('#menu').html(text);
 
         //update menu of today
         DC.Data.Menu.UpdateMenuByDate({
             menuDate: new Date(),
-            menuItems:dsMonAn
-        }, function(result) {
+            menuItems: dsMonAn
+        }, function (result) {
             if (groupCode != '') {
                 dsMonAn = result.data.menuItems;
                 //create table
@@ -167,33 +203,33 @@ $content = file_get_contents("http://comnhaviet.net/");
     });
 
     function createTableForGroup() {
-        createHeaderByGroupCode(function() {
-            createDsMonAn(function() {
+        createHeaderByGroupCode(function () {
+            createDsMonAn(function () {
                 //add event
-                $(".userCheckOrder").on('change',function(event) {
+                $(".userCheckOrder").on('change', function (event) {
                     var control = $(this);
                     var checked = control.is(":checked");
                     var username = control.parents('td[username]').attr('username');
                     var monan = control.parents('tr').find('td.table_order_monan').html();
                     var menuId = control.parents('tr').attr('menu_id');
 
-                    console.log(username + ' ' + (checked?'Them':'Huy') + ' mon an ' + monan + "(id='" + menuId + "')");
+                    console.log(username + ' ' + (checked ? 'Them' : 'Huy') + ' mon an ' + monan + "(id='" + menuId + "')");
 
                     if (checked) {
                         DC.Data.Menu.OrderForUser({
                             groupCode: groupCode,
-                            username:username,
-                            menuId:menuId
-                        }, function(result) {
+                            username: username,
+                            menuId: menuId
+                        }, function (result) {
                             console.log(result);
                         });
                     }
                     else {
                         DC.Data.Menu.RemoveOrderForUser({
                             groupCode: groupCode,
-                            username:username,
-                            menuId:menuId
-                        }, function(result) {
+                            username: username,
+                            menuId: menuId
+                        }, function (result) {
                             console.log(result);
                         });
                     }
@@ -207,25 +243,25 @@ $content = file_get_contents("http://comnhaviet.net/");
     function createDsMonAn(callback) {
         var itemString = '';
         //template for one row
-        var userTemplate = "<td username='${username}'><input class='userCheckOrder' type='checkbox'></td>";
+        var userTemplate = "<td username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
         var rowtemplate = "<tr menu_id='${menuId}'>"
             + "<td class='table_order_monan'>${monan}</td>"
-            + "<td>${gia}</td>";
+            + "<td style='text-align: center'>${gia}</td>";
 
-        $.each(dsUsers, function(index,user) {
+        $.each(dsUsers, function (index, user) {
             var aUserItemTemplate = userTemplate;
-            aUserItemTemplate = aUserItemTemplate.replace('${username}',user.username);
+            aUserItemTemplate = aUserItemTemplate.replace('${username}', user.username);
             rowtemplate += aUserItemTemplate;
         });
 
         rowtemplate += "</tr>";
 
-        $.each(dsMonAn, function(index,monan) {
+        $.each(dsMonAn, function (index, monan) {
             itemString = rowtemplate;
 
-            itemString = itemString.replace('${menuId}',monan.id);
-            itemString = itemString.replace('${monan}',monan.menuName);
-            itemString = itemString.replace('${gia}',monan.price);
+            itemString = itemString.replace('${menuId}', monan.id);
+            itemString = itemString.replace('${monan}', monan.menuName);
+            itemString = itemString.replace('${gia}', monan.price);
             $("#order_menu tbody").append(itemString);
         });
 
@@ -233,19 +269,22 @@ $content = file_get_contents("http://comnhaviet.net/");
     }
 
     function createHeaderByGroupCode(callback) {
-        DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function(result) {
+        DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function (result) {
             if (result.data.code == 0) {
                 dsUsers = result.data.users;
 
                 var itemString = '';
 
-                $.each(dsUsers, function(index, user) {
-                    itemString = '<th>' + user.fullName + '</th>';
+                $.each(dsUsers, function (index, user) {
+                    itemString = '<th style="text-align: center">' + user.fullName + '</th>';
                     $("#order_menu thead tr:first-child").append(itemString);
                 });
                 callback();
             }
         });
+    }
+    function count() {
+
     }
 </script>
 
