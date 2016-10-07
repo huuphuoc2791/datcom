@@ -1,3 +1,23 @@
+<?php
+function getPostValue($name) {
+    if (isset($_POST[$name])) return $_POST[$name];
+    return "";
+}
+
+function getGetValue($name) {
+    if (isset($_GET[$name])) return $_GET[$name];
+    return "";
+}
+
+function GetSessionValue($name) {
+    if (isset($_SESSION[$name])) return $_SESSION[$name];
+    return NULL;
+}
+
+
+$groupCode = getPostValue('groupCode');
+
+?>
 <!DOCTYPE html>
 <?php
 $content = file_get_contents("http://comnhaviet.net/");
@@ -19,6 +39,8 @@ $content = file_get_contents("http://comnhaviet.net/");
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
 
     <script src="js/DC.Config.js"></script>
@@ -44,58 +66,58 @@ $content = file_get_contents("http://comnhaviet.net/");
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="http://localhost/menu.php" style="font-weight: bold; font-size: 25px;">Trang đặt cơm</a>
+                <a class="navbar-brand" href="/menu.php"
+                   style="font-weight: bold; font-size: 25px;">Trang đặt cơm</a>
             </div>
-<!--            <ul class="nav navbar-nav">-->
-<!--                <li class="active"><a href="#">Home</a></li>-->
-<!--                <li><a href="#">Page 1</a></li>-->
-<!--                <li><a href="#">Page 2</a></li>-->
-<!--                <li><a href="#">Page 3</a></li>-->
-<!--            </ul>-->
+            <!--            <ul class="nav navbar-nav">-->
+            <!--                <li class="active"><a href="#">Home</a></li>-->
+            <!--                <li><a href="#">Page 1</a></li>-->
+            <!--                <li><a href="#">Page 2</a></li>-->
+            <!--                <li><a href="#">Page 3</a></li>-->
+            <!--            </ul>-->
         </div>
     </nav>
-    <div style="display: none">
+    <div id="comnhaviet_page" style="display: none">
         <?= $content ?>
     </div>
-<h1 class="text-center">Menu</h1>
+    <h1 class="text-center">Menu</h1>
 
-<div class="col-sm-10" id="menu" style="text-align: center">
+    <!-- do not show here -->
+    <div class="col-sm-10" id="menu" style="text-align: center; display: none;">
 
-</div>
-    <table class="table table-striped">
+    </div>
+    <div style="clear: both"></div>
+    <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="email">Mã nhóm:</label>
+
+            <div class="col-md-4">
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="fa fa-users"></span></div>
+
+                    <input type="text" class="form-control" name="groupCode"
+                           placeholder="Chọn mã nhóm" value="<?= getPostValue('groupCode') ?>">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" name="selectGroup" value="submit" class="btn btn-primary"
+                        autocomplete="off"><span class="fa fa-check"></span>&nbsp;Chọn
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <table id="order_menu" class="table table-striped">
         <thead>
         <tr>
             <th>Thực đơn</th>
-            <th>Giá</th>
-            <th>Sơn 1</th>
-            <th>Sơn 2</th>
-            <th>Tảo</th>
-            <th>Phúc</th>
-            <th>Dũng</th>
-            <th>Minh</th>
-            <th>Phú</th>
-            <th>Phước</th>
-            <th>Hân</th>
-            <th>Tauj</th>
-            <th>Lộc</th>
+            <th class="price_header">Giá</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td></td>
-        </tr>
         </tbody>
     </table>
 
@@ -103,9 +125,18 @@ $content = file_get_contents("http://comnhaviet.net/");
 
 <script>
     var dsMonAn = [];
-    $(document).ready(function () {
+    var dsUsers = [];
+
+    var groupCode = '<?= $groupCode ?>'
+    $(document).ready(function() {
+        //event
+        $("input[name=selectGroup]").on('click', function(event) {
+            $("form")[0].submit();
+        });
+
         var text = '';
-        $.each($(".monan [data-name=thuc-don]"), function (index, item) {
+        var monanElements = $(".monan [data-name=thuc-don]");
+        $.each(monanElements, function(index, item) {
             var monan1 = $(item).attr('data-title');
 
             var monan2 = monan1.toLowerCase();
@@ -113,22 +144,108 @@ $content = file_get_contents("http://comnhaviet.net/");
 
             text += monan + '<br/>';
 
-            dsMonAn.push(monan);
+            dsMonAn.push({menuName: monan,price:30000});
         });
+
         $('#menu').html(text);
+
+        //clear comnhaviet page
+        $("#comnhaviet_page").empty();
+
+        //update menu of today
+        DC.Data.Menu.UpdateMenuByDate({
+            menuDate: new Date(),
+            menuItems:dsMonAn
+        }, function(result) {
+            if (groupCode != '') {
+                dsMonAn = result.data.menuItems;
+                //create table
+                createTableForGroup();
+            }
+        });
+
     });
-    
-    function createDsMonAn() {
-        
-    }
-    
-    
-    function createHeaderByGroupCode() {
-        
+
+    function createTableForGroup() {
+        createHeaderByGroupCode(function() {
+            createDsMonAn(function() {
+                //add event
+                $(".userCheckOrder").on('change',function(event) {
+                    var control = $(this);
+                    var checked = control.is(":checked");
+                    var username = control.parents('td[username]').attr('username');
+                    var monan = control.parents('tr').find('td.table_order_monan').html();
+                    var menuId = control.parents('tr').attr('menu_id');
+
+                    console.log(username + ' ' + (checked?'Them':'Huy') + ' mon an ' + monan + "(id='" + menuId + "')");
+
+                    if (checked) {
+                        DC.Data.Menu.OrderForUser({
+                            groupCode: groupCode,
+                            username:username,
+                            menuId:menuId
+                        }, function(result) {
+                            console.log(result);
+                        });
+                    }
+                    else {
+                        DC.Data.Menu.RemoveOrderForUser({
+                            groupCode: groupCode,
+                            username:username,
+                            menuId:menuId
+                        }, function(result) {
+                            console.log(result);
+                        });
+                    }
+
+
+                });
+            });
+        });
     }
 
-    function test() {
+    function createDsMonAn(callback) {
+        var itemString = '';
+        //template for one row
+        var userTemplate = "<td username='${username}'><input class='userCheckOrder' type='checkbox'></td>";
+        var rowtemplate = "<tr menu_id='${menuId}'>"
+            + "<td class='table_order_monan'>${monan}</td>"
+            + "<td>${gia}</td>";
 
+        $.each(dsUsers, function(index,user) {
+            var aUserItemTemplate = userTemplate;
+            aUserItemTemplate = aUserItemTemplate.replace('${username}',user.username);
+            rowtemplate += aUserItemTemplate;
+        });
+
+        rowtemplate += "</tr>";
+
+        $.each(dsMonAn, function(index,monan) {
+            itemString = rowtemplate;
+
+            itemString = itemString.replace('${menuId}',monan.id);
+            itemString = itemString.replace('${monan}',monan.menuName);
+            itemString = itemString.replace('${gia}',monan.price);
+            $("#order_menu tbody").append(itemString);
+        });
+
+        callback();
+    }
+
+    function createHeaderByGroupCode(callback) {
+        DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function(result) {
+            if (result.data.code == 0) {
+                dsUsers = result.data.users;
+
+                var itemString = '';
+
+                $.each(dsUsers, function(index, user) {
+                    itemString = '<th>' + user.fullName + '</th>';
+                    $("#order_menu thead tr:first-child").append(itemString);
+                });
+                callback();
+            }
+        });
     }
 </script>
 
