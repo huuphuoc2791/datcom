@@ -43,7 +43,7 @@ DC.Data.Menu = {
 
     /*-- OrderForUser --*/
     OrderForUser: function(orderData, callback) {
-        //menuData = {groupCode, username, menuId}
+        //orderData = {groupCode, username, menuId}
         var request = new RequestMessage();
         request.methodName = 'OrderForUser';
         request.data = orderData;

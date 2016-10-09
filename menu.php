@@ -23,7 +23,9 @@ $groupCode = getPostValue('groupCode');
 ?>
 <!DOCTYPE html>
 <?php
-$content = file_get_contents("http://comnhaviet.net/");
+//for test, get mon day
+$page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
+$content = file_get_contents($page);
 ?>
 <html lang="">
 <head>
@@ -97,7 +99,7 @@ $content = file_get_contents("http://comnhaviet.net/");
 
 
     <div style="clear: both"></div>
-    <form class="form-inline" style="margin-bottom: 10px; float: right">
+    <form class="form-inline" style="margin-bottom: 10px; float: right" method="post">
         <div class="form-group">
             <label for="exampleInputName2">Mã nhóm:</label>
             <div class="input-group">
@@ -149,7 +151,11 @@ $content = file_get_contents("http://comnhaviet.net/");
     var dsMonAn = [];
     var dsUsers = [];
 
-    var groupCode = '<?= $groupCode ?>'
+    var groupCode = '<?= $groupCode ?>';
+    var MAIN_ITEM_CLASS = 'menu_detail_item_main';
+    var SUB_ITEM_CLASS = 'menu_detail_item_sub';
+    var MAIN_SUB_ITEM_ALL_CLASS = MAIN_ITEM_CLASS + ' ' + SUB_ITEM_CLASS;
+
     $(document).ready(function () {
         //event
         $("input[name=selectGroup]").on('click', function (event) {
@@ -202,6 +208,73 @@ $content = file_get_contents("http://comnhaviet.net/");
 
     });
 
+
+    //this is to get the menuItem object via the row of that menu
+    function getMenuItemByMenuRow(menuRow) {
+        var menuId = parseInt($(menuRow).attr('menu_id'));
+
+        return dsMonAn.filter(function(item) {
+            return item.id == menuId;
+        })[0];
+    }
+
+    function isMainMenuCheckedItem(checkbox) {
+        return $(checkbox).is("." + MAIN_ITEM_CLASS);
+    }
+    function isSubMenuCheckedItem(checkbox) {
+        return $(checkbox).is("." + SUB_ITEM_CLASS);
+    }
+
+    //this function is to get all the item that this user ordered
+    //return = [{item:{id,menuName,price},isMainItem:int}]
+    //isMainItem = 1: main, 0: sub, -1: not set
+    function getOrderedItemsByUsername(username) {
+        //get all the checked
+        var checkedItems = $("[username='" + username + "'] input[type=checkbox]:checked");
+
+        var orderedItems = [];
+        //travel all the checked, get the menu then return
+        $.each(checkedItems, function(index, checkedItem) {
+            var currentItem = {};
+            var currentMenuItemRow = $(checkedItem).parents('tr.detail_order_menu[menu_id]');
+            currentItem.item = getMenuItemByMenuRow($(currentMenuItemRow));
+            if (isMainMenuCheckedItem(checkedItem)) {
+                currentItem.isMainItem = 1;
+            } else if (isSubMenuCheckedItem(checkedItem)) {
+                currentItem.isMainItem = 0;
+            }
+            else {
+                currentItem.isMainItem = -1;
+            }
+
+            orderedItems.push(currentItem);
+        });
+
+        return orderedItems;
+    }
+
+    function setMainItemByCheckbox(checkbox) {
+        $(checkbox).removeClass(MAIN_SUB_ITEM_ALL_CLASS).addClass(MAIN_ITEM_CLASS);
+        $(checkbox).parents('td.detail_order_user_item[username]').removeClass('success info').addClass('success');
+    }
+    function setSubItemByCheckbox(checkbox) {
+        $(checkbox).removeClass(MAIN_SUB_ITEM_ALL_CLASS).addClass(SUB_ITEM_CLASS);
+        $(checkbox).parents('td.detail_order_user_item[username]').removeClass('success info').addClass('info');
+    }
+    function clearMainAndSubItemByCheckbox(checkbox) {
+        $(checkbox).removeClass(MAIN_SUB_ITEM_ALL_CLASS);
+        $(checkbox).parents('td.detail_order_user_item[username]').removeClass('success info');
+    }
+
+    function clearMainAndSubItemByUsername(username) {
+        //get all the checkbox (no matter if the checkbox is checked or not)
+        var checkboxes = $("td[username='" + username + "'] input[type=checkbox]");
+        clearMainAndSubItemByCheckbox(checkboxes);
+    }
+
+    function getCheckboxByMenuIdAndUsername(menuId, username) {
+        return $("tr.detail_order_menu[menu_id='" + menuId + "'] td.detail_order_user_item[username='" + username + "'] input[type=checkbox]");
+    }
     function createTableForGroup() {
         createHeaderByGroupCode(function () {
             createDsMonAn(function () {
@@ -209,9 +282,61 @@ $content = file_get_contents("http://comnhaviet.net/");
                 $(".userCheckOrder").on('change', function (event) {
                     var control = $(this);
                     var checked = control.is(":checked");
-                    var username = control.parents('td[username]').attr('username');
-                    var monan = control.parents('tr').find('td.table_order_monan').html();
-                    var menuId = control.parents('tr').attr('menu_id');
+                    var username = control.parents('td.detail_order_user_item[username]').attr('username');
+                    var monan = control.parents('tr.detail_order_menu').find('td.table_order_monan').html();
+                    var menuId = control.parents('tr.detail_order_menu').attr('menu_id');
+
+
+
+                    //process GUI first
+
+                    //if this checkbox is uncheck, clear the status first
+                    if (checked == false) {
+                        clearMainAndSubItemByCheckbox(control);
+                    }
+
+                    //if this user has only one checked --> set this to main and clear all others
+                    var orderedItems = getOrderedItemsByUsername(username);
+
+                    //if nothing checked, clear all
+                    if (orderedItems.length == 0) {
+                        clearMainAndSubItemByUsername(username);
+                    } else if (orderedItems.length == 1) {
+                        //still has only one item --> remove others then add main
+                        clearMainAndSubItemByUsername(username);
+
+                        var mainCheckedBox = $("tr.detail_order_menu[menu_id] td[username='" + username + "'] input[type=checkbox]:checked");
+
+                        setMainItemByCheckbox(mainCheckedBox);
+                    } else {
+                        //more than one. if this checkbox is checked. this is the sub item
+                        if (checked) {
+                            setSubItemByCheckbox(control);
+                        }
+                        else {
+                            //this checkbox is unchecked. if no main item, recalculate
+                            if (orderedItems.filter(function(orderedItem) {
+                                    return orderedItem.isMainItem == 1
+                                }).length == 0) {
+                                //set the first = main, others = sub
+                                var firstMenuItem = orderedItems[0].item.id;
+                                var firstCheckedBox = getCheckboxByMenuIdAndUsername(orderedItems[0].item.id,username);
+                                clearMainAndSubItemByCheckbox(firstCheckedBox);
+                                setMainItemByCheckbox(firstCheckedBox);
+
+                                //set others = sub
+                                for (var orderedItemIndex = 1; orderedItemIndex<orderedItems.length; orderedItemIndex++) {
+                                    var subCheckedBox = getCheckboxByMenuIdAndUsername(orderedItems[orderedItemIndex].item.id,username);
+                                    clearMainAndSubItemByCheckbox(subCheckedBox);
+                                    setSubItemByCheckbox(subCheckedBox);
+                                }
+
+                            }
+                            else {
+                                //already has main item, do nothing
+                            }
+                        }
+                    }
 
                     console.log(username + ' ' + (checked ? 'Them' : 'Huy') + ' mon an ' + monan + "(id='" + menuId + "')");
 
@@ -243,8 +368,8 @@ $content = file_get_contents("http://comnhaviet.net/");
     function createDsMonAn(callback) {
         var itemString = '';
         //template for one row
-        var userTemplate = "<td username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
-        var rowtemplate = "<tr menu_id='${menuId}'>"
+        var userTemplate = "<td class='detail_order_user_item' username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
+        var rowtemplate = "<tr class='detail_order_menu' menu_id='${menuId}'>"
             + "<td class='table_order_monan'>${monan}</td>"
             + "<td style='text-align: center'>${gia}</td>";
 
