@@ -25,6 +25,7 @@ $groupCode = getPostValue('groupCode');
 <?php
 //for test, get mon day
 $page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
+$page = "http://comnhaviet.net/";
 $content = file_get_contents($page);
 ?>
 <html lang="">
@@ -48,10 +49,10 @@ $content = file_get_contents($page);
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
 
-    <script src="js/DC.Config.js"></script>
-    <script src="js/DC.Data.Common.js"></script>
-    <script src="js/DC.Data.js"></script>
-    <script src="js/RequestMessage.js"></script>
+    <script src="/View/js/DC.Config.js"></script>
+    <script src="/View/js/DC.Data.Common.js"></script>
+    <script src="/View/js/DC.Data.js"></script>
+    <script src="/View/js/RequestMessage.js"></script>
 
     <style type="text/css">
         .sbzoff {
