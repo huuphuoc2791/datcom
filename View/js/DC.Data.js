@@ -81,7 +81,7 @@ DC.Data.Menu = {
     },
 };
 
-DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {
+DC.Data.Menu.GetUsersByGroupCode = function(groupData, callback) {
     //groupData = {groupCode}
     var result = {};
     var data = result.data = {code: 0, message: "Message 1"};
@@ -110,44 +110,33 @@ DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {
     }, 500);
 
 };
+DC.Data.Menu.UpdateMenuByDate = function(menuData, callback) {
+    //menuData = {menuDate,menuItems ([menu:{menuName,price}])}
+    var result = {};
+    var data = result.data = {code: 0, message: "Message 1"};
 
+    data.menuItems = [];
+    $.each(menuData.menuItems, function(index, menuItem) {
+        data.menuItems.push({id: index, menuName: menuItem.menuName, price: menuItem.price, extraPrice:15000});
+    });
+
+    setTimeout(function() {
+        callback(result);
+    }, 500);
+
+};
+DC.Data.Menu.OrderForUser = function(orderData, callback) {
+    //menuData = {groupCode, username, menuItems:[{menuId,isMain}]}
+    var result = {};
+    var data = result.data = {code: 0, message: "Message 1"};
+
+    setTimeout(function() {
+        callback(result);
+    }, 500);
+
+};
 
 //simulator
 if (DC.Config.SIMULATOR) {
-    DC.Data.Menu.UpdateMenuByDate = function(menuData, callback) {
-        //menuData = {menuDate,menuItems ([menu:{menuName,price}])}
-        var result = {};
-        var data = result.data = {code: 0, message: "Message 1"};
-
-        data.menuItems = [];
-        $.each(menuData.menuItems, function(index, menuItem) {
-            data.menuItems.push({id: index, menuName: menuItem.menuName, price: menuItem.price});
-        });
-
-        setTimeout(function() {
-            callback(result);
-        }, 500);
-
-    };
-    DC.Data.Menu.OrderForUser = function(orderData, callback) {
-        //menuData = {groupCode, username, menuId}
-        var result = {};
-        var data = result.data = {code: 0, message: "Message 1"};
-
-        setTimeout(function() {
-            callback(result);
-        }, 500);
-
-    };
-    DC.Data.Menu.RemoveOrderForUser = function(orderData, callback) {
-        //menuData = {groupCode, username, menuId}
-        var result = {};
-        var data = result.data = {code: 0, message: "Message 1"};
-
-        setTimeout(function() {
-            callback(result);
-        }, 500);
-
-    };
 }
 

@@ -1,18 +1,15 @@
 <?php
-function getPostValue($name)
-{
+function getPostValue($name) {
     if (isset($_POST[$name])) return $_POST[$name];
     return "";
 }
 
-function getGetValue($name)
-{
+function getGetValue($name) {
     if (isset($_GET[$name])) return $_GET[$name];
     return "";
 }
 
-function GetSessionValue($name)
-{
+function GetSessionValue($name) {
     if (isset($_SESSION[$name])) return $_SESSION[$name];
     return NULL;
 }
@@ -25,7 +22,7 @@ $groupCode = getPostValue('groupCode');
 <?php
 //for test, get mon day
 $page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
-$page = "http://comnhaviet.net/";
+//$page = "http://comnhaviet.net/";
 $content = file_get_contents($page);
 ?>
 <html lang="">
@@ -134,7 +131,8 @@ $content = file_get_contents($page);
     <div style="clear: both"></div>
 
     <div class="table-responsive">
-        <table id="count_menu" class="table table-striped table-bordered">
+        <table id="summary_menu" class="table table-striped table-bordered">
+            <thead>
             <tr>
                 <th>Thực đơn</th>
                 <th style="text-align: center" class="foodCounter">Phần cơm</th>
@@ -142,7 +140,10 @@ $content = file_get_contents($page);
                 <th style="text-align: center" class="foodCounter">Phần thêm</th>
                 <th style="text-align: center" class="foodCounter">Tiền thêm</th>
             </tr>
+            </thead>
+            <tbody>
 
+            </tbody>
         </table>
     </div>
     <label for="exampleInputName2">Tổng cộng</label>
@@ -157,15 +158,15 @@ $content = file_get_contents($page);
     var SUB_ITEM_CLASS = 'menu_detail_item_sub';
     var MAIN_SUB_ITEM_ALL_CLASS = MAIN_ITEM_CLASS + ' ' + SUB_ITEM_CLASS;
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         //event
-        $("input[name=selectGroup]").on('click', function (event) {
+        $("input[name=selectGroup]").on('click', function(event) {
             $("form")[0].submit();
         });
 
         var text = '';
         var monanElements = $(".monan [data-name=thuc-don]");
-        $.each(monanElements, function (index, item) {
+        $.each(monanElements, function(index, item) {
             var monan1 = $(item).attr('data-title');
 
             var monan2 = monan1.toLowerCase();
@@ -182,7 +183,7 @@ $content = file_get_contents($page);
         $("#comnhaviet_page").empty();
         var text = '';
         var monanElements = $(".monan [data-name=thuc-don]");
-        $.each(monanElements, function (index, item) {
+        $.each(monanElements, function(index, item) {
             var monan1 = $(item).attr('data-title');
 
             var monan2 = monan1.toLowerCase();
@@ -199,7 +200,7 @@ $content = file_get_contents($page);
         DC.Data.Menu.UpdateMenuByDate({
             menuDate: new Date(),
             menuItems: dsMonAn
-        }, function (result) {
+        }, function(result) {
             if (groupCode != '') {
                 dsMonAn = result.data.menuItems;
                 //create table
@@ -227,7 +228,7 @@ $content = file_get_contents($page);
     }
 
     //this function is to get all the item that this user ordered
-    //return = [{item:{id,menuName,price},isMainItem:int}]
+    //return = [{item:{id,menuName,price,extraPrice},isMainItem:int}]
     //isMainItem = 1: main, 0: sub, -1: not set
     function getOrderedItemsByUsername(username) {
         //get all the checked
@@ -277,16 +278,15 @@ $content = file_get_contents($page);
         return $("tr.detail_order_menu[menu_id='" + menuId + "'] td.detail_order_user_item[username='" + username + "'] input[type=checkbox]");
     }
     function createTableForGroup() {
-        createHeaderByGroupCode(function () {
-            createDsMonAn(function () {
+        createHeaderByGroupCode(function() {
+            createDsMonAn(function() {
                 //add event
-                $(".userCheckOrder").on('change', function (event) {
+                $(".userCheckOrder").on('change', function(event) {
                     var control = $(this);
                     var checked = control.is(":checked");
                     var username = control.parents('td.detail_order_user_item[username]').attr('username');
                     var monan = control.parents('tr.detail_order_menu').find('td.table_order_monan').html();
                     var menuId = control.parents('tr.detail_order_menu').attr('menu_id');
-
 
 
                     //process GUI first
@@ -321,13 +321,13 @@ $content = file_get_contents($page);
                                 }).length == 0) {
                                 //set the first = main, others = sub
                                 var firstMenuItem = orderedItems[0].item.id;
-                                var firstCheckedBox = getCheckboxByMenuIdAndUsername(orderedItems[0].item.id,username);
+                                var firstCheckedBox = getCheckboxByMenuIdAndUsername(orderedItems[0].item.id, username);
                                 clearMainAndSubItemByCheckbox(firstCheckedBox);
                                 setMainItemByCheckbox(firstCheckedBox);
 
                                 //set others = sub
-                                for (var orderedItemIndex = 1; orderedItemIndex<orderedItems.length; orderedItemIndex++) {
-                                    var subCheckedBox = getCheckboxByMenuIdAndUsername(orderedItems[orderedItemIndex].item.id,username);
+                                for (var orderedItemIndex = 1; orderedItemIndex < orderedItems.length; orderedItemIndex++) {
+                                    var subCheckedBox = getCheckboxByMenuIdAndUsername(orderedItems[orderedItemIndex].item.id, username);
                                     clearMainAndSubItemByCheckbox(subCheckedBox);
                                     setSubItemByCheckbox(subCheckedBox);
                                 }
@@ -339,28 +339,25 @@ $content = file_get_contents($page);
                         }
                     }
 
-                    console.log(username + ' ' + (checked ? 'Them' : 'Huy') + ' mon an ' + monan + "(id='" + menuId + "')");
+                    var newOrderedItems = getOrderedItemsByUsername(username);
 
-                    if (checked) {
-                        DC.Data.Menu.OrderForUser({
-                            groupCode: groupCode,
-                            username: username,
-                            menuId: menuId
-                        }, function (result) {
-                            console.log(result);
-                        });
-                    }
-                    else {
-                        DC.Data.Menu.RemoveOrderForUser({
-                            groupCode: groupCode,
-                            username: username,
-                            menuId: menuId
-                        }, function (result) {
-                            console.log(result);
-                        });
-                    }
+                    $.each(newOrderedItems, function(index, newOrderedItem) {
+                        newOrderedItem.isMainItem = newOrderedItem.isMainItem == 1;
+                        newOrderedItem.menuId = newOrderedItem.item.id;
+                        newOrderedItem.item = undefined;
+                    });
 
+                    console.log(newOrderedItems);
 
+                    //update all the menuItems for this username
+                    DC.Data.Menu.OrderForUser({
+                        groupCode: groupCode,
+                        username: username,
+                        menuItems: newOrderedItems
+                    }, function(result) {
+                        calculateAndFillSummaryOrderedMenuItems();
+                        console.log(result);
+                    });
                 });
             });
         });
@@ -374,7 +371,7 @@ $content = file_get_contents($page);
             + "<td class='table_order_monan'>${monan}</td>"
             + "<td style='text-align: center'>${gia}</td>";
 
-        $.each(dsUsers, function (index, user) {
+        $.each(dsUsers, function(index, user) {
             var aUserItemTemplate = userTemplate;
             aUserItemTemplate = aUserItemTemplate.replace('${username}', user.username);
             rowtemplate += aUserItemTemplate;
@@ -382,7 +379,7 @@ $content = file_get_contents($page);
 
         rowtemplate += "</tr>";
 
-        $.each(dsMonAn, function (index, monan) {
+        $.each(dsMonAn, function(index, monan) {
             itemString = rowtemplate;
 
             itemString = itemString.replace('${menuId}', monan.id);
@@ -391,17 +388,106 @@ $content = file_get_contents($page);
             $("#order_menu tbody").append(itemString);
         });
 
+        createDsMonAn_Summary(callback);
+    }
+
+    function createDsMonAn_Summary(callback) {
+        var itemString = '';
+        //template for one row
+        var rowtemplate = "<tr class='summary_order_menu' menu_id='${menuId}'>"
+            + "<td class='table_summary_monan'>${monan}</td>"
+            + "<td class='table_summary_count_main' style='text-align: center'>0</td>"
+            + "<td class='table_summary_amount_main' style='text-align: center'>0</td>"
+            + "<td class='table_summary_count_extra' style='text-align: center'>0</td>"
+            + "<td class='table_summary_amount_extra' style='text-align: center'>0</td>"
+        rowtemplate += "</tr>";
+
+        $.each(dsMonAn, function(index, monan) {
+            itemString = rowtemplate;
+
+            itemString = itemString.replace('${menuId}', monan.id);
+            itemString = itemString.replace('${monan}', monan.menuName);
+            $("#summary_menu tbody").append(itemString);
+        });
+
         callback();
     }
 
+    function clearAllSummary() {
+        $(".table_summary_count_main").html('0');
+        $(".table_summary_amount_main").html('0');
+        $(".table_summary_count_extra").html('0');
+        $(".table_summary_amount_extra").html('0');
+    }
+
+    //this is to return the object:
+    /*--
+        menuId
+        count_main
+        amount_main
+        count_extra
+        amount_extra
+    ---*/
+    function getSummaryOrderedMenuItems() {
+        //first copy from ds monan
+        var summaryOrderedMenuItems = [];
+        $.each(dsMonAn, function(index,monan) {
+            summaryOrderedMenuItems.push({
+                menuId:monan.id,
+                count_main:0,
+                amount_main:0,
+                count_extra:0,
+                amount_extra:0,
+            });
+        });
+
+        //for each user calculate the data
+        $.each(dsUsers, function(index, user) {
+            var orderedUserItems = getOrderedItemsByUsername(user.username);
+
+            //return = [{item:{id,menuName,price,extraPrice},isMainItem:int}]
+            //isMainItem = 1: main, 0: sub, -1: not set
+
+            $.each(orderedUserItems, function(indexUser, orderedUserItem) {
+                var summaryOrderedMenuItem = summaryOrderedMenuItems.filter(function(item) {
+                    return item.menuId == orderedUserItem.item.id;
+                })[0];
+
+                if (orderedUserItem.isMainItem == 1) {
+                    summaryOrderedMenuItem.count_main += 1;
+                    summaryOrderedMenuItem.amount_main += orderedUserItem.item.price;
+                }
+                else {
+                    summaryOrderedMenuItem.count_extra += 1;
+                    summaryOrderedMenuItem.amount_extra += orderedUserItem.item.extraPrice;
+                }
+            });
+        });
+
+        return summaryOrderedMenuItems;
+    }
+
+    function calculateAndFillSummaryOrderedMenuItems() {
+
+        var summaryOrderedMenuItems = getSummaryOrderedMenuItems();
+        $.each(summaryOrderedMenuItems, function(index, summaryOrderedMenuItem) {
+            var summaryMenuRow = $("tr.summary_order_menu[menu_id='" + summaryOrderedMenuItem.menuId + "']");
+
+            $('.table_summary_count_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_main);
+            $('.table_summary_amount_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_main);
+            $('.table_summary_count_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_extra);
+            $('.table_summary_amount_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_extra);
+        });
+    }
+
     function createHeaderByGroupCode(callback) {
-        DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function (result) {
+        DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function(result) {
             if (result.data.code == 0) {
                 dsUsers = result.data.users;
 
                 var itemString = '';
 
-                $.each(dsUsers, function (index, user) {
+                $.each(dsUsers, function(index, user) {
                     itemString = '<th style="text-align: center">' + user.fullName + '</th>';
                     $("#order_menu thead tr:first-child").append(itemString);
                 });

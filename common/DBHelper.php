@@ -11,8 +11,8 @@ class Database
     public function __construct()
     {
         $this->hostname = 'localhost';
-        $this->username = 'root';
-        $this->password = '111111';
+        $this->username = 'datcom';
+        $this->password = 'dinhloc';
         $this->database = 'datcom';
     }
 
