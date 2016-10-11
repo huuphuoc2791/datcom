@@ -117,7 +117,7 @@ DC.Data.Menu.UpdateMenuByDate = function(menuData, callback) {
 
     data.menuItems = [];
     $.each(menuData.menuItems, function(index, menuItem) {
-        data.menuItems.push({id: index, menuName: menuItem.menuName, price: menuItem.price, extraPrice:15000});
+        data.menuItems.push({id: index, menuName: menuItem.menuName, price: menuItem.price, extraPrice:25000});
     });
 
     setTimeout(function() {

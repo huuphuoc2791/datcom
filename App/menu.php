@@ -146,7 +146,6 @@ $content = file_get_contents($page);
             </tbody>
         </table>
     </div>
-    <label for="exampleInputName2">Tổng cộng</label>
 </div>
 
 <script>
@@ -410,14 +409,14 @@ $content = file_get_contents($page);
             $("#summary_menu tbody").append(itemString);
         });
 
-        callback();
-    }
+        var totalRowTemplate = "<tr class='summary_order_menu_total'>"
+        + "<td style='font-size: 15; font-weight: bold'>Tổng cộng</td>"
+        + "<td colspan='4' class='summary_order_menu_total_cell'></td>"
+        + "</tr>";
+        $("#summary_menu tbody").append(totalRowTemplate);
 
-    function clearAllSummary() {
-        $(".table_summary_count_main").html('0');
-        $(".table_summary_amount_main").html('0');
-        $(".table_summary_count_extra").html('0');
-        $(".table_summary_amount_extra").html('0');
+
+        callback();
     }
 
     //this is to return the object:
@@ -470,6 +469,7 @@ $content = file_get_contents($page);
     function calculateAndFillSummaryOrderedMenuItems() {
 
         var summaryOrderedMenuItems = getSummaryOrderedMenuItems();
+        var total = 0;
         $.each(summaryOrderedMenuItems, function(index, summaryOrderedMenuItem) {
             var summaryMenuRow = $("tr.summary_order_menu[menu_id='" + summaryOrderedMenuItem.menuId + "']");
 
@@ -477,7 +477,12 @@ $content = file_get_contents($page);
             $('.table_summary_amount_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_main);
             $('.table_summary_count_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_extra);
             $('.table_summary_amount_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_extra);
+
+            total += summaryOrderedMenuItem.amount_main + summaryOrderedMenuItem.amount_extra;
         });
+
+
+        $(".summary_order_menu_total_cell").html(total);
     }
 
     function createHeaderByGroupCode(callback) {
