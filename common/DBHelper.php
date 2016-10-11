@@ -11,8 +11,8 @@ class Database
     public function __construct()
     {
         $this->hostname = 'localhost';
-        $this->username = 'datcom';
-        $this->password = 'dinhloc';
+        $this->username = 'root';
+        $this->password = '111111';
         $this->database = 'datcom';
     }
 
@@ -44,7 +44,7 @@ class Database
         $this->openConnection();
 
         // Execute database statement
-        $result = mysqli_query($statement, $this->connection);
+        $result = mysqli_query( $this->connection,$statement);
         if ($this->connection->connect_error) {
             die("Error execute: " . $this->connection->connect_error);
         }

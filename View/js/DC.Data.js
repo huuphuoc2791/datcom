@@ -99,11 +99,12 @@ DC.Data.Menu.GetUsersByGroupCode = function(groupData, callback) {
         data.users.push({id: 3, username: "tao", fullName: 'Tảo'});
         data.users.push({id: 4, username: "dung", fullName: 'Dũng'});
         data.users.push({id: 5, username: "minh", fullName: 'Minh'});
-        data.users.push({id: 6, username: "phu", fullName: 'Phú'});
-        data.users.push({id: 7, username: "phuoc", fullName: 'Phước'});
-        data.users.push({id: 8, username: "han", fullName: 'Hân'});
-        data.users.push({id: 9, username: "tauj", fullName: 'Tauj'});
-        data.users.push({id: 10, username: "loc", fullName: 'Lộc'});
+        data.users.push({id: 6, username: "phuc", fullName: 'Phúc'});
+        data.users.push({id: 7, username: "phu", fullName: 'Phú'});
+        data.users.push({id: 8, username: "phuoc", fullName: 'Phước'});
+        data.users.push({id: 9, username: "han", fullName: 'Hân'});
+        data.users.push({id: 10, username: "tauj", fullName: 'Tauj'});
+        data.users.push({id: 11, username: "loc", fullName: 'Lộc'});
     }
     setTimeout(function() {
         callback(result);

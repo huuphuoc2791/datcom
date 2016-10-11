@@ -505,5 +505,13 @@ $content = file_get_contents($page);
     }
 </script>
 
+<div class="row">
+    <div class="col-lg-12">
+        
+
+    </div>
+</div>
+
+
 </body>
 </html>

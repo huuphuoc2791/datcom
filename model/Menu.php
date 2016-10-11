@@ -6,6 +6,9 @@
  * Date: 10/10/16
  * Time: 20:27
  */
+
+include 'Model.php';
+
 class Menu extends Model
 {
     public $foodName;
@@ -40,15 +43,18 @@ class Menu extends Model
     public function findById($id)
     {
         $db = new Database();
-        $query = "select * menu WHERE id =.$id";
-        $db->executeStatement($query);
+        $query = "select * from menu WHERE id = $id";
+        $result = $db->executeStatement($query);
+        return $result;
     }
 
     public function findAll()
     {
         $db = new Database();
-        $query = "select * menu";
-        $db->executeStatement($query);
+        $query = "select * from menu";
+        $result =$db->executeStatement($query);
+        return $result;
     }
 
 }
+

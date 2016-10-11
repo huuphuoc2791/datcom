@@ -6,8 +6,8 @@
  * Date: 10/10/16
  * Time: 20:34
  */
-include "../common/DBHelper.php";
-abstract class Model
+include "../../common/DBHelper.php";
+ class Model
 {
 
     public function getById($id){
