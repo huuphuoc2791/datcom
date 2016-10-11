@@ -6,15 +6,16 @@
  * Date: 10/10/16
  * Time: 20:26
  */
+include '../common/DBHelper.php';
 class Group
 {
     public $name;
-    public $groupCode;
+    public $code;
 
-    public function insert($name, $groupCode)
+    public function insert($name, $code)
     {
-        $db = new Database();
-        $query = "insert into users(username, fullname, email, phone) VALUES (.$name,.$groupCode)";
+        $db = new DBHelper();
+        $query = "insert into group(name,code) VALUES ($name,$code)";
         $db->executeStatement($query);
     }
 
@@ -23,29 +24,29 @@ class Group
      */
     public function delete($id)
     {
-        $db = new Database();
-        $query = "delete from users WHERE id =.$id";
+        $db = new DBHelper();
+        $query = "delete from group WHERE id =$id";
         $db->executeStatement($query);
     }
 
-    public function update($id, $name, $groupCode, $email, $phone)
+    public function update($id, $name, $code)
     {
-        $db = new Database();
-        $query = "UPDATE users SET username = .$name,fullname =.$groupCode,email=.$email,phone=.$phone WHERE id=.$id";
+        $db = new DBHelper();
+        $query = "UPDATE group SET name = $name,code =$code WHERE id=$id";
         $db->executeStatement($query);
     }
 
     public function findById($id)
     {
-        $db = new Database();
-        $query = "select * users WHERE id =.$id";
+        $db = new DBHelper();
+        $query = "select * from group WHERE id =$id";
         $db->executeStatement($query);
     }
 
     public function findAll()
     {
-        $db = new Database();
-        $query = "select * users";
+        $db = new DBHelper();
+        $query = "select * from group";
         $db->executeStatement($query);
     }
 

@@ -7,9 +7,9 @@
  * Time: 20:27
  */
 
-include 'Model.php';
+require '../common/DBHelper.php';
 
-class Menu extends Model
+class Menu
 {
     public $foodName;
     public $date;
@@ -18,8 +18,8 @@ class Menu extends Model
 
     public function insert($foodName, $date, $price, $extraPrice)
     {
-        $db = new Database();
-        $query = "insert into menu(food_name, date, price, extra_price) VALUES (.$foodName,.$date,.$price,.$extraPrice)";
+        $db = new DBHelper();
+        $query = "insert into menu(food_name, date, price, extra_price) VALUES ($foodName,$date,$price,$extraPrice)";
         $db->executeStatement($query);
     }
 
@@ -28,21 +28,21 @@ class Menu extends Model
      */
     public function delete($id)
     {
-        $db = new Database();
-        $query = "delete from menu WHERE id =.$id";
+        $db = new DBHelper();
+        $query = "delete from menu WHERE id =$id";
         $db->executeStatement($query);
     }
 
     public function update($id, $foodName, $date, $price, $extraPrice)
     {
-        $db = new Database();
-        $query = "UPDATE menu SET food_name = .$foodName,date =.$date,price=.$price,extra_price=.$extraPrice WHERE id=.$id";
+        $db = new DBHelper();
+        $query = "UPDATE menu SET food_name = $foodName,date =$date,price=$price,extra_price=$extraPrice WHERE id=$id";
         $db->executeStatement($query);
     }
 
     public function findById($id)
     {
-        $db = new Database();
+        $db = new DBHelper();
         $query = "select * from menu WHERE id = $id";
         $result = $db->executeStatement($query);
         return $result;
@@ -50,11 +50,17 @@ class Menu extends Model
 
     public function findAll()
     {
-        $db = new Database();
+        $db = new DBHelper();
         $query = "select * from menu";
-        $result =$db->executeStatement($query);
+        $result = $db->executeStatement($query);
         return $result;
+    }
+    public function test(){
+        $db = new DBHelper();
+        $result = $db->test();
+         return $result;
     }
 
 }
 
+?>

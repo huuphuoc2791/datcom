@@ -1,6 +1,6 @@
 <?php
 
-class Database
+class DBHelper
 {
     private $connection;
     private $hostname;
@@ -16,43 +16,28 @@ class Database
         $this->database = 'datcom';
     }
 
-    public function openConnection()
-    {
-        // Open database connection
-        $this->connection = mysqli_connect($this->hostname, $this->username, $this->password, $this->database);
-        if ($this->connection->connect_error) {
-            die("Connection failed: " . $this->connection->connect_error);
-        }
-
-
-    }
-
-    public function closeConnection()
-    {
-        if (isset($this->connection)) {
-            // Close database connection
-            mysqli_close($this->connection);
-            if ($this->connection->connect_error) {
-                die("Error: " . $this->connection->connect_error);
-            }
-        }
-    }
 
     public function executeStatement($statement)
     {
-        // Open database connection
-        $this->openConnection();
+        try {
+            $conn = new PDO("mysql:host=$this->hostname;dbname=$this->database", $this->username, $this->password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $conn->prepare($statement);
+            $stmt->execute();
 
-        // Execute database statement
-        $result = mysqli_query( $this->connection,$statement);
-        if ($this->connection->connect_error) {
-            die("Error execute: " . $this->connection->connect_error);
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+            foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+                echo $v;
+            }
         }
-        // Close database connection
-        $this->closeConnection();
-
+        catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        $conn = null;
+        var_dump($result);
         // Return result
-        return $result;
     }
 
     public function executeSql($sql)
@@ -102,6 +87,27 @@ class Database
     public function setConnection($connection)
     {
         $this->connection = $connection;
+    }
+
+    public function test()
+    {
+        try {
+            $conn = new PDO("mysql:host=$this->hostname;dbname=$this->database", $this->username, $this->password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $conn->prepare("SELECT * FROM menu");
+            $stmt->execute();
+            var_dump($stmt);
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+            foreach (new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k => $v) {
+                echo $v;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        $conn = null;
+        return $result;
     }
 
 
