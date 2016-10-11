@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+Options +FollowSymLinks
+Options -Indexes
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^$    app/index.php    [NC,L]
+</IfModule>

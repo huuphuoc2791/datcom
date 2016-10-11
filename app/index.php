@@ -46,10 +46,10 @@ $content = file_get_contents($page);
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
 
-    <script src="/View/js/DC.Config.js"></script>
-    <script src="/View/js/DC.Data.Common.js"></script>
-    <script src="/View/js/DC.Data.js"></script>
-    <script src="/View/js/RequestMessage.js"></script>
+    <script src="/view/js/DC.Config.js"></script>
+    <script src="/view/js/DC.Data.Common.js"></script>
+    <script src="/view/js/DC.Data.js"></script>
+    <script src="/view/js/RequestMessage.js"></script>
 
     <style type="text/css">
         .sbzoff {
@@ -62,7 +62,7 @@ $content = file_get_contents($page);
         }
     </style>
     <!-- jQuery -->
-    <script src="//code.jquery.com/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery.js"></script>
     <!-- Bootstrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
