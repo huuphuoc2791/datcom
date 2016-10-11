@@ -1,22 +1,11 @@
 <?php
-function getPostValue($name) {
-    if (isset($_POST[$name])) return $_POST[$name];
-    return "";
-}
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../'. PATH_SEPARATOR . '../../../');
 
-function getGetValue($name) {
-    if (isset($_GET[$name])) return $_GET[$name];
-    return "";
-}
-
-function GetSessionValue($name) {
-    if (isset($_SESSION[$name])) return $_SESSION[$name];
-    return NULL;
-}
+include 'common/autoload.php';
 
 $_POST['groupCode'] = 'korrin';
 
-$groupCode = getPostValue('groupCode');
+$groupCode = CommonFunction::getPostValue('groupCode');
 ?>
 <!DOCTYPE html>
 <?php
@@ -46,10 +35,7 @@ $content = file_get_contents($page);
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
 
-    <script src="/view/js/DC.Config.js"></script>
-    <script src="/view/js/DC.Data.Common.js"></script>
-    <script src="/view/js/DC.Data.js"></script>
-    <script src="/view/js/RequestMessage.js"></script>
+
 
     <style type="text/css">
         .sbzoff {
@@ -60,6 +46,10 @@ $content = file_get_contents($page);
         div.sbzoff, div.sbzon, #sbzstorage_frame {
             display: none !important;
         }
+
+        #order_menu.table-striped>tbody>tr:nth-of-type(odd) {
+            background-color: rgba(43, 222, 65, 0.26);
+        }
     </style>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
@@ -67,6 +57,12 @@ $content = file_get_contents($page);
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
+
+    <script src="/common/common.js"></script>
+    <script src="/view/js/DC.Config.js"></script>
+    <script src="/view/js/DC.Data.Common.js"></script>
+    <script src="/view/js/DC.Data.js"></script>
+    <script src="/view/js/RequestMessage.js"></script>
 </head>
 <body>
 <div class="container">
@@ -104,7 +100,7 @@ $content = file_get_contents($page);
                 <div class="input-group-addon"><span class="fa fa-users"></span></div>
 
                 <input type="text" class="form-control" name="groupCode"
-                       placeholder="Chọn mã nhóm" value="<?= getPostValue('groupCode') ?>">
+                       placeholder="Chọn mã nhóm" value="<?= $groupCode ?>">
             </div>
             <button type="submit" name="selectGroup" value="submit" class="btn btn-primary"
                     autocomplete="off" style="float: right; margin-left: 5px;"><span class="fa fa-check"></span>&nbsp;Chọn
@@ -383,7 +379,7 @@ $content = file_get_contents($page);
 
             itemString = itemString.replace('${menuId}', monan.id);
             itemString = itemString.replace('${monan}', monan.menuName);
-            itemString = itemString.replace('${gia}', monan.price);
+            itemString = itemString.replace('${gia}', monan.price.FormatNumber(0));
             $("#order_menu tbody").append(itemString);
         });
 
@@ -473,16 +469,16 @@ $content = file_get_contents($page);
         $.each(summaryOrderedMenuItems, function(index, summaryOrderedMenuItem) {
             var summaryMenuRow = $("tr.summary_order_menu[menu_id='" + summaryOrderedMenuItem.menuId + "']");
 
-            $('.table_summary_count_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_main);
-            $('.table_summary_amount_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_main);
-            $('.table_summary_count_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_extra);
-            $('.table_summary_amount_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_extra);
+            $('.table_summary_count_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_main.FormatNumber(0));
+            $('.table_summary_amount_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_main.FormatNumber(0));
+            $('.table_summary_count_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_extra.FormatNumber(0));
+            $('.table_summary_amount_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_extra.FormatNumber(0));
 
             total += summaryOrderedMenuItem.amount_main + summaryOrderedMenuItem.amount_extra;
         });
 
 
-        $(".summary_order_menu_total_cell").html(total);
+        $(".summary_order_menu_total_cell").html(total.FormatNumber(0));
     }
 
     function createHeaderByGroupCode(callback) {
@@ -504,14 +500,6 @@ $content = file_get_contents($page);
 
     }
 </script>
-
-<div class="row">
-    <div class="col-lg-12">
-        
-
-    </div>
-</div>
-
 
 </body>
 </html>
