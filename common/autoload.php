@@ -9,10 +9,14 @@ spl_autoload_register(
 
         if ($classes === null) {
             $classes = array(
-                /*--- controller ---*/
+                /*--- Common ---*/
+                'CommonFunction' => 'common/CommonFunction.php',
                 'Database' => 'common/DBHelper.php',
-                'Menu' => 'model/Menu.php',
+
+                /*--- Model ---*/
                 'Model' => 'model/Model.php',
+
+                /*--- controller ---*/
             );
         }
         $cn = trim($class);
