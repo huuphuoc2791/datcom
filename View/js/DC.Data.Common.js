@@ -36,7 +36,7 @@ DC.Data = {
                     type: "POST",
                     url: DC.Config.HTTP_URL + "?method=" + message.methodName,
                     data: JSON.stringify(message),
-                    contentType: "text/plain;charset=UTF-8",
+                    contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(transport) {
                         var data = transport || {};
@@ -62,7 +62,7 @@ DC.Data = {
                     },
                     crossDomain: true,
                     beforeSend: function(req) {
-                        //req.setRequestHeader('Access-Control-Allow-Origin', "*");
+                        req.setRequestHeader('Access-Control-Allow-Origin', "*");
                     }
                 });
             };
