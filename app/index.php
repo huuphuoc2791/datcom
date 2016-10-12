@@ -10,8 +10,8 @@ $groupCode = CommonFunction::getPostValue('groupCode');
 <!DOCTYPE html>
 <?php
 //for test, get mon day
-$page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
-//$page = "http://comnhaviet.net/";
+//$page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
+$page = "http://comnhaviet.net/";
 $content = file_get_contents($page);
 ?>
 <html lang="">

@@ -17,7 +17,8 @@ class Menu
     public function insert($foodName, $date, $price, $extraPrice)
     {
         $db = new DBHelper();
-        $query = "insert into menu(food_name, date, price, extra_price) VALUES ($foodName,$date,$price,$extraPrice)";
+        $query = "insert into menu(food_name, date, price, extra_price) VALUES ('$foodName','$date','$price','$extraPrice')";
+        var_dump($query);
         $db->executeStatement($query);
     }
 

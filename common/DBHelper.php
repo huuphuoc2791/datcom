@@ -19,7 +19,6 @@ class DBHelper
 
     public function executeStatement($statement)
     {
-        $result = null;
         try {
             $conn = new PDO("mysql:host=$this->hostname;dbname=$this->database", $this->username, $this->password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -30,11 +29,11 @@ class DBHelper
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
             $result = $stmt->fetchAll();
+            return $result;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
         $conn = null;
-        return $result;
     }
 
     public function executeSql($sql)

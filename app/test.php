@@ -1,11 +1,11 @@
 <?php
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../'. PATH_SEPARATOR . '../../../');
 
-include '../common/autoload.php';
+include 'common/autoload.php';
 
 $menu = new Menu();
 
-$id = $_GET['method'];
-$rows = $menu->findById($id);
+//$id = $_GET['method'];
+$rows = $menu->findAll();
 
-echo json_encode($rows);
+var_dump($rows);
