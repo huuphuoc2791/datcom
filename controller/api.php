@@ -1,41 +1,52 @@
 <?php
-ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../'. PATH_SEPARATOR . '../../../');
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include_once 'common/autoload.php';
 
 
-$methodName = '';
-$foodName = '';
 $postedData = json_decode(file_get_contents('php://input'));
 
 $methodName = $postedData->methodName;
 
 if ($methodName == 'UpdateMenuByDate') {
     UpdateMenuByDate();
+} elseif ($methodName == 'GetUsersByGroupCode') {
+
+} elseif ($methodName == 'OrderForUser') {
+
+} elseif ($methodName == 'RemoveOrderForUser') {
+
+} else {
+
 }
 
-function UpdateMenuByDate() {
-    $postedData = json_decode(file_get_contents('php://input'));
-    $menuItems = $postedData->data->menuItems;
-//var_dump("menuItems",$postedData->data->menuItems);
-//var_dump("data",$data);
+function UpdateMenuByDate()
+{
+    $extraPrice = '25000';
+    $common = new CommonFunction();
+    $day = $common->convertDayOfWeek();
+    $menuItems = $this->postedData->data->menuItems;
     foreach ($menuItems as $item) {
-        $foodNameAndPrice = $item->menuName . 'gia ' . $item->price;
         $menu = new Menu();
-//        $menu->insert($item->menuName,'Thứ 4',$item->price,'25000');
-        var_dump($foodNameAndPrice);
+        $menu->insert($item->menuName, $day, $item->price, $extraPrice);
     }
-//var_dump($data);
-//foreach ($data as $item) {
-//    $foodName = $item->menuName;
-////    var_dump("Mon an: " . $foodName);
-//    $price = $item->price;
-////    var_dump("Gia: " . $price);
-//
-//    echo $foodName . " " . $price;
-//    $menu = new Menu();
-//    $menu->insert($foodName,'20',$price,'25000');
-//}
+
+}
+
+function GetUsersByGroupCode($groupCode)
+{
+    $user = new User();
+    return $user->findUsersByGroupCode($groupCode);
+
+}
+
+function OrderForUser()
+{
+
+}
+
+function RemoveOrderForUser()
+{
 
 }
 

@@ -6,7 +6,6 @@
  * Date: 10/10/16
  * Time: 20:27
  */
-
 class Menu
 {
     public $foodName;
@@ -54,11 +53,7 @@ class Menu
         $result = $db->executeStatement($query);
         return $result;
     }
-    public function test(){
-        $db = new DBHelper();
-        $result = $db->test();
-         return $result;
-    }
+
 
 }
 

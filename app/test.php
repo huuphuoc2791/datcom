@@ -7,5 +7,13 @@ $menu = new Menu();
 
 //$id = $_GET['method'];
 $rows = $menu->findAll();
+$foodName ="food_name";
+$dw = date( "w", $timestamp);
+//var_dump($rows);
+foreach ($rows as $row){
+//    echo $row[$foodName];
+}
+$cm=new CommonFunction();
 
-var_dump($rows);
+$day = $cm->convertDayOfWeek();
+echo $day;

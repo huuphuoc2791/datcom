@@ -59,4 +59,12 @@ class User
         $result = $db->executeStatement($query);
         return $result;
     }
+
+    public function findUsersByGroupCode($groupCode)
+    {
+        $db = new DBHelper();
+        $query = "select * from users WHERE group_code = $groupCode";
+        $result = $db->executeStatement($query);
+        return $result;
+    }
 }

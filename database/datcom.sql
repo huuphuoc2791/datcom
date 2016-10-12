@@ -124,3 +124,14 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-10-10 15:44:44
+ALTER TABLE `order` ADD `menu_id`  INT(11) NOT NULL;
+ALTER TABLE `group` CHANGE `group_code` `code` VARCHAR(255) NOT NULL;
+ALTER TABLE `menu` ADD UNIQUE `unique_key` ( `food_name` );
+ALTER TABLE `group` ADD UNIQUE `unique_key` ( `code` );
+ALTER TABLE `users` ADD UNIQUE `unique_key` ( `username` );
+ALTER TABLE `order`   ADD FOREIGN KEY (menu_id) REFERENCES `menu`(id);
+ALTER TABLE `group` CHANGE `group_code` `code` INT(11) NOT NULL;
+ALTER TABLE `order` ADD `menu_id`  INT(11) NOT NULL;
+ALTER TABLE `users` ADD `group_code`  INT(11) NOT NULL;
+ALTER TABLE `users`  ADD FOREIGN KEY  `group_code`  REFERENCES `group` (`code`);
+ALTER TABLE `order` CHANGE `group_code` `group_name` VARCHAR(255) NOT NULL;

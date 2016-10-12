@@ -41,7 +41,7 @@ class Order
     public function findById($id)
     {
         $db = new DBHelper();
-        $query = "select * from order WHERE id =$id";
+        $query = "select * from order WHERE id = $id";
         $db->executeStatement($query);
     }
 
@@ -49,8 +49,34 @@ class Order
     {
         $db = new DBHelper();
         $query = "select * from order";
-        $db->executeStatement($query);
+        $result = $db->executeStatement($query);
+        return $result;
     }
-    
+
+    public function addOrderForUser($groupCode, $userName, $menuId)
+    {
+        $db = new DBHelper();
+        $group = new Group();
+        $gr = $group->findByGroupCode($groupCode);
+        $groupName = $gr["name"];
+        $users = new User();
+        $users->findAll();
+
+
+        $query = "select * from order WHERE groupCode = $groupCode AND menu_id = $menuId";
+        $result = $db->executeStatement($query);
+        return $result;
+
+    }
+
+    public function removeOrderForUser($groupCode, $userName, $menuId)
+    {
+        $db = new DBHelper();
+        $queryUser = "select * from users WHERE username = $userName";
+        $query = "select * from order WHERE groupCode = $groupCode AND menu_id = $menuId";
+        $result = $db->executeStatement($query);
+        return $result;
+
+    }
 
 }
