@@ -81,7 +81,7 @@ DC.Data.Menu = {
     },
 };
 
-DC.Data.Menu.GetUsersByGroupCode = function(groupData, callback) {
+DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {
     //groupData = {groupCode}
     var result = {};
     var data = result.data = {code: 0, message: "Message 1"};
@@ -111,7 +111,7 @@ DC.Data.Menu.GetUsersByGroupCode = function(groupData, callback) {
     }, 500);
 
 };
-DC.Data.Menu.UpdateMenuByDate = function(menuData, callback) {
+DC.Data.Menu.UpdateMenuByDate1 = function(menuData, callback) {
     //menuData = {menuDate,menuItems ([menu:{menuName,price}])}
     var result = {};
     var data = result.data = {code: 0, message: "Message 1"};
@@ -126,7 +126,7 @@ DC.Data.Menu.UpdateMenuByDate = function(menuData, callback) {
     }, 500);
 
 };
-DC.Data.Menu.OrderForUser = function(orderData, callback) {
+DC.Data.Menu.OrderForUser1 = function(orderData, callback) {
     //menuData = {groupCode, username, menuItems:[{menuId,isMain}]}
     var result = {};
     var data = result.data = {code: 0, message: "Message 1"};

@@ -19,18 +19,18 @@ class DBHelper
 
     public function executeStatement($statement)
     {
+        $result = null;
         try {
             $conn = new PDO("mysql:host=$this->hostname;dbname=$this->database", $this->username, $this->password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $stmt = $conn->prepare($statement);
-            var_dump($stmt->execute());
+            $stmt->execute();
 
             // set the resulting array to associative
-            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-            return $stmt->fetchAll();
-        }
-        catch(PDOException $e) {
+            $result = $stmt->fetchAll();
+        } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
         $conn = null;

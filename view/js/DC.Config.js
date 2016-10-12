@@ -1,7 +1,7 @@
 var DC = DC || {};
 
 DC.Config = {
-    HTTP_URL: "http://local.datcom/api",
+    HTTP_URL: "http://localhost/controller/api.php",
     SIMULATOR: false,
 };
 
