@@ -10,10 +10,10 @@ class DBHelper
 
     public function __construct()
     {
-        $this->hostname = 'localhost';
-        $this->username = 'root';
-        $this->password = '111111';
-        $this->database = 'datcom';
+        $this->hostname = DATABASE_HOSTNAME;
+        $this->username = DATABASE_USERNAME;
+        $this->password = DATABASE_PASSWORD;
+        $this->database = DATABASE_DATABASE_NAME;
     }
 
 
@@ -23,21 +23,18 @@ class DBHelper
             $conn = new PDO("mysql:host=$this->hostname;dbname=$this->database", $this->username, $this->password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $stmt = $conn->prepare($statement);
-            $stmt->execute();
+            var_dump($stmt->execute());
 
             // set the resulting array to associative
             $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-            foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
-                echo $v;
-            }
+            return $stmt->fetchAll();
         }
         catch(PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
         $conn = null;
-        var_dump($result);
-        // Return result
+        return $result;
     }
 
     public function executeSql($sql)

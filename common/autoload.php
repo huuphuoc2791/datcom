@@ -1,5 +1,6 @@
 <?php
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../'. PATH_SEPARATOR . '../../../');
+include_once ('environment.php');
 
 // @codingStandardsIgnoreFile
 // @codeCoverageIgnoreStart
@@ -12,10 +13,11 @@ spl_autoload_register(
             $classes = array(
                 /*--- Common ---*/
                 'CommonFunction' => 'common/CommonFunction.php',
-                'Database' => 'common/DBHelper.php',
+                'DBHelper' => 'common/DBHelper.php',
 
                 /*--- Model ---*/
                 'Model' => 'model/Model.php',
+                'Menu' => 'model/Menu.php',
 
                 /*--- controller ---*/
             );

@@ -7,8 +7,6 @@
  * Time: 20:27
  */
 
-require '../common/DBHelper.php';
-
 class Menu
 {
     public $foodName;
