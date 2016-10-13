@@ -3,7 +3,6 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_
 
 include_once 'common/autoload.php';
 
-
 $postedData = json_decode(file_get_contents('php://input'));
 $methodName = $postedData->methodName;
 
@@ -45,6 +44,15 @@ function GetUsersByGroupCode()
     $group = new Group();
 
     $groups = $group->findByGroupCode($groupCode);
+
+    //check when no group on database --> return no users
+    if (count($groups) <= 0) {
+        $returnMessage->data->users = [];
+
+        $returnMessage->data->code = 1; //no group is created with this group no
+        echo json_encode($returnMessage);
+        return;
+    }
     $groupId = $groups[0]["id"];
     $user = new User();
     $result = $user->findByGroupId($groupId);

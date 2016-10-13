@@ -32,10 +32,19 @@ DC.Data.Menu = {
             request,
             function(data) {
 
-                $.each(data.data.menuItems, function(index,menuItem) {
-                    menuItem.menuName = menuItem.food_name;
-                    menuItem.price = parseFloat(menuItem.price);
-                });
+                if (typeof (data) != UNDEFINED) {
+                    if (typeof (data.data) != UNDEFINED) {
+                        if (typeof (data.data.menuItems) != UNDEFINED && data.data.menuItems != null) {
+                            $.each(data.data.menuItems, function(index,menuItem) {
+                                menuItem.menuName = menuItem.food_name;
+                                menuItem.price = parseFloat(menuItem.price);
+                                menuItem.extra_price = parseFloat(menuItem.extra_price);
+                                menuItem.extra_price = parseFloat(menuItem.extra_price);
+                            });
+                        }
+                    }
+                }
+
                 if (typeof (callback) === "function") {
                     callback(data);
                 }
@@ -123,7 +132,7 @@ DC.Data.Menu.UpdateMenuByDate1 = function(menuData, callback) {
 
     data.menuItems = [];
     $.each(menuData.menuItems, function(index, menuItem) {
-        data.menuItems.push({id: index, menuName: menuItem.menuName, price: menuItem.price, extraPrice:25000});
+        data.menuItems.push({id: index, menuName: menuItem.menuName, price: menuItem.price, extra_price:25000});
     });
 
     setTimeout(function() {

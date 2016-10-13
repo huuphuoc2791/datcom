@@ -1,5 +1,5 @@
 <?php
-ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../'. PATH_SEPARATOR . '../../../');
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include 'common/autoload.php';
 
@@ -35,8 +35,6 @@ $content = file_get_contents($page);
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
 
-
-
     <style type="text/css">
         .sbzoff {
             display: none;
@@ -47,7 +45,7 @@ $content = file_get_contents($page);
             display: none !important;
         }
 
-        #order_menu.table-striped>tbody>tr:nth-of-type(odd) {
+        #order_menu.table-striped > tbody > tr:nth-of-type(odd) {
             background-color: rgba(43, 222, 65, 0.26);
         }
     </style>
@@ -72,12 +70,6 @@ $content = file_get_contents($page);
                 <a class="navbar-brand" href="/menu.php"
                    style="font-weight: bold; font-size: 25px;">Trang đặt cơm</a>
             </div>
-            <!--            <ul class="nav navbar-nav">-->
-            <!--                <li class="active"><a href="#">Home</a></li>-->
-            <!--                <li><a href="#">Page 1</a></li>-->
-            <!--                <li><a href="#">Page 2</a></li>-->
-            <!--                <li><a href="#">Page 3</a></li>-->
-            <!--            </ul>-->
         </div>
     </nav>
     <div id="comnhaviet_page" style="display: none">
@@ -109,6 +101,11 @@ $content = file_get_contents($page);
     </form>
 
     <div style="clear: both"></div>
+    <div class="row message_no_user" style="display: none;">
+        <div class="col-sm-10 message">
+
+        </div>
+    </div>
     <div class="table-responsive">
         <table id="order_menu" class="table table-striped table-bordered">
             <thead>
@@ -167,40 +164,20 @@ $content = file_get_contents($page);
             var monan2 = monan1.toLowerCase();
             var monan = monan2.substr(0, 1).toUpperCase() + monan2.substr(1, monan2.length);
 
-            text += monan + '<br/>';
-
             dsMonAn.push({menuName: monan, price: 30000});
         });
-
-        $('#menu').html(text);
 
         //clear comnhaviet page
         $("#comnhaviet_page").empty();
-        var text = '';
-        var monanElements = $(".monan [data-name=thuc-don]");
-        $.each(monanElements, function(index, item) {
-            var monan1 = $(item).attr('data-title');
-
-            var monan2 = monan1.toLowerCase();
-            var monan = monan2.substr(0, 1).toUpperCase() + monan2.substr(1, monan2.length);
-
-            text += monan + '<br/>';
-
-            dsMonAn.push({menuName: monan, price: 30000});
-        });
-
-        $('#menu').html(text);
 
         //update menu of today
         DC.Data.Menu.UpdateMenuByDate({
             menuDate: new Date(),
             menuItems: dsMonAn
         }, function(result) {
-            if (groupCode != '') {
-                dsMonAn = result.data.menuItems;
-                //create table
-                createTableForGroup();
-            }
+            dsMonAn = result.data.menuItems;
+            //create table
+            createTableForGroup();
         });
 
     });
@@ -223,7 +200,7 @@ $content = file_get_contents($page);
     }
 
     //this function is to get all the item that this user ordered
-    //return = [{item:{id,menuName,price,extraPrice},isMainItem:int}]
+    //return = [{item:{id,menuName,price,extra_price},isMainItem:int}]
     //isMainItem = 1: main, 0: sub, -1: not set
     function getOrderedItemsByUsername(username) {
         //get all the checked
@@ -271,6 +248,9 @@ $content = file_get_contents($page);
 
     function getCheckboxByMenuIdAndUsername(menuId, username) {
         return $("tr.detail_order_menu[menu_id='" + menuId + "'] td.detail_order_user_item[username='" + username + "'] input[type=checkbox]");
+    }
+    function getCheckboxByMenuIdAndUserId(menuId, userId) {
+        return $("tr.detail_order_menu[menu_id='" + menuId + "'] td.detail_order_user_item[user_id='" + userId + "'] input[type=checkbox]");
     }
     function createTableForGroup() {
         createHeaderByGroupCode(function() {
@@ -356,6 +336,11 @@ $content = file_get_contents($page);
                         console.log(result);
                     });
                 });
+
+                //calculate the data before
+                fillOrderedItemForUsers(function() {
+                    calculateAndFillSummaryOrderedMenuItems();
+                })
             });
         });
     }
@@ -409,9 +394,9 @@ $content = file_get_contents($page);
         });
 
         var totalRowTemplate = "<tr class='summary_order_menu_total'>"
-        + "<td style='font-size: 20; font-weight: bold; '>Tổng cộng</td>"
-        + "<td style='font-size: 20; font-weight: bold; text-align: center' colspan='4' class='summary_order_menu_total_cell'></td>"
-        + "</tr>";
+            + "<td style='font-size: 20; font-weight: bold; '>Tổng cộng</td>"
+            + "<td style='font-size: 20; font-weight: bold; text-align: center' colspan='4' class='summary_order_menu_total_cell'></td>"
+            + "</tr>";
         $("#summary_menu tbody").append(totalRowTemplate);
 
 
@@ -420,22 +405,22 @@ $content = file_get_contents($page);
 
     //this is to return the object:
     /*--
-        menuId
-        count_main
-        amount_main
-        count_extra
-        amount_extra
-    ---*/
+     menuId
+     count_main
+     amount_main
+     count_extra
+     amount_extra
+     ---*/
     function getSummaryOrderedMenuItems() {
         //first copy from ds monan
         var summaryOrderedMenuItems = [];
-        $.each(dsMonAn, function(index,monan) {
+        $.each(dsMonAn, function(index, monan) {
             summaryOrderedMenuItems.push({
-                menuId:monan.id,
-                count_main:0,
-                amount_main:0,
-                count_extra:0,
-                amount_extra:0,
+                menuId: monan.id,
+                count_main: 0,
+                amount_main: 0,
+                count_extra: 0,
+                amount_extra: 0,
             });
         });
 
@@ -443,7 +428,7 @@ $content = file_get_contents($page);
         $.each(dsUsers, function(index, user) {
             var orderedUserItems = getOrderedItemsByUsername(user.username);
 
-            //return = [{item:{id,menuName,price,extraPrice},isMainItem:int}]
+            //return = [{item:{id,menuName,price,extra_price},isMainItem:int}]
             //isMainItem = 1: main, 0: sub, -1: not set
 
             $.each(orderedUserItems, function(indexUser, orderedUserItem) {
@@ -457,7 +442,7 @@ $content = file_get_contents($page);
                 }
                 else {
                     summaryOrderedMenuItem.count_extra += 1;
-                    summaryOrderedMenuItem.amount_extra += orderedUserItem.item.extraPrice;
+                    summaryOrderedMenuItem.amount_extra += orderedUserItem.item.extra_price;
                 }
             });
         });
@@ -472,10 +457,10 @@ $content = file_get_contents($page);
         $.each(summaryOrderedMenuItems, function(index, summaryOrderedMenuItem) {
             var summaryMenuRow = $("tr.summary_order_menu[menu_id='" + summaryOrderedMenuItem.menuId + "']");
 
-            $('.table_summary_count_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_main.FormatNumber(0));
-            $('.table_summary_amount_main',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_main.FormatNumber(0));
-            $('.table_summary_count_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.count_extra.FormatNumber(0));
-            $('.table_summary_amount_extra',$(summaryMenuRow)).html(summaryOrderedMenuItem.amount_extra.FormatNumber(0));
+            $('.table_summary_count_main', $(summaryMenuRow)).html(summaryOrderedMenuItem.count_main.FormatNumber(0));
+            $('.table_summary_amount_main', $(summaryMenuRow)).html(summaryOrderedMenuItem.amount_main.FormatNumber(0));
+            $('.table_summary_count_extra', $(summaryMenuRow)).html(summaryOrderedMenuItem.count_extra.FormatNumber(0));
+            $('.table_summary_amount_extra', $(summaryMenuRow)).html(summaryOrderedMenuItem.amount_extra.FormatNumber(0));
 
             total += summaryOrderedMenuItem.amount_main + summaryOrderedMenuItem.amount_extra;
         });
@@ -495,12 +480,43 @@ $content = file_get_contents($page);
                     itemString = '<th style="text-align: center">' + user.fullName + '</th>';
                     $("#order_menu thead tr:first-child").append(itemString);
                 });
-                callback();
+
+                //in the case the group has no data of user -> show message
+                $(".message_no_user div").html('Nhóm chưa có thành viên. Xin vui lòng cập nhật.')
+                $(".message_no_user").show();
             }
+            else if (result.data.code == 1) {
+                //has no group
+                $(".message_no_user div").html('Nhóm chưa được tạo, xin liên hệ người quản trị.')
+                $(".message_no_user").show();
+            }
+            callback();
         });
     }
-    function count() {
 
+    //this function is to travel all the user and check if the item is ordered (main or extra) or not
+    function fillOrderedItemForUsers(callback) {
+        $.each(dsUsers, function(indexUser, user) {
+            var userId = user.id;
+            $.each(user.menuItems, function(indexItem, item) {
+                var menuId = item.menu_id;
+                var isMainItem = item.extra_food == '1';
+                var checkbox = getCheckboxByMenuIdAndUserId(menuId, userId);
+
+                //check this checkbox
+                $(checkbox).attr('checked', 'checked');
+
+                //set main or sub
+                if (isMainItem) {
+                    setMainItemByCheckbox(checkbox);
+                }
+                else {
+                    setSubItemByCheckbox(checkbox);
+                }
+            });
+        });
+
+        callback();
     }
 </script>
 
