@@ -10,13 +10,13 @@
 
 class Order
 {
-    public $groupCode;
+    public $userId;
     public $menuItemId;
 
-    public function insert($groupCode, $menuId)
+    public function insert($userId, $menuId, $extraFood)
     {
         $db = new DBHelper();
-        $query = "insert into order(group_code,menu_id) VALUES ($groupCode,$menuId)";
+        $query = "insert into order(user_id,menu_id,extra_food) VALUES ('$userId','$menuId','$extraFood')";
         $db->executeStatement($query);
     }
 
@@ -30,10 +30,10 @@ class Order
         $db->executeStatement($query);
     }
 
-    public function update($id, $groupCode, $menuId)
+    public function update($id, $userId, $menuId, $extraFood)
     {
         $db = new DBHelper();
-        $query = "UPDATE order SET group_code = $groupCode,menu_id =$menuId WHERE id=$id";
+        $query = "UPDATE order SET user_id = '$userId',menu_id ='$menuId',extra_food = '$extraFood' WHERE id=$id";
         $db->executeStatement($query);
     }
 
@@ -51,31 +51,6 @@ class Order
         $result = $db->executeStatement($query);
         return $result;
     }
-
-    public function addOrderForUser($groupCode, $userName, $menuId)
-    {
-        $db = new DBHelper();
-        $group = new Group();
-        $gr = $group->findByGroupCode($groupCode);
-        $groupName = $gr["name"];
-        $users = new User();
-        $users->findAll();
-
-
-        $query = "select * from order WHERE groupCode = $groupCode AND menu_id = $menuId";
-        $result = $db->executeStatement($query);
-        return $result;
-
-    }
-
-    public function removeOrderForUser($groupCode, $userName, $menuId)
-    {
-        $db = new DBHelper();
-        $queryUser = "select * from users WHERE username = $userName";
-        $query = "select * from order WHERE groupCode = $groupCode AND menu_id = $menuId";
-        $result = $db->executeStatement($query);
-        return $result;
-
-    }
+    
 
 }

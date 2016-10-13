@@ -13,8 +13,9 @@ spl_autoload_register(
             $classes = array(
                 /*--- Common ---*/
                 'CommonFunction' => 'common/CommonFunction.php',
+                'ResponseMessage' => 'common/ResponseMessage.php',
                 'DBHelper' => 'common/DBHelper.php',
-
+                
                 /*--- Model ---*/
                 'Menu' => 'model/Menu.php',
                 'User' => 'model/User.php',

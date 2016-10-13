@@ -62,4 +62,26 @@ class CommonFunction
 
     }
 
+    public static function guid($hasHyphens = true,$hasBraces = false) {
+        if (function_exists('com_create_guid')){
+            return com_create_guid();
+        }else{
+            mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $hyphen = $hasHyphens?chr(45):'';// "-"
+            $braceStart = $hasBraces?chr(123):'';
+            $braceEnd = $hasBraces?chr(125):'';
+            if ($hasHyphens == false) {
+                $hyphen = '';
+            }
+            $uuid = $braceStart// "{"
+                .substr($charid, 0, 8).$hyphen
+                .substr($charid, 8, 4).$hyphen
+                .substr($charid,12, 4).$hyphen
+                .substr($charid,16, 4).$hyphen
+                .substr($charid,20,12)
+                .$braceEnd;// "}"
+            return $uuid;
+        }
+    }
 }
