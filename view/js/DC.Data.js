@@ -31,6 +31,11 @@ DC.Data.Menu = {
         DC.Data.Common.httpRequest(
             request,
             function(data) {
+
+                $.each(data.data.menuItems, function(index,menuItem) {
+                    menuItem.menuName = menuItem.food_name;
+                    menuItem.price = parseFloat(menuItem.price);
+                });
                 if (typeof (callback) === "function") {
                     callback(data);
                 }
@@ -81,7 +86,7 @@ DC.Data.Menu = {
     },
 };
 
-DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {
+DC.Data.Menu.GetUsersByGroupCode = function(groupData, callback) {
     //groupData = {groupCode}
     var result = {};
     var data = result.data = {code: 0, message: "Message 1"};
