@@ -280,6 +280,7 @@ $content = file_get_contents($page);
                     var control = $(this);
                     var checked = control.is(":checked");
                     var username = control.parents('td.detail_order_user_item[username]').attr('username');
+                    var userId = control.parents('td.detail_order_user_item[username]').attr('user_id');
                     var monan = control.parents('tr.detail_order_menu').find('td.table_order_monan').html();
                     var menuId = control.parents('tr.detail_order_menu').attr('menu_id');
 
@@ -346,8 +347,9 @@ $content = file_get_contents($page);
 
                     //update all the menuItems for this username
                     DC.Data.Menu.OrderForUser({
-                        groupCode: groupCode,
-                        username: username,
+                        groupCode: groupCode, //not use
+                        username: username, // not use
+                        userId: userId,
                         menuItems: newOrderedItems
                     }, function(result) {
                         calculateAndFillSummaryOrderedMenuItems();
@@ -361,7 +363,7 @@ $content = file_get_contents($page);
     function createDsMonAn(callback) {
         var itemString = '';
         //template for one row
-        var userTemplate = "<td class='detail_order_user_item' username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
+        var userTemplate = "<td class='detail_order_user_item' user_id='${userId}' username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
         var rowtemplate = "<tr class='detail_order_menu' menu_id='${menuId}'>"
             + "<td class='table_order_monan'>${monan}</td>"
             + "<td style='text-align: center'>${gia}</td>";
@@ -369,6 +371,7 @@ $content = file_get_contents($page);
         $.each(dsUsers, function(index, user) {
             var aUserItemTemplate = userTemplate;
             aUserItemTemplate = aUserItemTemplate.replace('${username}', user.username);
+            aUserItemTemplate = aUserItemTemplate.replace('${userId}', user.id);
             rowtemplate += aUserItemTemplate;
         });
 
