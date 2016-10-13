@@ -47,7 +47,7 @@ class Menu
     public function findByDay($day)
     {
         $db = new DBHelper();
-        $query = "select *,food_name menuName from menu WHERE date = '$day'";
+        $query = "select *,food_name menuName,extra_price extraPrice from menu WHERE date = '$day'";
         $result = $db->executeStatement($query);
         return $result;
     }
@@ -59,8 +59,7 @@ class Menu
         $result = $db->executeStatement($query);
         return $result;
     }
-
-
+    
 }
 
 ?>

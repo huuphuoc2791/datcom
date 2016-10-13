@@ -16,8 +16,6 @@ if ($methodName == 'UpdateMenuByDate') {
 } elseif ($methodName == 'OrderForUser') {
     OrderForUser();
 
-} elseif ($methodName == 'RemoveOrderForUser') {
-    RemoveOrderForUser();
 } else {
 
 }
@@ -45,11 +43,20 @@ function GetUsersByGroupCode()
     global $postedData;
     $groupCode = $postedData->data->groupCode;
     $group = new Group();
+
     $groups = $group->findByGroupCode($groupCode);
     $groupId = $groups[0]["id"];
     $user = new User();
     $result = $user->findByGroupId($groupId);
+    foreach ($result as &$user) {
+        $order = new Order();
+        $userId = $user['id'];
+        $orderList = $order->findByUserId($userId);
+        $user['menuItems'] = $orderList;
+    }
+
     $returnMessage->data->users = $result;
+
     $returnMessage->data->code = 0;
     echo json_encode($returnMessage);
 
@@ -59,24 +66,15 @@ function OrderForUser()
 {
     global $returnMessage;
     global $postedData;
+    $order = new Order();
     $userId = $postedData->data->userId;
-    $menuId = $postedData->data->menuId;
-    $extra_food = $postedData->data->isMainItem;
-    $order = new Order();
-    $order->insert($userId,$menuId,$extra_food);
+    $order->deleteByUserId($userId);
+    $menuItems = $postedData->data->menuItems;
+    foreach ($menuItems as $item) {
+        $order->insert($userId, $item->menuId, $item->isMainItem);
 
-}
+    }
+    echo json_encode($returnMessage);
 
-function RemoveOrderForUser()
-{
-    global $returnMessage;
-    global $postedData;
-   
-    $order = new Order();
-
-}
-
-function UpdateUserFullname()
-{
 
 }

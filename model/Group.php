@@ -16,7 +16,7 @@ class Group
     public function insert($name, $code)
     {
         $db = new DBHelper();
-        $query = "insert into group(name,code) VALUES ('$name','$code')";
+        $query = "insert into `group`(name,code) VALUES ('$name','$code')";
         $db->executeStatement($query);
     }
 
@@ -26,21 +26,21 @@ class Group
     public function delete($id)
     {
         $db = new DBHelper();
-        $query = "delete from group WHERE id = $id";
+        $query = "delete from `group` WHERE id = $id";
         $db->executeStatement($query);
     }
 
     public function update($id, $name, $code)
     {
         $db = new DBHelper();
-        $query = "UPDATE group SET name = '$name',code = '$code' WHERE id = $id";
+        $query = "UPDATE `group` SET name = '$name',code = '$code' WHERE id = $id";
         $db->executeStatement($query);
     }
 
     public function findById($id)
     {
         $db = new DBHelper();
-        $query = "select * from group WHERE id =$id";
+        $query = "select * from `group` WHERE id =$id";
         $result = $db->executeStatement($query);
         return $result;
 
@@ -57,7 +57,7 @@ class Group
     public function findAll()
     {
         $db = new DBHelper();
-        $query = "select * from group";
+        $query = "select * from `group`";
         $result = $db->executeStatement($query);
         return $result;
     }
