@@ -7,7 +7,6 @@
  * Time: 20:25
  */
 
-include '../common/DBHelper.php';
 
 class Order
 {

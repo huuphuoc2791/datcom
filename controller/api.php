@@ -12,8 +12,9 @@ $returnMessage->responseCode = 0;
 $returnMessage->responseMessage = '';
 $returnMessage->data = new stdClass();
 if ($methodName == 'UpdateMenuByDate') {
-     UpdateMenuByDate();
+    UpdateMenuByDate();
 } elseif ($methodName == 'GetUsersByGroupCode') {
+    GetUsersByGroupCode();
 
 } elseif ($methodName == 'OrderForUser') {
 
@@ -45,9 +46,14 @@ function GetUsersByGroupCode()
     global $returnMessage;
     global $postedData;
     $groupCode = $postedData->data->groupCode;
+    $group = new Group();
+    $groups = $group->findByGroupCode($groupCode);
+    $groupId = $groups[0]["id"];
     $user = new User();
-    $result= $user->findUsersByGroupCode($groupCode);
+    $result = $user->findByGroupId($groupId);
     $returnMessage->data->users = $result;
+    $returnMessage->data->code = 0;
+
     echo json_encode($returnMessage);
 
 }
@@ -62,6 +68,7 @@ function RemoveOrderForUser()
 
 }
 
-function UpdateUserFullname() {
-    
+function UpdateUserFullname()
+{
+
 }

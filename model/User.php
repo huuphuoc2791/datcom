@@ -7,7 +7,6 @@
  * Time: 20:25
  */
 
-include '../common/DBHelper.php';
 
 class User
 {
@@ -22,7 +21,7 @@ class User
     public function insert($userName, $fullName, $email, $phone)
     {
         $db = new DBHelper();
-        $query = "insert into users(username, fullname, email, phone) VALUES ($userName,$fullName,$email,$phone)";
+        $query = "insert into users(username, fullname, email, phone) VALUES ('$userName','$fullName','$email','$phone')";
         $db->executeStatement($query);
     }
 
@@ -39,7 +38,7 @@ class User
     public function update($id, $userName, $fullName, $email, $phone)
     {
         $db = new DBHelper();
-        $query = "UPDATE users SET username = $userName,fullname =$fullName,email=$email,phone=$phone WHERE id=$id";
+        $query = "UPDATE users SET username = '$userName',fullname ='$fullName',email='$email',phone='$phone' WHERE id=$id";
         $db->executeStatement($query);
     }
 
@@ -60,10 +59,10 @@ class User
         return $result;
     }
 
-    public function findUsersByGroupCode($groupCode)
+    public function findByGroupId($groupId)
     {
         $db = new DBHelper();
-        $query = "select * from users WHERE group_code = $groupCode";
+        $query = "SELECT *,fullname fullName FROM users WHERE group_id = '$groupId'";
         $result = $db->executeStatement($query);
         return $result;
     }

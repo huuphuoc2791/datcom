@@ -16,8 +16,10 @@ spl_autoload_register(
                 'DBHelper' => 'common/DBHelper.php',
 
                 /*--- Model ---*/
-                'Model' => 'model/Model.php',
                 'Menu' => 'model/Menu.php',
+                'User' => 'model/User.php',
+                'Group' => 'model/Group.php',
+                'Order' => 'model/Order.php',
 
                 /*--- controller ---*/
             );

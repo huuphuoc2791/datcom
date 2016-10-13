@@ -33,7 +33,7 @@ class Menu
     public function update($id, $foodName, $date, $price, $extraPrice)
     {
         $db = new DBHelper();
-        $query = "UPDATE menu SET food_name = $foodName,date =$date,price=$price,extra_price=$extraPrice WHERE id=$id";
+        $query = "UPDATE menu SET food_name = '$foodName',date ='$date',price = '$price' ,extra_price = '$extraPrice' WHERE id=$id";
         $db->executeStatement($query);
     }
 
@@ -47,7 +47,7 @@ class Menu
     public function findByDay($day)
     {
         $db = new DBHelper();
-        $query = "select * from menu WHERE date = '$day'";
+        $query = "select *,food_name menuName from menu WHERE date = '$day'";
         $result = $db->executeStatement($query);
         return $result;
     }

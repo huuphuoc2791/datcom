@@ -16,4 +16,9 @@ foreach ($rows as $row){
 $cm=new CommonFunction();
 
 $day = $cm->convertDayOfWeek();
-echo $day;
+
+$gr = new Group();
+$groupCode ='korrin';
+$value = $gr->findByGroupCode($groupCode);
+var_dump($value);
+
