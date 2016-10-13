@@ -409,8 +409,8 @@ $content = file_get_contents($page);
         });
 
         var totalRowTemplate = "<tr class='summary_order_menu_total'>"
-        + "<td style='font-size: 15; font-weight: bold'>Tổng cộng</td>"
-        + "<td colspan='4' class='summary_order_menu_total_cell'></td>"
+        + "<td style='font-size: 20; font-weight: bold; '>Tổng cộng</td>"
+        + "<td style='font-size: 20; font-weight: bold; text-align: center' colspan='4' class='summary_order_menu_total_cell'></td>"
         + "</tr>";
         $("#summary_menu tbody").append(totalRowTemplate);
 
