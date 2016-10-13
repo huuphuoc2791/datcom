@@ -66,4 +66,19 @@ class User
         $result = $db->executeStatement($query);
         return $result;
     }
+    public function updateFullNameById($id, $fullName)
+    {
+        $db = new DBHelper();
+        $query = "UPDATE users SET fullname ='$fullName' WHERE id=$id";
+        $db->executeStatement($query);
+    }
+
+    public function updateFullNameByFullNameKd($fullnameKd, $fullname)
+    {
+        $db = new DBHelper();
+        $query = "UPDATE users SET fullname = '$fullname' WHERE fullname='$fullnameKd'";
+        $db->executeStatement($query);
+    }
+
+
 }
