@@ -32,7 +32,7 @@ class CommonFunction
         return count($_GET) != 0;
     }
 
-    public function getDayOfWeek()
+    public static function getDayOfWeek()
     {
         $pTimezone = "+7";
         $userDateTimeZone = new DateTimeZone($pTimezone);
@@ -45,7 +45,7 @@ class CommonFunction
 
     }
 
-    public function convertDayOfWeek()
+    public static function convertDayOfWeek()
     {
         $DayOfWeek = array(
             "Mon" => "Thứ 2",
@@ -56,7 +56,7 @@ class CommonFunction
             "Sat" => "Thứ 7",
             "Sun" => "Chủ nhật"
         );
-        $day = $this->getDayOfWeek();
+        $day = CommonFunction::getDayOfWeek();
 
         return $DayOfWeek[$day];
 

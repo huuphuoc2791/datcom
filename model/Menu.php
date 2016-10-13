@@ -17,7 +17,6 @@ class Menu
     {
         $db = new DBHelper();
         $query = "insert into menu(food_name, date, price, extra_price) VALUES ('$foodName','$date','$price','$extraPrice')";
-        var_dump($query);
         $db->executeStatement($query);
     }
 
@@ -42,6 +41,13 @@ class Menu
     {
         $db = new DBHelper();
         $query = "select * from menu WHERE id = $id";
+        $result = $db->executeStatement($query);
+        return $result;
+    } 
+    public function findByDay($day)
+    {
+        $db = new DBHelper();
+        $query = "select * from menu WHERE date = '$day'";
         $result = $db->executeStatement($query);
         return $result;
     }

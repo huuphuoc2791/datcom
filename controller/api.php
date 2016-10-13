@@ -5,11 +5,14 @@ include_once 'common/autoload.php';
 
 
 $postedData = json_decode(file_get_contents('php://input'));
-
 $methodName = $postedData->methodName;
 
+$returnMessage = new stdClass();
+$returnMessage->responseCode = 0;
+$returnMessage->responseMessage = '';
+$returnMessage->data = new stdClass();
 if ($methodName == 'UpdateMenuByDate') {
-    UpdateMenuByDate();
+     UpdateMenuByDate();
 } elseif ($methodName == 'GetUsersByGroupCode') {
 
 } elseif ($methodName == 'OrderForUser') {
@@ -22,21 +25,30 @@ if ($methodName == 'UpdateMenuByDate') {
 
 function UpdateMenuByDate()
 {
+    global $returnMessage;
+    global $postedData;
     $extraPrice = '25000';
-    $common = new CommonFunction();
-    $day = $common->convertDayOfWeek();
-    $menuItems = $this->postedData->data->menuItems;
+    $day = CommonFunction::convertDayOfWeek();
+    $menuItems = $postedData->data->menuItems;
+    $menu = new Menu();
     foreach ($menuItems as $item) {
-        $menu = new Menu();
+
         $menu->insert($item->menuName, $day, $item->price, $extraPrice);
     }
-
+    $result = $menu->findByDay($day);
+    $returnMessage->data->menuItems = $result;
+    echo json_encode($returnMessage);
 }
 
-function GetUsersByGroupCode($groupCode)
+function GetUsersByGroupCode()
 {
+    global $returnMessage;
+    global $postedData;
+    $groupCode = $postedData->data->groupCode;
     $user = new User();
-    return $user->findUsersByGroupCode($groupCode);
+    $result= $user->findUsersByGroupCode($groupCode);
+    $returnMessage->data->users = $result;
+    echo json_encode($returnMessage);
 
 }
 
@@ -50,3 +62,6 @@ function RemoveOrderForUser()
 
 }
 
+function UpdateUserFullname() {
+    
+}
