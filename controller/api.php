@@ -19,8 +19,8 @@ if ($methodName == 'UpdateMenuByDate') {
 } elseif ($methodName == 'OrderForUser') {
     OrderForUser();
 
-} else {
-    ClearAllOder();
+} elseif ($methodName == 'ClearAllOderByGroupCode') {
+    ClearAllOderByGroupCode();
 }
 
 function UpdateMenuByDate()
@@ -107,9 +107,27 @@ function UpdateFullName()
 
 }
 
-function ClearAllOder()
+function ClearAllOderByGroupCode()
 {
-    $order = new Order();
-    $order->deleteAll();
+    global $returnMessage;
+    global $postedData;
 
+    $groupCode = $postedData->data->groupCode;
+    $group = new Group();
+
+    $groups = $group->findByGroupCode($groupCode);
+
+    //check when no group on database --> return no users
+    if (count($groups) <= 0) {
+        $returnMessage->data->code = 1; //no group is created with this group no
+        $returnMessage->responseCode = 1; //no group is created with this group no
+        echo json_encode($returnMessage);
+        return;
+    }
+    $groupId = $groups[0]["id"];
+
+    $order = new Order();
+    $order->deleteAllByGroupId($groupId);
+
+    echo json_encode($returnMessage);
 }

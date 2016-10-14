@@ -72,5 +72,12 @@ class Order
         $db->executeStatement($query);
     }
 
+    public function deleteAllByGroupId($groupId)
+    {
+        $db = new DBHelper();
+        $query = "delete from `order` WHERE exists(Select NULL from users where group_id = '$groupId')";
+        $db->executeStatement($query);
+    }
+
 
 }

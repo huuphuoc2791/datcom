@@ -93,6 +93,26 @@ DC.Data.Menu = {
             }
         );
     },
+    /*-- ClearAllOderByGroupCode --*/
+    ClearAllOderByGroupCode: function(orderData, callback) {
+        //orderData = {groupCode}
+        var request = new RequestMessage();
+        request.methodName = 'ClearAllOderByGroupCode';
+        request.data = orderData;
+
+        DC.Data.Common.httpRequest(
+            request,
+            function(data) {
+                if (typeof (callback) === "function") {
+                    callback(data);
+                }
+            },
+            function(data) {
+                console.log("Error in request:" + "ClearAllOderByGroupCode");
+            }
+        );
+    },
+
 };
 
 DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {

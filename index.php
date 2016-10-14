@@ -3,9 +3,16 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_
 
 include 'common/autoload.php';
 
-$_POST['groupCode'] = 'korrin';
+if (!isset($_GET['groupCode'])) {
+    if (!isset($_POST['groupCode'])) {
+        $_POST['groupCode'] = 'korrin';
+    }
+    $groupCode = CommonFunction::getPostValue('groupCode');
+}
+else {
+    $groupCode = CommonFunction::getGetValue('groupCode');
+}
 
-$groupCode = CommonFunction::getPostValue('groupCode');
 ?>
 <!DOCTYPE html>
 <?php
@@ -48,8 +55,19 @@ $content = file_get_contents($page);
             display: none !important;
         }
 
-        #order_menu.table-striped > tbody > tr:nth-of-type(odd) {
+        #order_menu.table-striped > tbody > tr:nth-of-type(odd),
+        #summary_menu.table-striped > tbody > tr:nth-of-type(odd)
+        {
             background-color: rgba(43, 222, 65, 0.26);
+        }
+
+        #summary_menu tr.summary_order_menu_total {
+            background-color: white !important;
+        }
+
+        .summary_order_menu_total_cell {
+            font-weight: bold;
+            text-align: center
         }
     </style>
     <!-- jQuery -->
@@ -59,11 +77,11 @@ $content = file_get_contents($page);
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
 
-    <script src="../datcom/common/common.js"></script>
-    <script src="../datcom/view/js/DC.Config.js"></script>
-    <script src="../datcom/view/js/DC.Data.Common.js"></script>
-    <script src="../datcom/view/js/DC.Data.js"></script>
-    <script src="../datcom/view/js/RequestMessage.js"></script>
+    <script src="common/common.js"></script>
+    <script src="view/js/DC.Config.js"></script>
+    <script src="view/js/DC.Data.Common.js"></script>
+    <script src="view/js/DC.Data.js"></script>
+    <script src="view/js/RequestMessage.js"></script>
 </head>
 <body>
 <div class="container">
@@ -123,6 +141,10 @@ $content = file_get_contents($page);
     </div>
     <div style="clear: both"></div>
 
+    <div class="row">
+        <button id="resetOrdered" type="button" class="btn btn-primary" style="margin-left: 15px">Tạo lại</button>
+    </div>
+    <div style="clear: both;height: 10px;"></div>
     <label for="exampleInputName2" style="font-size: 20px; font-weight: bold">Tổng hợp</label>
     <div style="clear: both"></div>
 
@@ -130,7 +152,7 @@ $content = file_get_contents($page);
         <table id="summary_menu" class="table table-striped table-bordered">
             <thead>
             <tr>
-                <th>Thực đơn</th>
+                <th colspan="2">Thực đơn</th>
                 <th style="text-align: center" class="foodCounter">Phần cơm</th>
                 <th style="text-align: center" class="foodCounter">Tổng tiền</th>
                 <th style="text-align: center" class="foodCounter">Phần thêm</th>
@@ -159,6 +181,8 @@ $content = file_get_contents($page);
             $("form")[0].submit();
         });
 
+        $("#resetOrdered").on('click', resetOrderEvent);
+
         var text = '';
         var monanElements = $(".monan [data-name=thuc-don]");
         $.each(monanElements, function(index, item) {
@@ -186,6 +210,28 @@ $content = file_get_contents($page);
     });
 
 
+    function resetOrderEvent(event) {
+        var control = $(this);
+
+        //send request to clear by group code
+        DC.Data.Menu.ClearAllOderByGroupCode({groupCode:groupCode},function(result) {
+            console.log('done');
+            if (result.responseCode == 0) {
+                //recalculate
+                //1. update GUI
+                $.each(dsUsers, function(userIndex, user) {
+                    clearMainAndSubItemByUsername(user.username);
+                    $("#order_menu .userCheckOrder[type=checkbox]").removeAttr('checked');
+                });
+
+                //recalculate the total
+                calculateAndFillSummaryOrderedMenuItems();
+            }
+            else {
+                console.log('Error');
+            }
+        });
+    }
     //this is to get the menuItem object via the row of that menu
     function getMenuItemByMenuRow(menuRow) {
         var menuId = parseInt($(menuRow).attr('menu_id'));
@@ -381,7 +427,7 @@ $content = file_get_contents($page);
         var itemString = '';
         //template for one row
         var rowtemplate = "<tr class='summary_order_menu' menu_id='${menuId}'>"
-            + "<td class='table_summary_monan'>${monan}</td>"
+            + "<td colspan='2' class='table_summary_monan'>${monan}</td>"
             + "<td class='table_summary_count_main' style='text-align: center'>0</td>"
             + "<td class='table_summary_amount_main' style='text-align: center'>0</td>"
             + "<td class='table_summary_count_extra' style='text-align: center'>0</td>"
@@ -397,13 +443,16 @@ $content = file_get_contents($page);
         });
 
         var totalRowTemplate = "<tr class='summary_order_menu_total'>"
-            + "<td style='font-size: 20; font-weight: bold; '>Tổng cộng</td>"
-            + "<td style='font-size: 20; font-weight: bold; text-align: center' colspan='4' class='summary_order_menu_total_cell'></td>"
+            + "<td class='summary_order_menu_total_cell' style='width: 115px;'>Tổng cộng</td>"
+            + "<td class='summary_order_menu_total_cell summary_order_menu_total_amount' style='min-width: 115px;'></td>"
+            + "<td class='summary_order_menu_total_cell summary_order_menu_total_count_ordered_cell'></td>"
+            + "<td class='summary_order_menu_total_cell summary_order_menu_total_amount_ordered_cell'></td>"
+            + "<td class='summary_order_menu_total_cell summary_order_menu_total_extra_count_ordered_cell'></td>"
+            + "<td class='summary_order_menu_total_cell summary_order_menu_total_extra_amount_ordered_cell'></td>"
             + "</tr>";
         $("#summary_menu tbody").append(totalRowTemplate);
 
-
-        callback();
+        PMCommonFunction.RunCallback(callback);
     }
 
     //this is to return the object:
@@ -457,19 +506,35 @@ $content = file_get_contents($page);
 
         var summaryOrderedMenuItems = getSummaryOrderedMenuItems();
         var total = 0;
+        var itemCount = 0;
+        var itemAmount = 0;
+        var itemExtraCount = 0;
+        var itemExtraAmount = 0;
         $.each(summaryOrderedMenuItems, function(index, summaryOrderedMenuItem) {
             var summaryMenuRow = $("tr.summary_order_menu[menu_id='" + summaryOrderedMenuItem.menuId + "']");
+
+            itemCount += summaryOrderedMenuItem.count_main
+            itemAmount += summaryOrderedMenuItem.amount_main
+            itemExtraCount += summaryOrderedMenuItem.count_extra
+            itemExtraAmount += summaryOrderedMenuItem.amount_extra
+            total += summaryOrderedMenuItem.amount_main + summaryOrderedMenuItem.amount_extra;
+
 
             $('.table_summary_count_main', $(summaryMenuRow)).html(summaryOrderedMenuItem.count_main.FormatNumber(0));
             $('.table_summary_amount_main', $(summaryMenuRow)).html(summaryOrderedMenuItem.amount_main.FormatNumber(0));
             $('.table_summary_count_extra', $(summaryMenuRow)).html(summaryOrderedMenuItem.count_extra.FormatNumber(0));
             $('.table_summary_amount_extra', $(summaryMenuRow)).html(summaryOrderedMenuItem.amount_extra.FormatNumber(0));
 
-            total += summaryOrderedMenuItem.amount_main + summaryOrderedMenuItem.amount_extra;
         });
 
 
-        $(".summary_order_menu_total_cell").html(total.FormatNumber(0));
+        $(".summary_order_menu_total_amount").html(total.FormatNumber(0));
+        $(".summary_order_menu_total_count_ordered_cell").html(itemCount.FormatNumber(0));
+        $(".summary_order_menu_total_amount_ordered_cell").html(itemAmount.FormatNumber(0));
+        $(".summary_order_menu_total_amount_ordered_cell").html(itemAmount.FormatNumber(0));
+        $(".summary_order_menu_total_extra_count_ordered_cell").html(itemExtraCount.FormatNumber(0));
+        $(".summary_order_menu_total_extra_amount_ordered_cell").html(itemExtraAmount.FormatNumber(0));
+
     }
 
     function createHeaderByGroupCode(callback) {
@@ -495,7 +560,7 @@ $content = file_get_contents($page);
                 $(".message_no_user div").html('Nhóm chưa được tạo, xin liên hệ người quản trị.')
                 $(".message_no_user").show();
             }
-            callback();
+            PMCommonFunction.RunCallback(callback);
         });
     }
 
@@ -521,7 +586,7 @@ $content = file_get_contents($page);
             });
         });
 
-        callback();
+        PMCommonFunction.RunCallback(callback);
     }
 </script>
 
