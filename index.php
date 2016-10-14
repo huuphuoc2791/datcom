@@ -59,11 +59,11 @@ $content = file_get_contents($page);
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
 
-    <script src="../common/common.js"></script>
-    <script src="../view/js/DC.Config.js"></script>
-    <script src="../view/js/DC.Data.Common.js"></script>
-    <script src="../view/js/DC.Data.js"></script>
-    <script src="../view/js/RequestMessage.js"></script>
+    <script src="../datcom/common/common.js"></script>
+    <script src="../datcom/view/js/DC.Config.js"></script>
+    <script src="../datcom/view/js/DC.Data.Common.js"></script>
+    <script src="../datcom/view/js/DC.Data.js"></script>
+    <script src="../datcom/view/js/RequestMessage.js"></script>
 </head>
 <body>
 <div class="container">
