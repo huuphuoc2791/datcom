@@ -4,7 +4,11 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_
 include_once 'common/autoload.php';
 
 $postedData = json_decode(file_get_contents('php://input'));
-$methodName = $postedData->methodName;
+
+$methodName = '';
+if (isset($postedData->methodName)) {
+    $methodName = $postedData->methodName;
+}
 
 $returnMessage = new ResponseMessage();
 if ($methodName == 'UpdateMenuByDate') {
@@ -16,7 +20,7 @@ if ($methodName == 'UpdateMenuByDate') {
     OrderForUser();
 
 } else {
-//    UpdateFullName();
+    ClearAllOder();
 }
 
 function UpdateMenuByDate()
@@ -92,13 +96,20 @@ function UpdateFullName()
     $fullNameListKd = array('Son 1', 'Son 2', 'Tao', 'Phuc', 'Dung', 'Minh', 'Phu', 'Loc', 'Phuoc', 'Han', 'Tanuj');
     $fullNameList = array('Sơn 1', 'Sơn 2', 'Tảo', 'Phúc', 'Dũng', 'Minh', 'Phú', 'Lộc', 'Phước', 'Hân', 'Tanuj');
     $user = new User();
-    for ($i=0;$i<count($fullNameListKd);$i++) {
+    for ($i = 0; $i < count($fullNameListKd); $i++) {
         $fullnameKd = $fullNameListKd[$i];
         $fullname = $fullNameList[$i];
         $user->updateFullNameByFullNameKd($fullnameKd, $fullname);
     }
-        
-    
+
+
 //    $user->updateFullNameById($userId, $fullName);
+
+}
+
+function ClearAllOder()
+{
+    $order = new Order();
+    $order->deleteAll();
 
 }

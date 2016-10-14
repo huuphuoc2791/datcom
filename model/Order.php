@@ -6,8 +6,6 @@
  * Date: 10/10/16
  * Time: 20:25
  */
-
-
 class Order
 {
     public $userId;
@@ -43,6 +41,7 @@ class Order
         $query = "select * from `order` WHERE id = $id";
         $db->executeStatement($query);
     }
+
     public function findByUserId($userId)
     {
         $db = new DBHelper();
@@ -50,6 +49,7 @@ class Order
         $result = $db->executeStatement($query);
         return $result;
     }
+
     public function findAll()
     {
         $db = new DBHelper();
@@ -57,12 +57,20 @@ class Order
         $result = $db->executeStatement($query);
         return $result;
     }
+
     public function deleteByUserId($userId)
     {
         $db = new DBHelper();
         $query = "delete from `order` WHERE user_id = '$userId'";
         $db->executeStatement($query);
     }
-    
+
+    public function deleteAll()
+    {
+        $db = new DBHelper();
+        $query = "delete from `order`";
+        $db->executeStatement($query);
+    }
+
 
 }
