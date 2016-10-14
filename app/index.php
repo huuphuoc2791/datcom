@@ -482,8 +482,10 @@ $content = file_get_contents($page);
                 });
 
                 //in the case the group has no data of user -> show message
-                $(".message_no_user div").html('Nhóm chưa có thành viên. Xin vui lòng cập nhật.')
-                $(".message_no_user").show();
+                if (dsUsers.length == 0) {
+                    $(".message_no_user div").html('Nhóm chưa có thành viên. Xin vui lòng cập nhật.')
+                    $(".message_no_user").show();
+                }
             }
             else if (result.data.code == 1) {
                 //has no group
