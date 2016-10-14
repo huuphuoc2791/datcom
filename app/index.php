@@ -9,6 +9,9 @@ $groupCode = CommonFunction::getPostValue('groupCode');
 ?>
 <!DOCTYPE html>
 <?php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 //for test, get mon day
 //$page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
 $page = "http://comnhaviet.net/";
@@ -56,11 +59,11 @@ $content = file_get_contents($page);
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
 
-    <script src="/common/common.js"></script>
-    <script src="/view/js/DC.Config.js"></script>
-    <script src="/view/js/DC.Data.Common.js"></script>
-    <script src="/view/js/DC.Data.js"></script>
-    <script src="/view/js/RequestMessage.js"></script>
+    <script src="../common/common.js"></script>
+    <script src="../view/js/DC.Config.js"></script>
+    <script src="../view/js/DC.Data.Common.js"></script>
+    <script src="../view/js/DC.Data.js"></script>
+    <script src="../view/js/RequestMessage.js"></script>
 </head>
 <body>
 <div class="container">
