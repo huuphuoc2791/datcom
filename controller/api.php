@@ -23,6 +23,7 @@ if ($methodName == 'UpdateMenuByDate') {
     ClearAllOderByGroupCode();
 }
 
+//change: the menu return has one more column call short_food_name
 function UpdateMenuByDate()
 {
     global $returnMessage;
@@ -36,6 +37,11 @@ function UpdateMenuByDate()
         $menu->insert($item->menuName, $day, $item->price, $extraPrice);
     }
     $result = $menu->findByDay($day);
+
+    foreach ($result as &$menuItem) {
+        $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
+    }
+
     $returnMessage->data->menuItems = $result;
     echo json_encode($returnMessage);
 }
