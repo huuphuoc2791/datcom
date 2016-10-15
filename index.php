@@ -88,7 +88,7 @@ $content = file_get_contents($page);
         //assign group code here
         GROUP_CODE = '<?= $groupCode ?>';
     </script>
-    <script src="view/js/index.js"></script>
+    <script src="view/js/index.js?20161015"></script>
 </head>
 <body>
 <div class="container">
@@ -188,7 +188,14 @@ $content = file_get_contents($page);
                 <h4 class="modal-title">Tin nhắn</h4>
             </div>
             <div class="modal-body">
-                <p id="sms_content"></p>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p id="sms_content"></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <img id="smsQrCode" style="width: 200px;height: 200px"/>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>

@@ -89,11 +89,20 @@ function showSmsPopup_Click(event) {
         sms += '\n';
     });
 
-    console.log(sms);
 
     sms = sms.ReplaceAll('\n','<br/>');
+
+    //set the text
     $("#sms_content").html(sms);
+
+    //set the qr code with phone number = empty
+
     $('#smsPopup').modal('show');
+}
+
+//the callback has the base64 image
+function getSmsQrCode(phoneNumber,message,callback) {
+    $.post('http://hosthinh.com/api{})
 }
 
 //this is to get the menuItem object via the row of that menu
