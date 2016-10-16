@@ -108,6 +108,7 @@ class CommonFunction
 
     public static function splitWordToSMS($str)
     {
+        $str=strtolower($str);
         $convertViToEN = self::convert_vi_to_en($str);
         $totalOfWord = explode(' ', $convertViToEN);
         $result =$totalOfWord[0]." ".$totalOfWord[1]." ".$totalOfWord[2];

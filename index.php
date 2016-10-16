@@ -20,8 +20,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 //for test, get mon day
-$page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
-//$page = "http://comnhaviet.net/";
+//$page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
+$page = "http://comnhaviet.net/";
 $content = file_get_contents($page);
 ?>
 <html lang="">
@@ -192,12 +192,13 @@ $content = file_get_contents($page);
                     <div class="col-sm-6">
                         <p id="sms_content"></p>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" style="display: none">
                         <img id="smsQrCode" style="width: 200px;height: 200px"/>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer form-inline">
+                <button class="btn btn-default" onclick="copyToClipboard('#sms_content')">Copy</button><span id="copyAnswer"></span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
             </div>
         </div>
