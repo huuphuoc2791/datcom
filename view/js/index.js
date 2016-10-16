@@ -79,21 +79,30 @@ function showSmsPopup_Click(event) {
         if (count > 0) {
             sms += count + ' ' + item.shortFoodName + ', ';
         }
-
+        countTotal = countTotal + count;
     });
     sms = sms.substr(0, sms.length - 2);
-    sms = sms + '. \n Them: ';
+    sms = sms + '. Them: ';
     $.each(orderedItems, function (index, item) {
         var countExtra = item.countExtra;
         if (countExtra > 0) {
             sms += countExtra + ' ' + item.shortFoodName + ', ';
+        } else {
+
         }
-
+        countExtraTotal = countExtraTotal + countExtra;
     });
-    sms = sms.substr(0, sms.length - 2);
-    sms = sms + '.';
-    sms = sms + ' Tong cong: ' + countTotal + ' phan' + ' + ' + countExtraTotal + ' phan them.';
 
+    if (countExtraTotal == 0) {
+        sms = sms.substr(0, sms.length - 6);
+    }
+    sms = sms.substr(0, sms.length - 2);
+    sms = sms + '. \n';
+    sms = sms + 'Tong cong: ' + countTotal + ' phan';
+    if (countExtraTotal > 0) {
+        sms = sms + ' + ' + countExtraTotal + ' phan them';
+    }
+    sms = sms + '. Thanks chi!';
     sms = sms.ReplaceAll('\n', '<br/>');
 
     //set the text
@@ -489,7 +498,6 @@ function getSummarySmsData() {
         var shortFoodName = $(row).attr('short_food_name');
         var count = parseInt($('td.table_summary_count_main', $(row)).html());
         var countExtra = parseInt($('td.table_summary_count_extra', $(row)).html());
-
         if (count + countExtra > 0) {
             orderedMenuItems.push({
                 meniId: menuId,
