@@ -11,10 +11,10 @@ class Order
     public $userId;
     public $menuId;
 
-    public function insert($userId, $menuId, $extraFood)
+    public function insert($gui, $userId, $menuId, $extraFood)
     {
         $db = new DBHelper();
-        $query = "insert into `order`(user_id,menu_id,extra_food) VALUES ('$userId','$menuId','$extraFood')";
+        $query = "insert into `order`(gui,user_id,menu_id,extra_food) VALUES ('$gui','$userId','$menuId','$extraFood')";
         $db->executeStatement($query);
     }
 

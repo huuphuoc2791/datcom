@@ -137,3 +137,11 @@ ALTER TABLE `users`  ADD FOREIGN KEY  `group_code`  REFERENCES `group` (`cod
 ALTER TABLE `order` CHANGE `group_co` `group_name` VARCHAR(255) NOT NULL;
 ALTER TABLE `order` DROP `group_code`;
 ALTER TABLE `order` ADD `menu_id`  INT(11) NOT NULL;
+/* chang id to gui */
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order` (
+  `gui` VARCHAR(255) ,
+  `user_id` INT(11),
+  `menu_id` INT(11),
+  `extra_food` BOOLEAN
+)DEFAULT CHARSET = utf8;
