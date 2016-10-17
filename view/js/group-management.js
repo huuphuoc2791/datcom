@@ -2,9 +2,7 @@ var dsMonAn = [];
 var dsUsers = [];
 
 var groupCode = GROUP_CODE;
-var MAIN_ITEM_CLASS = 'menu_detail_item_main';
-var SUB_ITEM_CLASS = 'menu_detail_item_sub';
-var MAIN_SUB_ITEM_ALL_CLASS = MAIN_ITEM_CLASS + ' ' + SUB_ITEM_CLASS;
+var hash = GROUP_HASH;
 
 $(document).ready(function() {
     //event
@@ -16,34 +14,7 @@ $(document).ready(function() {
     $("#showSmsPopup").on('click', showSmsPopup_Click);
 
 
-    $("#btnCopyToClipboard").on('mouseout', function() {
-        var answer = document.getElementById("btnCopyToClipboard");
-        answer.innerHTML = 'Copy';
-    });
-
-    var text = '';
-    var monanElements = $(".monan [data-name=thuc-don]");
-    $.each(monanElements, function(index, item) {
-        var monan1 = $(item).attr('data-title');
-
-        var monan2 = monan1.toLowerCase();
-        var monan = monan2.substr(0, 1).toUpperCase() + monan2.substr(1, monan2.length);
-
-        dsMonAn.push({menuName: monan, price: 30000});
-    });
-
-    //clear comnhaviet page
-    $("#comnhaviet_page").empty();
-
-    //update menu of today
-    DC.Data.Menu.UpdateMenuByDate({
-        menuDate: new Date(),
-        menuItems: dsMonAn
-    }, function(result) {
-        dsMonAn = result.data.menuItems;
-        //create table
-        createTableForGroup();
-    });
+    // createTableForGroup();
 
     $('#smsPopup').modal({show: false});
 
@@ -108,17 +79,12 @@ function showSmsPopup_Click(event) {
         sms = sms + ' + ' + countExtraTotal + ' phan them';
     }
     sms = sms + '. Thanks chi!';
-
-    var smsMessage = sms;
     sms = sms.ReplaceAll('\n', '<br/>');
 
     //set the text
     $("#sms_content").html(sms);
 
     //set the qr code with phone number = empty
-    getSmsQrCode({phoneNumber: '', message: smsMessage}, function(data) {
-        setImageBase64(data, 'smsQrCode')
-    });
 
     $('#smsPopup').modal('show');
 }
@@ -140,13 +106,13 @@ function getSmsQrCode(smsData, callback) {
     // xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     // xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlhttp.onload = function() {
-        PMCommonFunction.RunCallback(callback, xmlhttp.responseText);
+        PMCommonFunction.RunCallback(callback,xmlhttp.responseText);
     };
     // xmlhttp.send('message=' + encodeURIComponent(url));
     xmlhttp.send('phoneNumber=' + encodeURIComponent(smsData.phoneNumber) + '&message=' + encodeURIComponent(smsData.message));
 }
 
-function setImageBase64(base64, qrCodeImage) {
+function setImageBase64(base64,qrCodeImage) {
     var img = document.getElementById(qrCodeImage);
     img.src = "data:image/png;base64," + base64;
 }
@@ -544,7 +510,7 @@ function getSummarySmsData() {
     return orderedMenuItems;
 }
 function copyToClipboard(element) {
-    var answer = document.getElementById("btnCopyToClipboard");
+    var answer = document.getElementById("copyAnswer");
     var $temp = $("<input>");
     $("body").append($temp);
     $temp.val($(element).text()).select();

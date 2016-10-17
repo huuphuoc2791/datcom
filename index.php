@@ -8,8 +8,7 @@ if (!isset($_GET['groupCode'])) {
         $_POST['groupCode'] = 'korrin';
     }
     $groupCode = CommonFunction::getPostValue('groupCode');
-}
-else {
+} else {
     $groupCode = CommonFunction::getGetValue('groupCode');
 }
 
@@ -56,8 +55,7 @@ $content = file_get_contents($page);
         }
 
         #order_menu.table-striped > tbody > tr:nth-of-type(odd),
-        #summary_menu.table-striped > tbody > tr:nth-of-type(odd)
-        {
+        #summary_menu.table-striped > tbody > tr:nth-of-type(odd) {
             background-color: rgba(131, 165, 244, 0.13);
         }
 
@@ -69,6 +67,7 @@ $content = file_get_contents($page);
             font-weight: bold;
             text-align: center
         }
+
     </style>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
@@ -134,18 +133,20 @@ $content = file_get_contents($page);
 
         </div>
     </div>
-    <div class="table-responsive">
-        <table id="order_menu" class="table table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>Thực đơn</th>
-                <th style="text-align: center" class="price_header">Giá</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+
+        <div class="table-responsive">
+            <table id="order_menu" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Thực đơn</th>
+                    <th style="text-align: center;" class="price_header">Giá</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
     <div style="clear: both"></div>
 
     <div class="row">
@@ -172,7 +173,9 @@ $content = file_get_contents($page);
         </table>
     </div>
     <div class="row">
-        <button id="showSmsPopup" type="button" class="btn btn-primary" style="margin-left: 15px;margin-bottom: 15px;">Xem tin nhắn</button>
+        <button id="showSmsPopup" type="button" class="btn btn-primary"
+                style="margin-left: 15px;margin-bottom: 15px;">Xem tin nhắn
+        </button>
     </div>
 </div>
 
@@ -192,13 +195,13 @@ $content = file_get_contents($page);
                     <div class="col-sm-6">
                         <p id="sms_content"></p>
                     </div>
-                    <div class="col-sm-6" style="display: none">
+                    <div class="col-sm-6" style="">
                         <img id="smsQrCode" style="width: 200px;height: 200px"/>
                     </div>
                 </div>
             </div>
             <div class="modal-footer form-inline">
-                <button class="btn btn-default" onclick="copyToClipboard('#sms_content')">Copy</button><span id="copyAnswer"></span>
+                <button id="btnCopyToClipboard" class="btn btn-default" onclick="copyToClipboard('#sms_content')">Copy</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
             </div>
         </div>

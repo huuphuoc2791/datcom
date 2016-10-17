@@ -145,3 +145,6 @@ CREATE TABLE `order` (
   `menu_id` INT(11),
   `extra_food` BOOLEAN
 )DEFAULT CHARSET = utf8;
+
+
+ALTER TABLE `group` ADD `hash`  VARCHAR (36) NULL DEFAULT NULL;

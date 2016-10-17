@@ -96,13 +96,12 @@ function OrderForUser()
     global $returnMessage;
     global $postedData;
     $order = new Order();
-    $gui = CommonFunction::guid(true, false);
     $userId = $postedData->data->userId;
     $order->deleteByUserId($userId);
     $menuItems = $postedData->data->menuItems;
     foreach ($menuItems as $item) {
+        $gui = CommonFunction::guid(true, false);
         $order->insert($gui, $userId, $item->menuId, !$item->isMainItem);
-
     }
     echo json_encode($returnMessage);
 

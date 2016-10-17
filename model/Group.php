@@ -62,4 +62,13 @@ class Group
         return $result;
     }
 
+    public function findByGroupCodeAndHash($groupCode,$hash)
+    {
+        $db = new DBHelper();
+        $query = "select * from `group` WHERE code = '$groupCode' AND hash = '$hash'";
+        $result = $db->executeStatement($query);
+        return $result;
+    }
+
+
 }
