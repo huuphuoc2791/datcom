@@ -58,7 +58,7 @@ $content = file_get_contents($page);
         #order_menu.table-striped > tbody > tr:nth-of-type(odd),
         #summary_menu.table-striped > tbody > tr:nth-of-type(odd)
         {
-            background-color: rgba(43, 222, 65, 0.26);
+            background-color: rgba(131, 165, 244, 0.13);
         }
 
         #summary_menu tr.summary_order_menu_total {
