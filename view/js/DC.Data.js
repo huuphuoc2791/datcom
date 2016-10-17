@@ -113,6 +113,25 @@ DC.Data.Menu = {
         );
     },
 
+    /*-- getSmsQrBase64 --*/
+    getSmsQrBase64: function(smsData, callback) {
+        //orderData = {groupCode}
+        var request = new RequestMessage();
+        request.methodName = 'getSmsQrBase64';
+        request.data = smsData;
+
+        DC.Data.Common.httpRequest(
+            request,
+            function(data) {
+                if (typeof (callback) === "function") {
+                    callback(data);
+                }
+            },
+            function(data) {
+                console.log("Error in request:" + "getSmsQrBase64");
+            },true,'http://hosthinh.com/api/smsQrCode/'
+        );
+    },
 };
 
 DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {

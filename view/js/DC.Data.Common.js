@@ -19,7 +19,9 @@ DC.Data = {
             var msg;
             callback(data);
         },
-        httpRequest: function(message, callbackSuccess, callbackError, runBackGround) {
+        httpRequest: function(message, callbackSuccess, callbackError, runBackGround, url) {
+
+            if(typeof (url) == UNDEFINED) url = DC.Config.HTTP_URL;
             if (typeof (runBackGround) == UNDEFINED) runBackGround = false;
             var countRetry = 0;
             var maxRetry = 3;
@@ -34,7 +36,7 @@ DC.Data = {
             var ajaxCalling = function(index) {
                 $.ajax({
                     type: "POST",
-                    url: DC.Config.HTTP_URL + "?method=" + message.methodName,
+                    url: url + "?method=" + message.methodName,
                     data: JSON.stringify(message),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -63,6 +65,8 @@ DC.Data = {
                     crossDomain: true,
                     beforeSend: function(req) {
                         req.setRequestHeader('Access-Control-Allow-Origin', "*");
+                        req.setRequestHeader('Access-Control-Allow-Origin', "*");
+                        req.setRequestHeader('Access-Control-Allow-Headers', "x-requested-with, x-requested-by");
                     }
                 });
             };
