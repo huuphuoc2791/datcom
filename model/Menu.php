@@ -20,6 +20,13 @@ class Menu
         $db->executeStatement($query);
     }
 
+    public function insertAll($id, $foodName, $date, $price, $extraPrice)
+    {
+        $db = new DBHelper();
+        $query = "insert into menu(id , food_name, date, price, extra_price) VALUES ('$id','$foodName','$date','$price','$extraPrice')";
+        $db->executeStatement($query);
+    }
+
     /**
      * @param $id
      */
@@ -43,7 +50,8 @@ class Menu
         $query = "select * from menu WHERE id = $id";
         $result = $db->executeStatement($query);
         return $result;
-    } 
+    }
+
     public function findByDay($day)
     {
         $db = new DBHelper();
@@ -59,13 +67,22 @@ class Menu
         $result = $db->executeStatement($query);
         return $result;
     }
-    public function findByFoodName($foodName){
+
+    public function findByFoodName($foodName)
+    {
         $db = new DBHelper();
         $query = "select * from menu WHERE food_name = '$foodName'";
         $result = $db->executeStatement($query);
         return $result;
     }
-    
+
+    public function deleteAll()
+    {
+        $db = new DBHelper();
+        $query = "delete from menu";
+        $db->executeStatement($query);
+    }
+
 }
 
 ?>
