@@ -33,10 +33,10 @@ class User
         $db->executeStatement($query);
     }
 
-    public function update($id, $userName, $fullName, $email, $phone)
+    public function update($id, $userName, $fullName, $groupId, $email, $phone)
     {
         $db = new DBHelper();
-        $query = "UPDATE users SET username = '$userName',fullname ='$fullName',email='$email',phone='$phone' WHERE id=$id";
+        $query = "UPDATE users SET username = '$userName',fullname ='$fullName',group_id = '$groupId',email='$email',phone='$phone' WHERE id=$id";
         $db->executeStatement($query);
     }
 

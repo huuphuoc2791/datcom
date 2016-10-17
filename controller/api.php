@@ -150,14 +150,42 @@ function ClearAllOderByGroupCode()
     echo json_encode($returnMessage);
 }
 
-function addUser()
+function AddUserForGroup()
 {
-    $username = 'Nam';
-    $fullName = '';
-    $groupId = '';
-    $email = '';
-    $phone = '';
+    global $returnMessage;
+    global $postedData;
 
+    $groupCode = $postedData->data->groupCode;
+    $posteduser = $postedData->data->user;
+    $username = $posteduser->username;
+    $fullName = $posteduser->fullname;
+    $email = $posteduser->email;
+    $phone = $posteduser->phone;
+    $group = new Group();
+    $groups = $group->findByGroupCode($groupCode);
+    $groupId = $groups[0]["id"];
     $user = new User();
     $user->insert($username, $fullName, $groupId, $email, $phone);
+    echo json_encode($returnMessage);
+}
+
+function UpdateUserForGroup()
+{
+    global $returnMessage;
+    global $postedData;
+
+    $groupCode = $postedData->data->groupCode;
+
+    $posteduser = $postedData->data->user;
+    $id = $posteduser->id;
+    $username = $posteduser->username;
+    $fullName = $posteduser->fullname;
+    $email = $posteduser->email;
+    $phone = $posteduser->phone;
+    $group = new Group();
+    $groups = $group->findByGroupCode($groupCode);
+    $groupId = $groups[0]["id"];
+    $user = new User();
+    $user->update($id, $username, $fullName, $groupId, $email, $phone);
+    echo json_encode($returnMessage);
 }
