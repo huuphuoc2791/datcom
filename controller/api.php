@@ -149,3 +149,15 @@ function ClearAllOderByGroupCode()
 
     echo json_encode($returnMessage);
 }
+
+function addUser()
+{
+    $username = 'Nam';
+    $fullName = '';
+    $groupId = '';
+    $email = '';
+    $phone = '';
+
+    $user = new User();
+    $user->insert($username, $fullName, $groupId, $email, $phone);
+}

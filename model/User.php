@@ -6,8 +6,6 @@
  * Date: 10/10/16
  * Time: 20:25
  */
-
-
 class User
 {
     public $userName;
@@ -18,10 +16,10 @@ class User
     /**
      * @param $table
      */
-    public function insert($userName, $fullName, $email, $phone)
+    public function insert($userName, $fullName, $groupId, $email, $phone)
     {
         $db = new DBHelper();
-        $query = "insert into users(username, fullname, email, phone) VALUES ('$userName','$fullName','$email','$phone')";
+        $query = "insert into users(username, fullname,group_id, email, phone) VALUES ('$userName','$fullName','$groupId','$email','$phone')";
         $db->executeStatement($query);
     }
 
@@ -66,6 +64,7 @@ class User
         $result = $db->executeStatement($query);
         return $result;
     }
+
     public function updateFullNameById($id, $fullName)
     {
         $db = new DBHelper();
