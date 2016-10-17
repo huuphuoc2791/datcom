@@ -1,5 +1,8 @@
 <?php
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
+date_default_timezone_set("Asia/Ho_Chi_Minh");
+header("Access-Control-Allow-Origin: *"); //add this header for CORS
+header("Access-Control-Allow-Headers: Content-Type"); //add this header for CORS
 
 include_once 'common/autoload.php';
 
@@ -36,7 +39,9 @@ function UpdateMenuByDate()
 
         $menu->insert($item->menuName, $day, $item->price, $extraPrice);
     }
+
     $result = $menu->findByDay($day);
+    $result = $menu->findAll();
 
     foreach ($result as &$menuItem) {
         $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
