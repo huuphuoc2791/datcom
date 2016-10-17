@@ -101,7 +101,7 @@ function OrderForUser()
     $order->deleteByUserId($userId);
     $menuItems = $postedData->data->menuItems;
     foreach ($menuItems as $item) {
-        $order->insert($gui, $userId, $item->menuId, $item->isMainItem);
+        $order->insert($gui, $userId, $item->menuId, !$item->isMainItem);
 
     }
     echo json_encode($returnMessage);
