@@ -59,6 +59,12 @@ class Menu
         $result = $db->executeStatement($query);
         return $result;
     }
+    public function findByFoodName($foodName){
+        $db = new DBHelper();
+        $query = "select * from menu WHERE food_name = '$foodName'";
+        $result = $db->executeStatement($query);
+        return $result;
+    }
     
 }
 

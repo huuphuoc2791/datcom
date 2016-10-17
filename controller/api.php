@@ -35,13 +35,15 @@ function UpdateMenuByDate()
     $day = CommonFunction::convertDayOfWeek();
     $menuItems = $postedData->data->menuItems;
     $menu = new Menu();
+    $result = array();
     foreach ($menuItems as $item) {
-
         $menu->insert($item->menuName, $day, $item->price, $extraPrice);
+
+        $result = array_merge($result,$menu->findByFoodName($item->menuName));
     }
 
-    $result = $menu->findByDay($day);
-    $result = $menu->findAll();
+//    $result = $menu->findByDay($day);
+//    $result = $menu->findAll();
 
     foreach ($result as &$menuItem) {
         $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
