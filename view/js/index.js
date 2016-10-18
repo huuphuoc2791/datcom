@@ -6,9 +6,9 @@ var MAIN_ITEM_CLASS = 'menu_detail_item_main';
 var SUB_ITEM_CLASS = 'menu_detail_item_sub';
 var MAIN_SUB_ITEM_ALL_CLASS = MAIN_ITEM_CLASS + ' ' + SUB_ITEM_CLASS;
 
-$(document).ready(function() {
+$(document).ready(function () {
     //event
-    $("input[name=selectGroup]").on('click', function(event) {
+    $("input[name=selectGroup]").on('click', function (event) {
         $("form")[0].submit();
     });
 
@@ -16,14 +16,14 @@ $(document).ready(function() {
     $("#showSmsPopup").on('click', showSmsPopup_Click);
 
 
-    $("#btnCopyToClipboard").on('mouseout', function() {
+    $("#btnCopyToClipboard").on('mouseout', function () {
         var answer = document.getElementById("btnCopyToClipboard");
         answer.innerHTML = 'Copy';
     });
 
     var text = '';
     var monanElements = $(".monan [data-name=thuc-don]");
-    $.each(monanElements, function(index, item) {
+    $.each(monanElements, function (index, item) {
         var monan1 = $(item).attr('data-title');
 
         var monan2 = monan1.toLowerCase();
@@ -39,7 +39,7 @@ $(document).ready(function() {
     DC.Data.Menu.UpdateMenuByDate({
         menuDate: new Date(),
         menuItems: dsMonAn
-    }, function(result) {
+    }, function (result) {
         dsMonAn = result.data.menuItems;
         //create table
         createTableForGroup();
@@ -54,12 +54,12 @@ function resetOrderEvent(event) {
     var control = $(this);
 
     //send request to clear by group code
-    DC.Data.Menu.ClearAllOderByGroupCode({groupCode: groupCode}, function(result) {
+    DC.Data.Menu.ClearAllOderByGroupCode({groupCode: groupCode}, function (result) {
         console.log('done');
         if (result.responseCode == 0) {
             //recalculate
             //1. update GUI
-            $.each(dsUsers, function(userIndex, user) {
+            $.each(dsUsers, function (userIndex, user) {
                 clearMainAndSubItemByUsername(user.username);
                 $("#order_menu .userCheckOrder[type=checkbox]").removeAttr('checked');
             });
@@ -79,16 +79,18 @@ function showSmsPopup_Click(event) {
     var countTotal = 0;
     var countExtraTotal = 0;
 
-    $.each(orderedItems, function(index, item) {
+    $.each(orderedItems, function (index, item) {
         var count = item.count;
         if (count > 0) {
             sms += count + ' ' + item.shortFoodName + ', ';
         }
         countTotal = countTotal + count;
     });
-    sms = sms.substr(0, sms.length - 2);
-    sms = sms + '. Them: ';
-    $.each(orderedItems, function(index, item) {
+    if (countTotal > 0) {
+        sms = sms.substr(0, sms.length - 2);
+        sms = sms + '. Them: ';
+    }
+    $.each(orderedItems, function (index, item) {
         var countExtra = item.countExtra;
         if (countExtra > 0) {
             sms += countExtra + ' ' + item.shortFoodName + ', ';
@@ -101,14 +103,18 @@ function showSmsPopup_Click(event) {
     if (countExtraTotal == 0) {
         sms = sms.substr(0, sms.length - 6);
     }
-    sms = sms.substr(0, sms.length - 2);
-    sms = sms + '. \n';
-    sms = sms + 'Tong cong: ' + countTotal + ' phan';
-    if (countExtraTotal > 0) {
-        sms = sms + ' + ' + countExtraTotal + ' phan them';
-    }
-    sms = sms + '. Thanks chi!';
+    if (countTotal > 0) {
+        sms = sms.substr(0, sms.length - 2);
+        sms = sms + '. \n';
+        sms = sms + 'Tong cong: ' + countTotal + ' phan';
 
+        if (countExtraTotal > 0) {
+            sms = sms + ' + ' + countExtraTotal + ' phan them';
+        }
+        sms = sms + '. Thanks chi!';
+    } else {
+        sms ='Bạn chưa chọn món!';
+    }
     var smsMessage = sms;
     sms = sms.ReplaceAll('\n', '<br/>');
 
@@ -116,10 +122,11 @@ function showSmsPopup_Click(event) {
     $("#sms_content").html(sms);
 
     //set the qr code with phone number = empty
-    getSmsQrCode({phoneNumber: '', message: smsMessage}, function(data) {
-        setImageBase64(data, 'smsQrCode')
-    });
-
+    if (countTotal > 0) {
+        getSmsQrCode({phoneNumber: '0902702566', message: smsMessage}, function (data) {
+            setImageBase64(data, 'smsQrCode')
+        });
+    }
     $('#smsPopup').modal('show');
 }
 
@@ -131,7 +138,7 @@ function getSmsQrCode(smsData, callback) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     // xmlhttp.setRequestHeader('Access-Control-Allow-Origin', "*");
     // xmlhttp.setRequestHeader('Access-Control-Allow-Headers', "x-requested-with, x-requested-by");
-    xmlhttp.onload = function() {
+    xmlhttp.onload = function () {
         callback(xmlhttp);
     };
     // xmlhttp.send('phoneNumber=' + encodeURIComponent(smsData.phoneNumber) + '&message=' + encodeURIComponent(smsData.message));
@@ -139,7 +146,7 @@ function getSmsQrCode(smsData, callback) {
     // xmlhttp.open("POST", HOST_HINH_API_URL);
     // xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     // xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xmlhttp.onload = function() {
+    xmlhttp.onload = function () {
         PMCommonFunction.RunCallback(callback, xmlhttp.responseText);
     };
     // xmlhttp.send('message=' + encodeURIComponent(url));
@@ -155,7 +162,7 @@ function setImageBase64(base64, qrCodeImage) {
 function getMenuItemByMenuRow(menuRow) {
     var menuId = parseInt($(menuRow).attr('menu_id'));
 
-    return dsMonAn.filter(function(item) {
+    return dsMonAn.filter(function (item) {
         return item.id == menuId;
     })[0];
 }
@@ -176,7 +183,7 @@ function getOrderedItemsByUsername(username) {
 
     var orderedItems = [];
     //travel all the checked, get the menu then return
-    $.each(checkedItems, function(index, checkedItem) {
+    $.each(checkedItems, function (index, checkedItem) {
         var currentItem = {};
         var currentMenuItemRow = $(checkedItem).parents('tr.detail_order_menu[menu_id]');
         currentItem.item = getMenuItemByMenuRow($(currentMenuItemRow));
@@ -221,10 +228,10 @@ function getCheckboxByMenuIdAndUserId(menuId, userId) {
     return $("tr.detail_order_menu[menu_id='" + menuId + "'] td.detail_order_user_item[user_id='" + userId + "'] input[type=checkbox]");
 }
 function createTableForGroup() {
-    createHeaderByGroupCode(function() {
-        createDsMonAn(function() {
+    createHeaderByGroupCode(function () {
+        createDsMonAn(function () {
             //add event
-            $(".userCheckOrder").on('change', function(event) {
+            $(".userCheckOrder").on('change', function (event) {
                 var control = $(this);
                 var checked = control.is(":checked");
                 var username = control.parents('td.detail_order_user_item[username]').attr('username');
@@ -260,7 +267,7 @@ function createTableForGroup() {
                     }
                     else {
                         //this checkbox is unchecked. if no main item, recalculate
-                        if (orderedItems.filter(function(orderedItem) {
+                        if (orderedItems.filter(function (orderedItem) {
                                 return orderedItem.isMainItem == 1
                             }).length == 0) {
                             //set the first = main, others = sub
@@ -285,7 +292,7 @@ function createTableForGroup() {
 
                 var newOrderedItems = getOrderedItemsByUsername(username);
 
-                $.each(newOrderedItems, function(index, newOrderedItem) {
+                $.each(newOrderedItems, function (index, newOrderedItem) {
                     newOrderedItem.isMainItem = newOrderedItem.isMainItem == 1;
                     newOrderedItem.menuId = newOrderedItem.item.id;
                     newOrderedItem.item = undefined;
@@ -299,14 +306,14 @@ function createTableForGroup() {
                     username: username, // not use
                     userId: userId,
                     menuItems: newOrderedItems
-                }, function(result) {
+                }, function (result) {
                     calculateAndFillSummaryOrderedMenuItems();
                     console.log(result);
                 });
             });
 
             //calculate the data before
-            fillOrderedItemForUsers(function() {
+            fillOrderedItemForUsers(function () {
                 calculateAndFillSummaryOrderedMenuItems();
             })
         });
@@ -321,7 +328,7 @@ function createDsMonAn(callback) {
         + "<td class='table_order_monan'>${monan}</td>"
         + "<td style='text-align: center'>${gia}</td>";
 
-    $.each(dsUsers, function(index, user) {
+    $.each(dsUsers, function (index, user) {
         var aUserItemTemplate = userTemplate;
         aUserItemTemplate = aUserItemTemplate.replace('${username}', user.username);
         aUserItemTemplate = aUserItemTemplate.replace('${userId}', user.id);
@@ -330,7 +337,7 @@ function createDsMonAn(callback) {
 
     rowtemplate += "</tr>";
 
-    $.each(dsMonAn, function(index, monan) {
+    $.each(dsMonAn, function (index, monan) {
         itemString = rowtemplate;
 
         itemString = itemString.replace('${menuId}', monan.id);
@@ -353,7 +360,7 @@ function createDsMonAn_Summary(callback) {
         + "<td class='table_summary_amount_extra' style='text-align: center'>0</td>"
     rowtemplate += "</tr>";
 
-    $.each(dsMonAn, function(index, monan) {
+    $.each(dsMonAn, function (index, monan) {
         itemString = rowtemplate;
 
         itemString = itemString.replace('${menuId}', monan.id);
@@ -387,7 +394,7 @@ function createDsMonAn_Summary(callback) {
 function getSummaryOrderedMenuItems() {
     //first copy from ds monan
     var summaryOrderedMenuItems = [];
-    $.each(dsMonAn, function(index, monan) {
+    $.each(dsMonAn, function (index, monan) {
         summaryOrderedMenuItems.push({
             menuId: monan.id,
             count_main: 0,
@@ -398,14 +405,14 @@ function getSummaryOrderedMenuItems() {
     });
 
     //for each user calculate the data
-    $.each(dsUsers, function(index, user) {
+    $.each(dsUsers, function (index, user) {
         var orderedUserItems = getOrderedItemsByUsername(user.username);
 
         //return = [{item:{id,menuName,price,extra_price},isMainItem:int}]
         //isMainItem = 1: main, 0: sub, -1: not set
 
-        $.each(orderedUserItems, function(indexUser, orderedUserItem) {
-            var summaryOrderedMenuItem = summaryOrderedMenuItems.filter(function(item) {
+        $.each(orderedUserItems, function (indexUser, orderedUserItem) {
+            var summaryOrderedMenuItem = summaryOrderedMenuItems.filter(function (item) {
                 return item.menuId == orderedUserItem.item.id;
             })[0];
 
@@ -431,7 +438,7 @@ function calculateAndFillSummaryOrderedMenuItems() {
     var itemAmount = 0;
     var itemExtraCount = 0;
     var itemExtraAmount = 0;
-    $.each(summaryOrderedMenuItems, function(index, summaryOrderedMenuItem) {
+    $.each(summaryOrderedMenuItems, function (index, summaryOrderedMenuItem) {
         var summaryMenuRow = $("tr.summary_order_menu[menu_id='" + summaryOrderedMenuItem.menuId + "']");
 
         itemCount += summaryOrderedMenuItem.count_main
@@ -459,13 +466,13 @@ function calculateAndFillSummaryOrderedMenuItems() {
 }
 
 function createHeaderByGroupCode(callback) {
-    DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function(result) {
+    DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function (result) {
         if (result.data.code == 0) {
             dsUsers = result.data.users;
 
             var itemString = '';
 
-            $.each(dsUsers, function(index, user) {
+            $.each(dsUsers, function (index, user) {
                 itemString = '<th style="text-align: center">' + user.fullName + '</th>';
                 $("#order_menu thead tr:first-child").append(itemString);
             });
@@ -487,9 +494,9 @@ function createHeaderByGroupCode(callback) {
 
 //this function is to travel all the user and check if the item is ordered (main or extra) or not
 function fillOrderedItemForUsers(callback) {
-    $.each(dsUsers, function(indexUser, user) {
+    $.each(dsUsers, function (indexUser, user) {
         var userId = user.id;
-        $.each(user.menuItems, function(indexItem, item) {
+        $.each(user.menuItems, function (indexItem, item) {
             var menuId = item.menu_id;
             var isMainItem = item.extra_food != '1';
             var checkbox = getCheckboxByMenuIdAndUserId(menuId, userId);
@@ -514,7 +521,7 @@ function fillOrderedItemForUsers(callback) {
 function getSummarySmsText() {
     var summaryOrderedMenuItemRows = $('#summary_menu tr.summary_order_menu');
 
-    $.each(summaryOrderedMenuItemRows, function(index, row) {
+    $.each(summaryOrderedMenuItemRows, function (index, row) {
         var shortFoodName = $(row).attr('short_food_name');
         console.log(shortFoodName);
     });
@@ -526,7 +533,7 @@ function getSummarySmsData() {
     var summaryOrderedMenuItemRows = $('#summary_menu tr.summary_order_menu');
 
     var orderedMenuItems = [];
-    $.each(summaryOrderedMenuItemRows, function(index, row) {
+    $.each(summaryOrderedMenuItemRows, function (index, row) {
         var menuId = parseInt($(row).attr('menu_id'));
         var shortFoodName = $(row).attr('short_food_name');
         var count = parseInt($('td.table_summary_count_main', $(row)).html());
