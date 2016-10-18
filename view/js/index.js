@@ -113,7 +113,7 @@ function showSmsPopup_Click(event) {
         }
         sms = sms + '. Thanks chi!';
     } else {
-        sms ='Bạn chưa chọn món!';
+        sms = 'Bạn chưa chọn món!';
     }
     var smsMessage = sms;
     sms = sms.ReplaceAll('\n', '<br/>');
@@ -126,6 +126,9 @@ function showSmsPopup_Click(event) {
         getSmsQrCode({phoneNumber: '0902702566', message: smsMessage}, function (data) {
             setImageBase64(data, 'smsQrCode')
         });
+        $("#smsQrCode").show();
+    } else {
+        $("#smsQrCode").hide();
     }
     $('#smsPopup').modal('show');
 }
