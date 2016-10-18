@@ -5,8 +5,8 @@ var groupCode = GROUP_CODE;
 var MAIN_ITEM_CLASS = 'menu_detail_item_main';
 var SUB_ITEM_CLASS = 'menu_detail_item_sub';
 var MAIN_SUB_ITEM_ALL_CLASS = MAIN_ITEM_CLASS + ' ' + SUB_ITEM_CLASS;
-
-$(document).ready(function () {
+var PHONE_NUMBER = '0902702566';
+$(document).ready(function() {
     //event
     $("input[name=selectGroup]").on('click', function (event) {
         $("form")[0].submit();
@@ -123,8 +123,8 @@ function showSmsPopup_Click(event) {
 
     //set the qr code with phone number = empty
     if (countTotal > 0) {
-        getSmsQrCode({phoneNumber: '0902702566', message: smsMessage}, function (data) {
-            setImageBase64(data, 'smsQrCode')
+        getSmsQrCode({phoneNumber: PHONE_NUMBER, message: smsMessage}, function (data) {
+            setImageBase64(data, 'smsQrCode');
         });
         $("#smsQrCode").show();
     } else {
