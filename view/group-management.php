@@ -25,7 +25,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
         //update group
         if (isset($_POST['groupName'])) {
             $groupName = CommonFunction::getPostValue('groupName');
-            (new Group())->update($groupId, $groupName, $groupCode);
+            (new Group())->updateWithoutHash($groupId, $groupName, $groupCode);
 
             //get group again
             $groupRows = (new Group())->findByGroupCodeAndHash($groupCode, $hash);
@@ -55,8 +55,9 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                 if ($user['group_id'] != $groupId) {
                     $error = 'Invalid data';
                 } else {
-                    //update
-                    (new User())->updateDataById($userId, $fullname, $email, $phone);
+                    //update $test =
+                    $username = $userRows[0]['username'];
+                    (new User())->update($userId,$username,$fullname,$groupId, $email, $phone);
                     $success = 'Tài khoản được cập nhật thành công';
                 }
             }

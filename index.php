@@ -108,7 +108,6 @@ $content = file_get_contents($page);
     <div class="col-sm-10" id="menu" style="text-align: center; display: none;">
 
     </div>
-    <div style="clear: both"></div>
 
 
     <div class="col-lg-12" style="clear: both">
@@ -120,7 +119,7 @@ $content = file_get_contents($page);
                 <div class="input-group-addon"><span class="fa fa-users"></span></div>
 
                 <input type="text" class="form-control" name="groupCode"
-                       placeholder="Chọn mã nhóm" value="<? //= $groupCode ?>">
+                       placeholder="Chọn mã nhóm" value="<?= $groupCode ?>">
                 <span class="input-group-btn">
          <button type="submit" name="selectGroup" value="submit" class="btn btn-primary"
                  autocomplete="off" <span class="fa fa-check"></span>&nbsp;Chọn
