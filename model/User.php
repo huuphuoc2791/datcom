@@ -71,6 +71,14 @@ class User
         $query = "UPDATE users SET fullname ='$fullName' WHERE id=$id";
         $db->executeStatement($query);
     }
+    public function findByUsername($username)
+    {
+        $db = new DBHelper();
+        $query = "select * from users WHERE username ='$username'";
+        $result = $db->executeStatement($query);
+        return $result;
+
+    }
     
     
 }
