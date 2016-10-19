@@ -21,6 +21,7 @@ class DBHelper
         try {
             $conn = new PDO("mysql:host=$this->hostname;dbname=$this->database", $this->username, $this->password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $conn->exec("set names utf8");
             $stmt = $conn->prepare($statement);
             $stmt->execute();
 

@@ -195,7 +195,7 @@ $content = file_get_contents($page);
                     <p id="sms_content" style="margin-left: 10px;"></p>
                 </div>
                 <div class="row">
-                    <img id="smsQrCode" style="width: 400px;height: 400px; margin-left: 10px"/>
+                    <img id="smsQrCode" style="width: 300px;height: 300px;display: block; margin-left: auto; margin-right: auto;"/>
                 </div>
             </div>
             <div class="modal-footer form-inline">

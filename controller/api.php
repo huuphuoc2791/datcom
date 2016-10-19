@@ -108,21 +108,21 @@ function OrderForUser()
 
 }
 
-function UpdateFullName()
-{
-    $fullNameListKd = array('Son 1', 'Son 2', 'Tao', 'Phuc', 'Dung', 'Minh', 'Phu', 'Loc', 'Phuoc', 'Han', 'Tanuj');
-    $fullNameList = array('Sơn 1', 'Sơn 2', 'Tảo', 'Phúc', 'Dũng', 'Minh', 'Phú', 'Lộc', 'Phước', 'Hân', 'Tanuj');
-    $user = new User();
-    for ($i = 0; $i < count($fullNameListKd); $i++) {
-        $fullnameKd = $fullNameListKd[$i];
-        $fullname = $fullNameList[$i];
-        $user->updateFullNameByFullNameKd($fullnameKd, $fullname);
-    }
-
-
-//    $user->updateFullNameById($userId, $fullName);
-
-}
+//function UpdateFullName()
+//{
+//    $fullNameListKd = array('Son 1', 'Son 2', 'Tao', 'Phuc', 'Dung', 'Minh', 'Phu', 'Loc', 'Phuoc', 'Han', 'Tanuj');
+//    $fullNameList = array('Sơn 1', 'Sơn 2', 'Tảo', 'Phúc', 'Dũng', 'Minh', 'Phú', 'Lộc', 'Phước', 'Hân', 'Tanuj');
+//    $user = new User();
+//    for ($i = 0; $i < count($fullNameListKd); $i++) {
+//        $fullnameKd = $fullNameListKd[$i];
+//        $fullname = $fullNameList[$i];
+//        $user->updateFullNameByFullNameKd($fullnameKd, $fullname);
+//    }
+//
+//
+////    $user->updateFullNameById($userId, $fullName);
+//
+//}
 
 function ClearAllOderByGroupCode()
 {
