@@ -11,7 +11,7 @@ class Group
     public $name;
     public $code;
 
-    public function insert($code, $name,  $hash)
+    public function insert($code, $name, $hash)
     {
         $db = new DBHelper();
         $query = "insert into `group`(code, name, hash) VALUES ('$code','$name','$hash')";
@@ -28,10 +28,16 @@ class Group
         $db->executeStatement($query);
     }
 
-    public function update($id, $name, $code,$hash)
+    public function update($id, $name, $code, $hash)
     {
         $db = new DBHelper();
         $query = "UPDATE `group` SET name = '$name',code = '$code', hash = '$hash' WHERE id = $id";
+        $db->executeStatement($query);
+    }
+    public function updateWithoutHash($id, $name, $code)
+    {
+        $db = new DBHelper();
+        $query = "UPDATE `group` SET name = '$name',code = '$code' WHERE id = $id";
         $db->executeStatement($query);
     }
 

@@ -111,22 +111,25 @@ $content = file_get_contents($page);
     <div style="clear: both"></div>
 
 
-    <div style="clear: both"></div>
-    <form class="form-inline" style="margin-bottom: 10px; float: right" method="post" action="/datcom">
-        <div class="form-group">
-            <label for="exampleInputName2">Mã nhóm:</label>
-            <div class="input-group">
+    <div class="col-lg-12" style="clear: both">
+        <label style="text-align: left; font-size: 22px;"><?php $groups = (new Group())->findByGroupCode($groupCode);
+            echo $groups[0]["name"]; ?></label>
+
+        <form class="navbar-form navbar-right" role="search">
+            <div class="input-group form-group">
                 <div class="input-group-addon"><span class="fa fa-users"></span></div>
 
                 <input type="text" class="form-control" name="groupCode"
-                       placeholder="Chọn mã nhóm" value="<?= $groupCode ?>">
+                       placeholder="Chọn mã nhóm" value="<? //= $groupCode ?>">
+                <span class="input-group-btn">
+         <button type="submit" name="selectGroup" value="submit" class="btn btn-primary"
+                 autocomplete="off" <span class="fa fa-check"></span>&nbsp;Chọn
+                    </button>
+      </span>
             </div>
-            <button type="submit" name="selectGroup" value="submit" class="btn btn-primary"
-                    autocomplete="off" style="float: right; margin-left: 5px;"><span class="fa fa-check"></span>&nbsp;Chọn
-            </button>
-        </div>
-    </form>
 
+        </form>
+    </div>
     <div style="clear: both"></div>
     <div class="row message_no_user" style="display: none;">
         <div class="col-sm-10 message">
@@ -195,7 +198,8 @@ $content = file_get_contents($page);
                     <p id="sms_content" style="margin-left: 10px;"></p>
                 </div>
                 <div class="row">
-                    <img id="smsQrCode" style="width: 300px;height: 300px;display: block; margin-left: auto; margin-right: auto;"/>
+                    <img id="smsQrCode"
+                         style="width: 300px;height: 300px;display: block; margin-left: auto; margin-right: auto;"/>
                 </div>
             </div>
             <div class="modal-footer form-inline">
