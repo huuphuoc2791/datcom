@@ -20,6 +20,8 @@ $content = file_get_contents($page);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Đặt cơm</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/datcom/view/images/foods.png"/>
+    <link rel="image_src" href="/datcom/view/images/foods.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -33,7 +35,6 @@ $content = file_get_contents($page);
     <![endif]-->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
 
     <style type="text/css">
         .sbzoff {
