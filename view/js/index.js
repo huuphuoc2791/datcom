@@ -323,12 +323,23 @@ function createTableForGroup() {
     });
 }
 
+function frozenColumn() {
+    var $table = $('#order_menu');
+    var $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column');
+
+    $fixedColumn.find('th:not(:first-child),td:not(:first-child)').remove();
+
+    $fixedColumn.find('tr').each(function (i, elem) {
+        $(this).height($table.find('tr:eq(' + i + ')').height());
+    });
+}
+
 function createDsMonAn(callback) {
     var itemString = '';
     //template for one row
     var userTemplate = "<td class='detail_order_user_item' user_id='${userId}' username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
     var rowtemplate = "<tr class='detail_order_menu' menu_id='${menuId}'>"
-        + "<td class='table_order_monan'>${monan}</td>"
+        + "<td class='table_order_monan' style='background: beige'>${monan}</td>"
         + "<td style='text-align: center'>${gia}</td>";
 
     $.each(dsUsers, function (index, user) {
@@ -348,6 +359,8 @@ function createDsMonAn(callback) {
         itemString = itemString.replace('${gia}', monan.price.FormatNumber(0));
         $("#order_menu tbody").append(itemString);
     });
+
+    frozenColumn();
 
     createDsMonAn_Summary(callback);
 }

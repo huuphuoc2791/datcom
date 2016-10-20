@@ -2,16 +2,7 @@
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include 'common/autoload.php';
-
-if (!isset($_GET['groupCode'])) {
-    if (!isset($_POST['groupCode'])) {
-        $_POST['groupCode'] = 'korrin';
-    }
-    $groupCode = CommonFunction::getPostValue('groupCode');
-} else {
-    $groupCode = CommonFunction::getGetValue('groupCode');
-}
-
+$groupCode = CommonFunction::getGetValue('groupCode');
 ?>
 <!DOCTYPE html>
 <?php
@@ -62,10 +53,22 @@ $content = file_get_contents($page);
         #summary_menu tr.summary_order_menu_total {
             background-color: white !important;
         }
+        
+        .table-responsive>.fixed-column {
+            position: absolute;
+            display: inline-block;
+            width: auto;
+            border-right: 1px solid #ddd;
+        }
+        @media(min-width:768px) {
+            .table-responsive>.fixed-column {
+                display: none;
+            }
+        }
 
-        .summary_order_menu_total_cell {
-            font-weight: bold;
-            text-align: center
+
+        #order_menu.fixed-column thead tr {
+            height: 31px !important;
         }
 
     </style>
@@ -87,14 +90,14 @@ $content = file_get_contents($page);
         //assign group code here
         GROUP_CODE = '<?= $groupCode ?>';
     </script>
-    <script src="view/js/index.js?20161017"></script>
+    <script src="view/js/index.js?20161020"></script>
 </head>
 <body>
 <div class="container">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/menu.php"
+                <a class="navbar-brand" href="/"
                    style="font-weight: bold; font-size: 25px;">Trang đặt cơm</a>
             </div>
         </div>
@@ -108,7 +111,7 @@ $content = file_get_contents($page);
     <div class="col-sm-10" id="menu" style="text-align: center; display: none;">
 
     </div>
-
+   
 
     <div class="col-lg-12" style="clear: both">
         <label style="text-align: left; font-size: 22px;"><?php $groups = (new Group())->findByGroupCode($groupCode);
@@ -137,14 +140,15 @@ $content = file_get_contents($page);
     </div>
 
     <div class="table-responsive">
-        <table id="order_menu" class="table table-striped table-bordered">
+        <table id="order_menu" class="table table-striped table-bordered table-hover table-condensed">
             <thead>
             <tr>
-                <th>Thực đơn</th>
+                <th style="background: beige" >Thực đơn</th>
                 <th style="text-align: center;" class="price_header">Giá</th>
             </tr>
             </thead>
             <tbody>
+            
             </tbody>
         </table>
     </div>
@@ -210,5 +214,8 @@ $content = file_get_contents($page);
 
     </div>
 </div>
+<script>
+    
+</script>
 </body>
 </html>
