@@ -339,7 +339,7 @@ function createDsMonAn(callback) {
     //template for one row
     var userTemplate = "<td class='detail_order_user_item' user_id='${userId}' username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
     var rowtemplate = "<tr class='detail_order_menu' menu_id='${menuId}'>"
-        + "<td class='table_order_monan' style='background: beige'>${monan}</td>"
+        + "<td class='table_order_monan'>${monan}</td>"
         + "<td style='text-align: center'>${gia}</td>";
 
     $.each(dsUsers, function (index, user) {

@@ -45,9 +45,15 @@ $content = file_get_contents($page);
             display: none !important;
         }
 
+        
         #order_menu.table-striped > tbody > tr:nth-of-type(odd),
         #summary_menu.table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: rgba(131, 165, 244, 0.13);
+            background-color: rgb(214, 231, 244);
+        }
+
+        #order_menu.table-striped > tbody > tr:nth-of-type(even),
+        #summary_menu.table-striped > tbody > tr:nth-of-type(even) {
+            background-color: white;
         }
 
         #summary_menu tr.summary_order_menu_total {
@@ -143,7 +149,7 @@ $content = file_get_contents($page);
         <table id="order_menu" class="table table-striped table-bordered table-hover table-condensed">
             <thead>
             <tr>
-                <th style="background: beige" >Thực đơn</th>
+                <th style="background: white;" >Thực đơn</th>
                 <th style="text-align: center;" class="price_header">Giá</th>
             </tr>
             </thead>
