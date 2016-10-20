@@ -4,4 +4,6 @@ RewriteEngine On
     RewriteRule ^api$    datcom/controller/api.php    [NC,L]
 
     #guid template = [a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}
-    RewriteRule ^group-management/([a-z0-9]+)/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})$    datcom/view/group-management.php?groupCode=$1&hash=$2    [NC,L]
+    RewriteRule ^group-management/([a-z0-9]+)/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})$    datcom/management/group-management.php?groupCode=$1&hash=$2    [NC,L]
+    RewriteRule ^link-group$ datcom/management/link.php
+    RewriteRule ^create-group$ datcom/management/create-group.php
