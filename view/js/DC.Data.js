@@ -132,7 +132,31 @@ DC.Data.Menu = {
             },true,'http://hosthinh.com/api/smsQrCode/'
         );
     },
+
+
 };
+
+DC.Data.Group = {
+    /*-- CheckGroupPassword --*/
+    CheckGroupPassword: function(groupData, callback) {
+        //groupData = {groupCode,password}
+        var request = new RequestMessage();
+        request.methodName = 'CheckGroupPassword';
+        request.data = groupData;
+
+        DC.Data.Common.httpRequest(
+            request,
+            function(data) {
+                if (typeof (callback) === "function") {
+                    callback(data);
+                }
+            },
+            function(data) {
+                console.log("Error in request:" + "CheckGroupPassword");
+            }
+        );
+    },
+}
 
 DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {
     //groupData = {groupCode}

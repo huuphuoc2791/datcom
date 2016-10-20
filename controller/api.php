@@ -24,11 +24,12 @@ if ($methodName == 'UpdateMenuByDate') {
 
 } elseif ($methodName == 'ClearAllOderByGroupCode') {
     ClearAllOderByGroupCode();
+} elseif ($methodName == 'CheckGroupPassword') {
+    CheckGroupPassword();
 }
 
 //change: the menu return has one more column call short_food_name
-function UpdateMenuByDate()
-{
+function UpdateMenuByDate() {
     global $returnMessage;
     global $postedData;
     $extraPrice = '25000';
@@ -39,15 +40,16 @@ function UpdateMenuByDate()
     $result = array();
     $i = 1;
     foreach ($menuItems as $item) {
-//        $menu->insert($item->menuName, $day, $item->price, $extraPrice);
+        //        $menu->insert($item->menuName, $day, $item->price, $extraPrice);
         $menu->insertAll($i, $item->menuName, $day, $item->price, $extraPrice);
         $i++;
 
-        $result = array_merge($result, $menu->findByFoodName($item->menuName));
+        $menuRows = $menu->findByFoodName($item->menuName);
+        $result = array_merge($result, $menuRows);
     }
 
-//    $result = $menu->findByDay($day);
-//    $result = $menu->findAll();
+    //    $result = $menu->findByDay($day);
+    //    $result = $menu->findAll();
 
     foreach ($result as &$menuItem) {
         $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
@@ -57,8 +59,7 @@ function UpdateMenuByDate()
     echo json_encode($returnMessage);
 }
 
-function GetUsersByGroupCode()
-{
+function GetUsersByGroupCode() {
     global $returnMessage;
     global $postedData;
     $groupCode = $postedData->data->groupCode;
@@ -91,8 +92,7 @@ function GetUsersByGroupCode()
 
 }
 
-function OrderForUser()
-{
+function OrderForUser() {
     global $returnMessage;
     global $postedData;
     $order = new Order();
@@ -124,8 +124,7 @@ function OrderForUser()
 //
 //}
 
-function ClearAllOderByGroupCode()
-{
+function ClearAllOderByGroupCode() {
     global $returnMessage;
     global $postedData;
 
@@ -149,8 +148,7 @@ function ClearAllOderByGroupCode()
     echo json_encode($returnMessage);
 }
 
-function AddUserForGroup()
-{
+function AddUserForGroup() {
     global $returnMessage;
     global $postedData;
 
@@ -168,8 +166,7 @@ function AddUserForGroup()
     echo json_encode($returnMessage);
 }
 
-function UpdateUserForGroup()
-{
+function UpdateUserForGroup() {
     global $returnMessage;
     global $postedData;
 
@@ -186,5 +183,19 @@ function UpdateUserForGroup()
     $groupId = $groups[0]["id"];
     $user = new User();
     $user->update($id, $username, $fullName, $groupId, $email, $phone);
+    echo json_encode($returnMessage);
+}
+
+function CheckGroupPassword() {
+    global $returnMessage;
+    global $postedData;
+
+    $groupCode = $postedData->data->groupCode;
+    $password = $postedData->data->password;
+
+    $password = Group::EncodePassword($password);
+    $groupRows = (new Group())->findByGroupCodeAndPassword($groupCode,$password);
+
+    $returnMessage->data->passwordMatched = !empty($groupRows);
     echo json_encode($returnMessage);
 }

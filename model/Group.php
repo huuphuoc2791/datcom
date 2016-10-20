@@ -74,5 +74,23 @@ class Group
         return $result;
     }
 
+    public function updatePasswordByGroupId($id, $encodedPassword)
+    {
+        $db = new DBHelper();
+        $query = "UPDATE `group` SET password = '$encodedPassword' WHERE id = $id";
+        $db->executeStatement($query);
+    }
+
+    public static function EncodePassword($password) {
+        return hash('sha1',$password);
+    }
+
+    public function findByGroupCodeAndPassword($groupCode, $password)
+    {
+        $db = new DBHelper();
+        $query = "select * from `group` WHERE code = '$groupCode' AND password = '$password'";
+        $result = $db->executeStatement($query);
+        return $result;
+    }
 
 }

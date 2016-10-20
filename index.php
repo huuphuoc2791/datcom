@@ -3,6 +3,19 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_
 
 include 'common/autoload.php';
 $groupCode = CommonFunction::getGetValue('groupCode');
+
+if (empty($groupCode)) {
+    //try post
+    $groupCode = CommonFunction::getPostValue('groupCode');
+}
+
+$group = null;
+if (!empty($groupCode)) {
+    $groupRows = (new Group())->findByGroupCode($groupCode);
+    if (!empty($groupRows)) {
+        $group = $groupRows[0];
+    }
+}
 ?>
 <!DOCTYPE html>
 <?php
@@ -46,7 +59,6 @@ $content = file_get_contents($page);
             display: none !important;
         }
 
-        
         #order_menu.table-striped > tbody > tr:nth-of-type(odd),
         #summary_menu.table-striped > tbody > tr:nth-of-type(odd) {
             background-color: rgb(214, 231, 244);
@@ -60,24 +72,31 @@ $content = file_get_contents($page);
         #summary_menu tr.summary_order_menu_total {
             background-color: white !important;
         }
-        
-        .table-responsive>.fixed-column {
+
+        .table-responsive > .fixed-column {
             position: absolute;
             display: inline-block;
             width: auto;
             border-right: 1px solid #ddd;
         }
-        @media(min-width:768px) {
-            .table-responsive>.fixed-column {
+
+        @media (min-width: 768px) {
+            .table-responsive > .fixed-column {
                 display: none;
             }
         }
-
 
         #order_menu.fixed-column thead tr {
             height: 31px !important;
         }
 
+
+
+
+        .confirmPasswordPopup_emptyPassword .confirmPassword_emptyPasswordMessage,
+        .confirmPasswordPopup_invalidPassword .confirmPassword_invalidPasswordMessage {
+            display: inherit !important;
+        }
     </style>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
@@ -89,7 +108,7 @@ $content = file_get_contents($page);
     <script src="common/common.js?20161017"></script>
     <script src="view/js/DC.Config.js?20161017"></script>
     <script src="view/js/DC.Data.Common.js?20161017"></script>
-    <script src="view/js/DC.Data.js?20161017"></script>
+    <script src="view/js/DC.Data.js?20161021"></script>
     <script src="view/js/RequestMessage.js?20161017"></script>
 
     <!-- js of page(s) -->
@@ -97,7 +116,7 @@ $content = file_get_contents($page);
         //assign group code here
         GROUP_CODE = '<?= $groupCode ?>';
     </script>
-    <script src="view/js/index.js?20161020"></script>
+    <script src="view/js/index.js?20161021-1"></script>
 </head>
 <body>
 <div class="container">
@@ -118,12 +137,12 @@ $content = file_get_contents($page);
     <div class="col-sm-10" id="menu" style="text-align: center; display: none;">
 
     </div>
-   
+
 
     <div class="col-lg-12" style="clear: both">
-        <label style="text-align: left; font-size: 22px;"><?php $groups = (new Group())->findByGroupCode($groupCode);
-            echo $groups[0]["name"]; ?></label>
-
+        <?php if (!empty($group)): ?>
+            <label style="text-align: left; font-size: 22px;"><?= $group["name"] ?></label>
+        <?php endif; ?>
         <form class="navbar-form navbar-right" role="search">
             <div class="input-group form-group">
                 <div class="input-group-addon"><span class="fa fa-users"></span></div>
@@ -150,12 +169,12 @@ $content = file_get_contents($page);
         <table id="order_menu" class="table table-striped table-bordered table-hover table-condensed">
             <thead>
             <tr>
-                <th style="background: white;" >Thực đơn</th>
+                <th style="background: white;">Thực đơn</th>
                 <th style="text-align: center;" class="price_header">Giá</th>
             </tr>
             </thead>
             <tbody>
-            
+
             </tbody>
         </table>
     </div>
@@ -221,8 +240,52 @@ $content = file_get_contents($page);
 
     </div>
 </div>
+
+<div id="confirmPasswordPopup" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Xác nhận mật khầu</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form class="form-horizontal" style="margin-bottom: 10px;">
+                            <div class="form-group">
+                                <p class="col-sm-offset-2 text-danger hidden confirmPassword_emptyPasswordMessage">Xin nhập mật khẩu</p>
+                                <p class="col-sm-offset-2 text-danger hidden confirmPassword_invalidPasswordMessage">Mật khẩu không đúng</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Mật khẩu:</label>
+                                <div class="input-group col-sm-4">
+                                    <div class="input-group-addon"><span class="fa fa-lock"></span></div>
+                                    <input id="confirmPassword_Password" type="password" class="form-control" name="password"
+                                           placeholder="Nhập mật khẩu" value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="button" id="confirmPassword_BtnConfirm" name="selectGroup" value="submit" class="col-sm-offset-2 btn btn-primary"
+                                        autocomplete="off"><span
+                                        class="fa fa-floppy-o"></span>&nbsp;Xác nhận
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer form-inline">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 <script>
-    
+
 </script>
 </body>
 </html>

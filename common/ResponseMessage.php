@@ -15,5 +15,7 @@ class ResponseMessage {
         $this->responseCode = 0;
         $this->responseMessage = '';
         $this->data = new stdClass();
+        $this->data->code = 0;
+        $this->data->message = '';
     }
 }

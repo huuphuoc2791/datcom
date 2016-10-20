@@ -79,6 +79,14 @@ class User
         return $result;
 
     }
+
+    public function findByUsernameAndGroupId($username,$groupId)
+    {
+        $db = new DBHelper();
+        $query = "select * from users WHERE username ='$username' AND group_id = '$groupId'";
+        $result = $db->executeStatement($query);
+        return $result;
+    }
     
     
 }
