@@ -40,7 +40,6 @@ function UpdateMenuByDate() {
     $result = array();
     $i = 1;
     foreach ($menuItems as $item) {
-        //        $menu->insert($item->menuName, $day, $item->price, $extraPrice);
         $menu->insertAll($i, $item->menuName, $day, $item->price, $extraPrice);
         $i++;
 

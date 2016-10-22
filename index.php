@@ -90,9 +90,6 @@ $content = file_get_contents($page);
             height: 31px !important;
         }
 
-
-
-
         .confirmPasswordPopup_emptyPassword .confirmPassword_emptyPasswordMessage,
         .confirmPasswordPopup_invalidPassword .confirmPassword_invalidPasswordMessage {
             display: inherit !important;

@@ -12,7 +12,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
     //check hash and group code
     $groupRows = (new Group())->findByGroupCodeAndHash($groupCode, $hash);
 
-    if (count($groupRows) == 0) {
+    if (empty($groupRows)) {
         $error = 'Invalid link';
         $isInvalidLink = true;
     } else {
@@ -22,8 +22,18 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
 
         //check posted data
         if (!empty($_POST)) {
+            //create new link
+            if (isset($_POST['changeLink'])) {
+                //change link -> update database then redirect to new link
+                $guid = CommonFunction::guid();
+                (new Group())->updateHashByGroupId($groupId, $guid);
+
+                header("Location: " . "/datcom/group-management/$groupCode/$guid");
+                exit;
+            }
+
             //update group
-            if (isset($_POST['groupName'])) {
+            if (isset($_POST['updateGroup'])) {
                 $groupName = CommonFunction::getPostValue('groupName');
                 $password = CommonFunction::getPostValue('password');
                 (new Group())->updateWithoutHash($groupId, $groupName, $groupCode);
@@ -223,9 +233,14 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
             </div>
 
             <div class="form-group">
-                <button type="submit" name="selectGroup" value="submit" class="col-sm-offset-2 btn btn-primary"
+                <button type="submit" name="updateGroup" value="submit" class="col-sm-offset-2 btn btn-primary"
                         autocomplete="off"><span
                         class="fa fa-floppy-o"></span>&nbsp;Lưu
+                </button>
+
+                <button type="submit" name="changeLink" value="submit" class="btn btn-primary"
+                        autocomplete="off"><span
+                        class="fa fa-link"></span>&nbsp;Tạo link mới
                 </button>
             </div>
         </form>

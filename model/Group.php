@@ -93,4 +93,13 @@ class Group
         return $result;
     }
 
+    public function updateHashByGroupId($id, $guid)
+    {
+        $db = new DBHelper();
+        $query = "UPDATE `group` SET hash = '$guid' WHERE id = $id";
+        $db->executeStatement($query);
+    }
+
+
+
 }
