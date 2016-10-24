@@ -54,6 +54,7 @@ function UpdateMenuByDate() {
         $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
     }
 
+    if (empty($result)) $result = array();
     $returnMessage->data->menuItems = $result;
     echo json_encode($returnMessage);
 }
