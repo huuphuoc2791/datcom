@@ -18,15 +18,6 @@ if (!empty($groupCode)) {
 }
 ?>
 <!DOCTYPE html>
-<?php
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
-//for test, get mon day
-//$page = "http://comnhaviet.net/thuc-don/danh-muc/thu-hai-577.html";
-$page = "http://comnhaviet.net/";
-$content = file_get_contents($page);
-?>
 <html lang="">
 <head>
     <meta charset="utf-8">
@@ -125,16 +116,6 @@ $content = file_get_contents($page);
             </div>
         </div>
     </nav>
-    <div id="comnhaviet_page" style="display: none">
-        <?= $content ?>
-    </div>
-
-
-    <!-- do not show here -->
-    <div class="col-sm-10" id="menu" style="text-align: center; display: none;">
-
-    </div>
-
 
     <div class="col-lg-12" style="clear: both">
         <?php if (!empty($group)): ?>

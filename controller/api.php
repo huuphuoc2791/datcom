@@ -13,6 +13,12 @@ if (isset($postedData->methodName)) {
     $methodName = $postedData->methodName;
 }
 
+//support get method
+if (empty($methodName)) {
+    //try the get
+    $methodName = CommonFunction::getGetValue('methodName');
+}
+
 $returnMessage = new ResponseMessage();
 if ($methodName == 'UpdateMenuByDate') {
     UpdateMenuByDate();
@@ -21,20 +27,42 @@ if ($methodName == 'UpdateMenuByDate') {
 
 } elseif ($methodName == 'OrderForUser') {
     OrderForUser();
-
 } elseif ($methodName == 'ClearAllOderByGroupCode') {
     ClearAllOderByGroupCode();
 } elseif ($methodName == 'CheckGroupPassword') {
     CheckGroupPassword();
 }
+else if ($methodName == 'test') {
+    test();
+}
+
+function test() {
+    var_dump('test');
+}
 
 //change: the menu return has one more column call short_food_name
+//change: menu is get from server side instead
 function UpdateMenuByDate() {
+
     global $returnMessage;
     global $postedData;
     $extraPrice = '25000';
+    $price = '30000';
     $day = CommonFunction::convertDayOfWeek();
     $menuItems = $postedData->data->menuItems;
+
+    //change: do not use menu from client, use from server
+    $menuNames = (new MenuController())->GetMenuFromComNhaViet();
+
+    $menuItems = array();
+    foreach ($menuNames as $menuName) {
+        $item = new stdClass();
+        $item->menuName = $menuName;
+        $item->price = $price;
+
+        $menuItems[] = $item;
+    }
+
     $menu = new Menu();
     $menu->deleteAll();
     $result = array();
@@ -194,7 +222,7 @@ function CheckGroupPassword() {
     $password = $postedData->data->password;
 
     $password = Group::EncodePassword($password);
-    $groupRows = (new Group())->findByGroupCodeAndPassword($groupCode,$password);
+    $groupRows = (new Group())->findByGroupCodeAndPassword($groupCode, $password);
 
     $returnMessage->data->passwordMatched = !empty($groupRows);
     echo json_encode($returnMessage);

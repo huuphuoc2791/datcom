@@ -23,6 +23,9 @@ spl_autoload_register(
                 'Order' => 'model/Order.php',
 
                 /*--- controller ---*/
+                'AppController' => 'controller/AppController.php',
+                'BaseController' => 'controller/BaseController.php',
+                'MenuController' => 'controller/MenuController.php',
             );
         }
         $cn = trim($class);
