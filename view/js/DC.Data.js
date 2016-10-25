@@ -156,6 +156,26 @@ DC.Data.Group = {
             }
         );
     },
+    CheckGroupByGroupCode: function(groupData, callback) {
+        //groupData = {groupCode}
+        var request = new RequestMessage();
+        request.methodName = 'CheckGroupByGroupCode';
+        request.data = groupData;
+
+        DC.Data.Common.httpRequest(
+            request,
+            function(data) {
+                if (typeof (callback) === "function") {
+                    callback(data);
+                }
+            },
+            function(data) {
+                console.log("Error in request:" + "CheckGroupByGroupCode");
+            }
+        );
+    },
+
+
 }
 
 DC.Data.Menu.GetUsersByGroupCode1 = function(groupData, callback) {

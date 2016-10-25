@@ -85,6 +85,26 @@ if (!empty($groupCode)) {
         .confirmPasswordPopup_invalidPassword .confirmPassword_invalidPasswordMessage {
             display: inherit !important;
         }
+
+        .requestGroupPopup_emptyGroup .confirmPassword_emptyGroupMessage,
+        .confirmPasswordPopup_existedGroupCode .confirmPassword_existGroupMessage,
+        .confirmPasswordPopup_validGroupCode .confirmPassword_validGroupMessage
+        {
+            display: inherit !important;
+        }
+
+        .message_error_data.message_no_member_mode,
+        .message_error_data.message_no_group_mode {
+            display: inherit !important;
+        }
+
+        .message_error_data.message_no_member_mode .message_no_member {
+            display: inherit !important;
+        }
+
+        .message_error_data.message_no_group_mode .message_no_group {
+            display: inherit !important;
+        }
     </style>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
@@ -104,7 +124,7 @@ if (!empty($groupCode)) {
         //assign group code here
         GROUP_CODE = '<?= $groupCode ?>';
     </script>
-    <script src="view/js/index.js?20161021-3"></script>
+    <script src="view/js/index.js?20161026-1"></script>
 </head>
 <body>
 <div class="container">
@@ -121,7 +141,7 @@ if (!empty($groupCode)) {
         <?php if (!empty($group)): ?>
             <label style="text-align: left; font-size: 22px;"><?= $group["name"] ?></label>
         <?php endif; ?>
-        <form class="navbar-form navbar-right" role="search" method="post">
+        <form class="navbar-form navbar-right" role="search" method="post" action="/datcom/">
             <div class="input-group form-group">
                 <div class="input-group-addon"><span class="fa fa-users"></span></div>
 
@@ -137,9 +157,13 @@ if (!empty($groupCode)) {
         </form>
     </div>
     <div style="clear: both"></div>
-    <div class="row message_no_user" style="display: none;">
-        <div class="col-sm-10 message">
-
+    <div class="row message_error_data" style="display: none; margin-bottom: 10px;">
+        <div class="col-sm-10 message_no_group" style="display: none;">
+            Nhóm chưa được tạo, xin hãy
+            <button type="button" name="requestGroup" class="btn btn-link" style="padding: 0;">tạo yêu cầu</button>
+        </div>
+        <div class="col-sm-10 message_no_member" style="display: none;">
+            Nhóm chưa có thành viên. Xin vui lòng cập nhật.
         </div>
     </div>
 
@@ -240,19 +264,71 @@ if (!empty($groupCode)) {
                                 <label class="col-sm-2 control-label">Mật khẩu:</label>
                                 <div class="input-group col-sm-4">
                                     <div class="input-group-addon"><span class="fa fa-lock"></span></div>
-                                    <input id="confirmPassword_Password" type="password" class="form-control" name="password"
+                                    <input id="confirmPassword_Password" type="password" class="form-control"
+                                           name="password"
                                            placeholder="Nhập mật khẩu" value="">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <button type="button" id="confirmPassword_BtnConfirm" name="selectGroup" value="submit" class="col-sm-offset-2 btn btn-primary"
+                                <button type="button" id="confirmPassword_BtnConfirm" name="selectGroup" value="submit"
+                                        class="col-sm-offset-2 btn btn-primary"
                                         autocomplete="off"><span
                                         class="fa fa-floppy-o"></span>&nbsp;Xác nhận
                                 </button>
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+            <div class="modal-footer form-inline">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="requestGroupPopup" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Nhập thông tin nhóm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form class="form-horizontal" style="margin-bottom: 10px;">
+                            <div class="form-group">
+                                <p class="col-sm-offset-2 text-danger hidden confirmPassword_emptyGroupMessage">Xin nhập mã nhóm</p>
+                                <p class="col-sm-offset-2 text-danger hidden confirmPassword_existGroupMessage">Mã nhóm đã tồn tại</p>
+                                <p class="col-sm-offset-2 text-danger hidden confirmPassword_validGroupMessage">Mã nhóm hợp lệ. Quét mã và gửi tin nhắn</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Mã nhóm:</label>
+                                <div class="input-group col-sm-4">
+                                    <div class="input-group-addon"><span class="fa fa-users"></span></div>
+                                    <input id="requestGroup_GroupCode" type="text" class="form-control"
+                                           name="groupCode"
+                                           placeholder="Nhập mã nhóm" value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="button" id="requestGroup_BtnConfirm" name="selectGroup" value="submit"
+                                        class="col-sm-offset-2 btn btn-primary"
+                                        autocomplete="off"><span
+                                        class="fa fa-floppy-o"></span>&nbsp;Xác nhận
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <img id="smsQrCode_RequestGroup"
+                         style="width: 300px;height: 300px;display: block; margin-left: auto; margin-right: auto;"/>
                 </div>
             </div>
             <div class="modal-footer form-inline">

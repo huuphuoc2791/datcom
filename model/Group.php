@@ -99,7 +99,4 @@ class Group
         $query = "UPDATE `group` SET hash = '$guid' WHERE id = $id";
         $db->executeStatement($query);
     }
-
-
-
 }

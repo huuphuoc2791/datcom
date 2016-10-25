@@ -31,7 +31,11 @@ if ($methodName == 'UpdateMenuByDate') {
     ClearAllOderByGroupCode();
 } elseif ($methodName == 'CheckGroupPassword') {
     CheckGroupPassword();
+} elseif ($methodName == 'CheckGroupByGroupCode') {
+    CheckGroupByGroupCode();
 }
+
+
 else if ($methodName == 'test') {
     test();
 }
@@ -227,3 +231,15 @@ function CheckGroupPassword() {
     $returnMessage->data->passwordMatched = !empty($groupRows);
     echo json_encode($returnMessage);
 }
+function CheckGroupByGroupCode() {
+    global $returnMessage;
+    global $postedData;
+
+    $groupCode = $postedData->data->groupCode;
+
+    $groupRows = (new Group())->findByGroupCode($groupCode);
+
+    $returnMessage->data->found = !empty($groupRows);
+    echo json_encode($returnMessage);
+}
+

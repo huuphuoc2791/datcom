@@ -6,6 +6,7 @@ var MAIN_ITEM_CLASS = 'menu_detail_item_main';
 var SUB_ITEM_CLASS = 'menu_detail_item_sub';
 var MAIN_SUB_ITEM_ALL_CLASS = MAIN_ITEM_CLASS + ' ' + SUB_ITEM_CLASS;
 var PHONE_NUMBER = '0902702566';
+var ADMIN_PHONE_NUMBER = '0907121981';
 $(document).ready(function() {
     //event
     $("input[name=selectGroup]").on('click', function(event) {
@@ -15,6 +16,8 @@ $(document).ready(function() {
     $("#resetOrdered").on('click', resetOrderEvent);
     $("#showSmsPopup").on('click', showSmsPopup_Click);
     $("#confirmPassword_BtnConfirm").on('click', confirmPassword_Click);
+    $("#requestGroup_BtnConfirm").on('click', confirmRequestGroup_Click);
+    $("button[name=requestGroup]").on('click', requestGroup_Click);
 
 
     $("#btnCopyToClipboard").on('mouseout', function() {
@@ -25,9 +28,16 @@ $(document).ready(function() {
     $(window).on('keypress', function(event) {
         if (checkConfirmPasswordIsShown()) {
             if (event.which == 13) {
-                //do somthing ok bac
                 event.preventDefault();
                 confirmPassword_Click(event);
+                return false;
+            }
+        }
+
+        if (checkRequestGroupIsShown()) {
+            if (event.which == 13) {
+                event.preventDefault();
+                confirmRequestGroup_Click(event);
                 return false;
             }
         }
@@ -66,16 +76,26 @@ $(document).ready(function() {
         $("#confirmPassword_Password").focus();
     });
 
-
+    $('#requestGroupPopup').modal({show: false});
+    $('#requestGroupPopup').on('shown.bs.modal', function() {
+        $("#requestGroup_GroupCode").focus();
+    });
 });
 
 function checkConfirmPasswordIsShown() {
     return ($("#confirmPasswordPopup").data('bs.modal') || {isShown: false}).isShown;
 }
+function checkRequestGroupIsShown() {
+    return ($("#requestGroupPopup").data('bs.modal') || {isShown: false}).isShown;
+}
 //event
 //change: call the confirm password
 function resetOrderEvent(event) {
     $("#confirmPasswordPopup").modal('show');
+}
+
+function requestGroup_Click(event) {
+    $("#requestGroupPopup").modal('show');
 }
 
 function resetOrderAndRecalculate() {
@@ -97,6 +117,38 @@ function resetOrderAndRecalculate() {
         }
     });
 }
+function confirmRequestGroup_Click(event) {
+    var groupCode = $("#requestGroup_GroupCode").val();
+    if (groupCode == '') {
+        console.log('empty password');
+        $("#requestGroupPopup").removeClass('requestGroupPopup_emptyGroup confirmPasswordPopup_existedGroupCode').addClass("requestGroupPopup_emptyGroup");
+        return;
+    }
+
+    var groupData = {
+        groupCode: groupCode
+    };
+
+    DC.Data.Group.CheckGroupByGroupCode(groupData, function(result) {
+        if (result.data.code == 0) {
+            if (result.data.found == false) {
+                //generate sms
+                $("#requestGroupPopup").removeClass('requestGroupPopup_emptyGroup confirmPasswordPopup_existedGroupCode').addClass('confirmPasswordPopup_validGroupCode');
+                var smsMessage = 'Yeu can tao nhom = ' + groupCode;
+                getSmsQrCode({phoneNumber: ADMIN_PHONE_NUMBER, message: smsMessage}, function(data) {
+                    setImageBase64(data, 'smsQrCode_RequestGroup');
+                });
+
+            }
+            else {
+                //invalid group
+                $("#requestGroupPopup").removeClass('requestGroupPopup_emptyGroup confirmPasswordPopup_existedGroupCode').addClass("confirmPasswordPopup_existedGroupCode");
+            }
+        }
+    });
+}
+
+
 function confirmPassword_Click(event) {
     var password = $("#confirmPassword_Password").val();
     if (password == '') {
@@ -193,6 +245,7 @@ function showSmsPopup_Click(event) {
 
 //callback get the base64image
 function getSmsQrCode(smsData, callback) {
+    //smsData = {phoneNumber,message}
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
     // xmlhttp.open("POST", 'http://hosthinh.com/api/smsQrCode/');
     xmlhttp.open("POST", 'http://hosthinh.com/api/qurl_sms');
@@ -553,15 +606,15 @@ function createHeaderByGroupCode(callback) {
 
             //in the case the group has no data of user -> show message
             if (dsUsers.length == 0) {
-                $(".message_no_user div").html('Nhóm chưa có thành viên. Xin vui lòng cập nhật.')
-                $(".message_no_user").show();
+                $(".message_error_data").addClass('message_no_member_mode');
+                $(".message_error_data").show();
             }
         }
         else if (result.data.code == 1) {
             //has no group (show the message if groupCode has data
             if (GROUP_CODE != '') {
-                $(".message_no_user div").html('Nhóm chưa được tạo, xin liên hệ người quản trị.')
-                $(".message_no_user").show();
+                $(".message_error_data").addClass('message_no_group_mode');
+                $(".message_error_data").show();
             }
         }
         PMCommonFunction.RunCallback(callback);
