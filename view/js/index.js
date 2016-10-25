@@ -53,7 +53,18 @@ $(document).ready(function() {
 //event
 //change: call the confirm password
 function resetOrderEvent(event) {
+
     $("#confirmPasswordPopup").modal('show');
+    $('.form-horizontal').on("keypress", function (e) {
+        e.preventDefault();
+        // vi du cho nay goi btOk thi call thoi
+        //kiem tra neu no nhan fim enter
+        if (e.which == 13) {
+            //do somthing ok bac
+
+        }
+        return false;
+    })
 }
 
 function resetOrderAndRecalculate() {
