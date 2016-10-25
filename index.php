@@ -116,7 +116,7 @@ if (!empty($groupCode)) {
     <script src="common/common.js?20161017"></script>
     <script src="view/js/DC.Config.js?20161017"></script>
     <script src="view/js/DC.Data.Common.js?20161017"></script>
-    <script src="view/js/DC.Data.js?20161021"></script>
+    <script src="view/js/DC.Data.js?20161026-1"></script>
     <script src="view/js/RequestMessage.js?20161017"></script>
 
     <!-- js of page(s) -->
