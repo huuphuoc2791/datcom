@@ -104,7 +104,7 @@ if (!empty($groupCode)) {
         //assign group code here
         GROUP_CODE = '<?= $groupCode ?>';
     </script>
-    <script src="view/js/index.js?20161021-1"></script>
+    <script src="view/js/index.js?20161021-3"></script>
 </head>
 <body>
 <div class="container">
@@ -121,7 +121,7 @@ if (!empty($groupCode)) {
         <?php if (!empty($group)): ?>
             <label style="text-align: left; font-size: 22px;"><?= $group["name"] ?></label>
         <?php endif; ?>
-        <form class="navbar-form navbar-right" role="search">
+        <form class="navbar-form navbar-right" role="search" method="post">
             <div class="input-group form-group">
                 <div class="input-group-addon"><span class="fa fa-users"></span></div>
 
@@ -226,7 +226,7 @@ if (!empty($groupCode)) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Xác nhận mật khầu</h4>
+                <h4 class="modal-title">Bạn muốn tạo lại?</h4>
             </div>
             <div class="modal-body">
                 <div class="row">

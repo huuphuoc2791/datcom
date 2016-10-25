@@ -1,6 +1,7 @@
 <?php
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../'. PATH_SEPARATOR . '../../../');
 include_once ('environment.php');
+include_once ('constants.php');
 
 // @codingStandardsIgnoreFile
 // @codeCoverageIgnoreStart

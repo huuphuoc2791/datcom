@@ -242,6 +242,10 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                         autocomplete="off"><span
                         class="fa fa-link"></span>&nbsp;Tạo link mới
                 </button>
+
+                <a class="btn btn-success" href="<?= ROOT_URL ?>/datcom/?groupCode=<?= $groupCode ?>"><span
+                        class="fa fa-cutlery"></span>&nbsp;Đặt món
+                </a>
             </div>
         </form>
 

@@ -10,7 +10,7 @@ $groups = (new Group())->findByGroupCode($groupCode);
 $group = $groups[0];
 $hash =$group['hash'];
 //$link = 'http://localhost/datcom/group-management/';
-$link = 'http://www.ple-server.me/datcom/group-management/';
+$link = ROOT_URL . '/datcom/group-management/';
 if($groupCode==''){
     $link='';
 }else{

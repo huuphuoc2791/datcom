@@ -22,6 +22,17 @@ $(document).ready(function() {
         answer.innerHTML = 'Copy';
     });
 
+    $(window).on('keypress', function(event) {
+        if (checkConfirmPasswordIsShown()) {
+            if (event.which == 13) {
+                //do somthing ok bac
+                event.preventDefault();
+                confirmPassword_Click(event);
+                return false;
+            }
+        }
+    });
+
     var text = '';
     var monanElements = $(".monan [data-name=thuc-don]");
     $.each(monanElements, function(index, item) {
@@ -47,24 +58,24 @@ $(document).ready(function() {
     });
 
     $('#smsPopup').modal({show: false});
+
     $('#confirmPasswordPopup').modal({show: false});
+
+    //event to focus the input when the popup is shown
+    $('#confirmPasswordPopup').on('shown.bs.modal', function() {
+        $("#confirmPassword_Password").focus();
+    });
+
+
 });
 
+function checkConfirmPasswordIsShown() {
+    return ($("#confirmPasswordPopup").data('bs.modal') || {isShown: false}).isShown;
+}
 //event
 //change: call the confirm password
 function resetOrderEvent(event) {
-
     $("#confirmPasswordPopup").modal('show');
-    $('.form-horizontal').on("keypress", function (e) {
-        e.preventDefault();
-        // vi du cho nay goi btOk thi call thoi
-        //kiem tra neu no nhan fim enter
-        if (e.which == 13) {
-            //do somthing ok bac
-
-        }
-        return false;
-    })
 }
 
 function resetOrderAndRecalculate() {
