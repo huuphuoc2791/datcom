@@ -499,11 +499,11 @@ function createDsMonAn_Summary(callback) {
 
     var totalRowTemplate = "<tr class='summary_order_menu_total'>"
         + "<td class='summary_order_menu_total_cell' style='width: 115px;'>Tổng cộng</td>"
-        + "<td class='summary_order_menu_total_cell summary_order_menu_total_amount' style='min-width: 115px;'></td>"
-        + "<td class='summary_order_menu_total_cell summary_order_menu_total_count_ordered_cell'></td>"
-        + "<td class='summary_order_menu_total_cell summary_order_menu_total_amount_ordered_cell'></td>"
-        + "<td class='summary_order_menu_total_cell summary_order_menu_total_extra_count_ordered_cell'></td>"
-        + "<td class='summary_order_menu_total_cell summary_order_menu_total_extra_amount_ordered_cell'></td>"
+        + "<td class='summary_order_menu_total_cell summary_order_menu_total_amount' style='min-width: 115px;text-align: center; font-weight: bold;'></td>"
+        + "<td class='summary_order_menu_total_cell summary_order_menu_total_count_ordered_cell' style='text-align: center; font-weight: bold;'></td>"
+        + "<td class='summary_order_menu_total_cell summary_order_menu_total_amount_ordered_cell' style='text-align: center; font-weight: bold;'></td>"
+        + "<td class='summary_order_menu_total_cell summary_order_menu_total_extra_count_ordered_cell' style='text-align: center; font-weight: bold;'></td>"
+        + "<td class='summary_order_menu_total_cell summary_order_menu_total_extra_amount_ordered_cell' style='text-align: center; font-weight: bold;'></td>"
         + "</tr>";
     $("#summary_menu tbody").append(totalRowTemplate);
 
