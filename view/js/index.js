@@ -64,7 +64,9 @@ $(document).ready(function() {
     }, function(result) {
         dsMonAn = result.data.menuItems;
         //create table
-        createTableForGroup();
+        createTableForGroup(function() {
+            startAutoSync(5000);
+        });
     });
 
     $('#smsPopup').modal({show: false});
@@ -335,13 +337,26 @@ function clearMainAndSubItemByUsername(username) {
     clearMainAndSubItemByCheckbox(checkboxes);
 }
 
+function clearMainAndSubItemAndCheckboxByAllUsername(username) {
+    //get all the checkbox (no matter if the checkbox is checked or not)
+    var checkboxes = $("td[username] input[type=checkbox]");
+    checkboxes.removeAttr('checked');
+
+    //make sure the checkbox is off
+    $.each(checkboxes, function(index, checkbox) {
+        checkbox.checked = false;
+    });
+
+    clearMainAndSubItemByCheckbox(checkboxes);
+}
+
 function getCheckboxByMenuIdAndUsername(menuId, username) {
     return $("tr.detail_order_menu[menu_id='" + menuId + "'] td.detail_order_user_item[username='" + username + "'] input[type=checkbox]");
 }
 function getCheckboxByMenuIdAndUserId(menuId, userId) {
     return $("tr.detail_order_menu[menu_id='" + menuId + "'] td.detail_order_user_item[user_id='" + userId + "'] input[type=checkbox]");
 }
-function createTableForGroup() {
+function createTableForGroup(callback) {
     createHeaderByGroupCode(function() {
         createDsMonAn(function() {
             //add event
@@ -429,6 +444,7 @@ function createTableForGroup() {
             //calculate the data before
             fillOrderedItemForUsers(function() {
                 calculateAndFillSummaryOrderedMenuItems();
+                PMCommonFunction.RunCallback(callback);
             })
         });
     });
@@ -632,6 +648,7 @@ function fillOrderedItemForUsers(callback) {
 
             //check this checkbox
             $(checkbox).attr('checked', 'checked');
+            checkbox[0].checked = true;
 
             //set main or sub
             if (isMainItem) {
@@ -688,4 +705,27 @@ function copyToClipboard(element) {
     if (successful) answer.innerHTML = 'Copied!';
     else answer.innerHTML = 'Unable to copy!';
     $temp.remove();
+}
+
+function getUserDataAndFillGrid(callback) {
+    DC.Data.Menu.GetUsersByGroupCode({groupCode: groupCode}, function(result) {
+        if (result.data.code == 0) {
+            clearMainAndSubItemAndCheckboxByAllUsername();
+            dsUsers = result.data.users;
+            fillOrderedItemForUsers(function() {
+                calculateAndFillSummaryOrderedMenuItems();
+                PMCommonFunction.RunCallback(callback);
+            })
+        }
+    });
+}
+
+function startAutoSync(time) {
+    window.autoSyncTimer = setTimeout(function() {
+        window.isGettingUserDataAndFillProgress = true;
+        getUserDataAndFillGrid(function() {
+            window.isGettingUserDataAndFillProgress = false;
+            startAutoSync(time);
+        });
+    }, time);
 }
