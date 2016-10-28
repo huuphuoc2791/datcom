@@ -34,13 +34,10 @@ class CommonFunction
 
     public static function getDayOfWeek()
     {
-        $pTimezone = "+7";
+        $pTimezone = "Asia/Ho_Chi_Minh";
         $userDateTimeZone = new DateTimeZone($pTimezone);
         $UserDateTime = new DateTime("now", $userDateTimeZone);
-
         $offsetSeconds = $UserDateTime->getOffset();
-        //echo $offsetSeconds;
-
         return gmdate("D", time() + $offsetSeconds);
 
     }
@@ -57,7 +54,6 @@ class CommonFunction
             "Sun" => "Chủ nhật"
         );
         $day = CommonFunction::getDayOfWeek();
-
         return $DayOfWeek[$day];
 
     }

@@ -16,6 +16,9 @@ if (!empty($groupCode)) {
         $group = $groupRows[0];
     }
 }
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="">
@@ -113,18 +116,18 @@ if (!empty($groupCode)) {
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
 
-    <script src="common/common.js?20161017"></script>
-    <script src="view/js/DC.Config.js?20161017"></script>
-    <script src="view/js/DC.Data.Common.js?20161017"></script>
-    <script src="view/js/DC.Data.js?20161026-1"></script>
-    <script src="view/js/RequestMessage.js?20161017"></script>
+    <script src="common/common.js?<?= Production_Version ?>"></script>
+    <script src="view/js/DC.Config.js?<?= Production_Version ?>"></script>
+    <script src="view/js/DC.Data.Common.js?<?= Production_Version ?>"></script>
+    <script src="view/js/DC.Data.js?<?= Production_Version ?>"></script>
+    <script src="view/js/RequestMessage.js?<?= Production_Version ?>"></script>
 
     <!-- js of page(s) -->
     <script>
         //assign group code here
         GROUP_CODE = '<?= $groupCode ?>';
     </script>
-    <script src="view/js/index.js?20161026-1"></script>
+    <script src="view/js/index.js?<?= Production_Version ?>"></script>
 </head>
 <body>
 <div class="container">
