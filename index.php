@@ -20,12 +20,14 @@ if (!empty($groupCode)) {
 
 
 ?>
+
 <!DOCTYPE html>
 <html lang="">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--    <meta http-equiv="refresh" content="10" />-->
     <title>Đặt cơm</title>
     <link rel="shortcut icon" type="image/x-icon" href="/datcom/view/images/foods.png"/>
     <link rel="image_src" href="/datcom/view/images/foods.png">
@@ -257,28 +259,25 @@ if (!empty($groupCode)) {
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-12">
-                        <form class="form-horizontal" style="margin-bottom: 10px;">
-                            <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <form class="form-horizontal">
+                            <div class="navbar-form">
                                 <p class="col-sm-offset-2 text-danger hidden confirmPassword_emptyPasswordMessage">Xin nhập mật khẩu</p>
                                 <p class="col-sm-offset-2 text-danger hidden confirmPassword_invalidPasswordMessage">Mật khẩu không đúng</p>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Mật khẩu:</label>
-                                <div class="input-group col-sm-4">
+                            <div class="navbar-form">
+                                <label class="control-label">Mật khẩu:</label>
+                                <div class="input-group">
                                     <div class="input-group-addon"><span class="fa fa-lock"></span></div>
                                     <input id="confirmPassword_Password" type="password" class="form-control"
                                            name="password"
                                            placeholder="Nhập mật khẩu" value="">
+                                    <span class="input-group-btn"><button type="button" id="confirmPassword_BtnConfirm"
+                                                                          name="selectGroup" value="submit"
+                                                                          class="btn btn-primary"
+                                                                          autocomplete="off">Xác nhận
+                                        </button> </span>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <button type="button" id="confirmPassword_BtnConfirm" name="selectGroup" value="submit"
-                                        class="col-sm-offset-2 btn btn-primary"
-                                        autocomplete="off"><span
-                                        class="fa fa-floppy-o"></span>&nbsp;Xác nhận
-                                </button>
                             </div>
                         </form>
                     </div>
