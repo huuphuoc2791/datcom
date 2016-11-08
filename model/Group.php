@@ -99,4 +99,18 @@ class Group
         $query = "UPDATE `group` SET hash = '$guid' WHERE id = $id";
         $db->executeStatement($query);
     }
+    public function updateOrderHashByGroupId($id, $guid)
+    {
+        $db = new DBHelper();
+        $query = "UPDATE `group` SET order_code = '$guid' WHERE id = $id";
+        $db->executeStatement($query);
+    }
+    public function findByOrderCode($orderCode)
+    {
+        $db = new DBHelper();
+        $query = "select * from `group` WHERE order_code = '$orderCode'";
+        $result = $db->executeStatement($query);
+        return $result;
+    }
+
 }

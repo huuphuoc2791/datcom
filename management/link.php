@@ -3,16 +3,39 @@
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include_once 'common/autoload.php';
+
+
+//change: this page also generate the link if not exists before
+
 $link ='';
 $groupCode = CommonFunction::getPostValue('group_name');
 
-$groups = (new Group())->findByGroupCode($groupCode);
-$group = $groups[0];
-$hash =$group['hash'];
-//$link = 'http://localhost/datcom/group-management/';
-$link = ROOT_URL . '/datcom/group-management/';
+if (!empty($groupCode)) {
+    $groups = (new Group())->findByGroupCode($groupCode);
+    $group = $groups[0];
+    $hash = $group['hash'];
+
+    if (empty($hash)) {
+        //generate then get again
+        $hash = CommonFunction::guid();
+        (new Group())->updateHashByGroupId($group["id"],$hash);
+    }
+
+    //then get the order link
+    $orderHash = $group['order_code'];
+    if (empty($orderHash)) {
+        $orderHash = Group::EncodePassword(CommonFunction::guid());
+        (new Group())->updateOrderHashByGroupId($group["id"],$orderHash);
+    }
+
+    //$link = 'http://localhost/datcom/group-management/';
+    $link = ROOT_URL . '/datcom/group-management/';
+    $orderLink = ROOT_URL . "/datcom/$orderHash";
+}
+
 if($groupCode==''){
     $link='';
+    $orderLink='';
 }else{
     if($hash==null){
         $link='';
@@ -65,7 +88,9 @@ if($groupCode==''){
         </div>
     </form>
     <div class="col-sm-8 col-sm-offset-2">
-        <a href="<?php echo $link ?>"> <?php echo $link ?></a>
+        <a href="<?php echo $link ?>"> <?php echo $link ?></a><br/>
+        <a href="<?php echo $orderLink ?>"> <?php echo $orderLink ?></a><br/>
+
     </div>
 </div>
 </body>

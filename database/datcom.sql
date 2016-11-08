@@ -151,3 +151,6 @@ ALTER TABLE `group` ADD `hash`  VARCHAR (36) NULL DEFAULT NULL;
 
 /*--- password of the group ---*/
 ALTER TABLE `group` ADD `password`  VARCHAR (40) NULL DEFAULT NULL; /* password will be stored as sha1 */
+
+/*--- add one more hash code for order ---*/
+ALTER TABLE `group` ADD `order_code`  VARCHAR (40) NULL DEFAULT NULL; /* code will be stored as sha1 */

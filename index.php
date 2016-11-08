@@ -2,12 +2,27 @@
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include 'common/autoload.php';
-$groupCode = CommonFunction::getGetValue('groupCode');
 
-if (empty($groupCode)) {
-    //try post
-    $groupCode = CommonFunction::getPostValue('groupCode');
+$orderCode = CommonFunction::getGetValue('order_code');
+if (!empty($orderCode)) {
+    $groupRows = (new Group())->findByOrderCode($orderCode);
+    if (!empty($groupRows)) {
+        $groupRow = $groupRows[0];
+        $groupCode = $groupRow['code'];
+    }
 }
+
+//do not get the get or post any more, use order_code instead
+/*
+if (empty($groupCode)) {
+    $groupCode = CommonFunction::getGetValue('groupCode');
+
+    if (empty($groupCode)) {
+        //try post
+        $groupCode = CommonFunction::getPostValue('groupCode');
+    }
+}
+*/
 
 $group = null;
 if (!empty($groupCode)) {
@@ -146,6 +161,8 @@ if (!empty($groupCode)) {
         <?php if (!empty($group)): ?>
             <label style="text-align: left; font-size: 22px;"><?= $group["name"] ?></label>
         <?php endif; ?>
+        <!-- do not used any more -->
+        <!--
         <form class="navbar-form navbar-right" role="search" method="post" action="/datcom/">
             <div class="input-group form-group">
                 <div class="input-group-addon"><span class="fa fa-users"></span></div>
@@ -160,6 +177,7 @@ if (!empty($groupCode)) {
             </div>
 
         </form>
+        -->
     </div>
     <div style="clear: both"></div>
     <div class="row message_error_data" style="display: none; margin-bottom: 10px;">
