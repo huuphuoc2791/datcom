@@ -82,7 +82,7 @@ class Group
     }
 
     public static function EncodePassword($password) {
-        return hash('sha1',$password);
+        return hash('sha1',hash('md5',$password));
     }
 
     public function findByGroupCodeAndPassword($groupCode, $password)
