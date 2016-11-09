@@ -461,12 +461,130 @@ function frozenColumn() {
     });
 }
 
+function getFavouritesFromLocalStorage() {
+    if (typeof (localStorage.favourites) == UNDEFINED) localStorage.favourites = JSON.stringify([{
+        id: 0,
+        foodName: ''
+    }]);
+    return JSON.parse(localStorage.favourites);
+}
+function removeFavourite(food) {
+    //use splice
+    var favourites = getFavouritesFromLocalStorage();
+
+    //find the index
+    var index = 0;
+    var found = false;
+    while (index < favourites.length && !found) {
+        if (favourites[index].id == food.id && favourites[index].foodName == food.foodName) {
+            //splice here
+            found = true;
+        }
+        else {
+            index++;
+        }
+    }
+
+    if (found) {
+        favourites.splice(index,1);
+    }
+
+    localStorage.favourites = JSON.stringify(favourites);
+}
+
+function addFavourite(food) {
+    var favourites = getFavouritesFromLocalStorage();
+    var foundFavouriteFood = favourites.filter(function(foodItem) {
+        return foodItem.id == food.id && foodItem.foodName == food.foodName;
+    })[0];
+    if (!foundFavouriteFood) {
+        favourites.push({
+            id: food.id,
+            foodName: food.foodName,
+        });
+    }
+
+    localStorage.favourites = JSON.stringify(favourites);
+}
+
+function setFavouriteClassForRowById(menuId, favourite) {
+    if (typeof (favourite) == UNDEFINED) favourite = true;
+    var rowMenu = $(".detail_order_menu[menu_id=" + menuId + "]");
+    if (favourite) {
+        rowMenu.addClass('food_is_favourite');
+    }
+    else {
+        rowMenu.removeClass('food_is_favourite');
+    }
+}
+
+function resetFavourites() {
+    clearFavourites();
+    showFavouriteFoods();
+}
+
+function clearFavourites() {
+    $(".favourite_food").hide();
+    $(".food_is_favourite").removeClass('food_is_favourite');
+}
+
+function showFavouriteFoods() {
+    var favourites = getFavouritesFromLocalStorage();
+
+    $.each(favourites, function(index, food) {
+        showFavouriteFoodByFoodObject(food, true);
+    })
+}
+
+function foodName_click(event) {
+    //check if this food is favourite or not
+    var foodNameElement = $(this);
+    var menuRow = foodNameElement.parents("tr.detail_order_menu");
+    var menuId = menuRow.attr('menu_id');
+    var foodName = foodNameElement.html();
+
+    var food = {
+        id:menuId,
+        foodName:foodName
+    };
+
+    if (menuRow.is(".food_is_favourite")) {
+        //remove
+        removeFavourite(food);
+    }
+    else {
+        //add
+        addFavourite(food);
+    }
+
+    resetFavourites();
+}
+
+//food = {id,foodName}
+function showFavouriteFoodByFoodObject(food, show) {
+    if (typeof (show) == UNDEFINED) show = true;
+    var rowMenu = $(".detail_order_menu[menu_id=" + food.id + "]");
+    var cellFood = $('.table_order_monan', rowMenu);
+    var foodName = $('.detail_order_food_name', cellFood).html();
+    if (foodName == food.foodName) {
+        var favouriteIcon = $(".favourite_food", cellFood);
+        if (show) {
+            setFavouriteClassForRowById(food.id, true);
+            favouriteIcon.show();
+        }
+        else {
+            setFavouriteClassForRowById(food.id, false);
+            favouriteIcon.hide();
+        }
+    }
+}
+
 function createDsMonAn(callback) {
     var itemString = '';
     //template for one row
     var userTemplate = "<td class='detail_order_user_item' user_id='${userId}' username='${username}' style='text-align: center'><input class='userCheckOrder'  type='checkbox'></td>";
     var rowtemplate = "<tr class='detail_order_menu' menu_id='${menuId}'>"
-        + "<td class='table_order_monan'>${monan}</td>"
+        + "<td class='table_order_monan'><span class='detail_order_food_name' style='cursor: pointer'>${monan}</span>&nbsp<span class='favourite_food glyphicon glyphicon-star-empty' style='display: none;'></span></td>"
         + "<td style='text-align: center'>${gia}</td>";
 
     $.each(dsUsers, function(index, user) {
@@ -487,7 +605,13 @@ function createDsMonAn(callback) {
         $("#order_menu tbody").append(itemString);
     });
 
+    //show the favourite food
+    showFavouriteFoods();
+
     frozenColumn();
+
+    //set event after render food
+    $(".detail_order_food_name").on('click', foodName_click);
 
     createDsMonAn_Summary(callback);
 }

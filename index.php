@@ -125,6 +125,10 @@ if (!empty($groupCode)) {
         .message_error_data.message_no_group_mode .message_no_group {
             display: inherit !important;
         }
+
+        #order_menu.fixed-column {
+            z-index: 1000;
+        }
     </style>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery.js"></script>
