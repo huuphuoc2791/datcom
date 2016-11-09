@@ -13,7 +13,6 @@ if (!empty($orderCode)) {
 }
 
 //do not get the get or post any more, use order_code instead
-/*
 if (empty($groupCode)) {
     $groupCode = CommonFunction::getGetValue('groupCode');
 
@@ -22,7 +21,6 @@ if (empty($groupCode)) {
         $groupCode = CommonFunction::getPostValue('groupCode');
     }
 }
-*/
 
 $group = null;
 if (!empty($groupCode)) {
@@ -198,7 +196,7 @@ if (!empty($groupCode)) {
         <table id="order_menu" class="table table-striped table-bordered table-hover table-condensed">
             <thead>
             <tr>
-                <th style="background: white;">Thực đơn</th>
+                <th style="background: white;min-width: 200px;">Thực đơn</th>
                 <th style="text-align: center;" class="price_header">Giá</th>
             </tr>
             </thead>

@@ -463,7 +463,6 @@ function frozenColumn() {
 
 function getFavouritesFromLocalStorage() {
     if (typeof (localStorage.favourites) == UNDEFINED) localStorage.favourites = JSON.stringify([{
-        id: 0,
         foodName: ''
     }]);
     return JSON.parse(localStorage.favourites);
@@ -476,7 +475,7 @@ function removeFavourite(food) {
     var index = 0;
     var found = false;
     while (index < favourites.length && !found) {
-        if (favourites[index].id == food.id && favourites[index].foodName == food.foodName) {
+        if (favourites[index].foodName == food.foodName) {
             //splice here
             found = true;
         }
@@ -495,11 +494,10 @@ function removeFavourite(food) {
 function addFavourite(food) {
     var favourites = getFavouritesFromLocalStorage();
     var foundFavouriteFood = favourites.filter(function(foodItem) {
-        return foodItem.id == food.id && foodItem.foodName == food.foodName;
+        return foodItem.foodName == food.foodName;
     })[0];
     if (!foundFavouriteFood) {
         favourites.push({
-            id: food.id,
             foodName: food.foodName,
         });
     }
@@ -507,9 +505,9 @@ function addFavourite(food) {
     localStorage.favourites = JSON.stringify(favourites);
 }
 
-function setFavouriteClassForRowById(menuId, favourite) {
+function setFavouriteClassForRowByFoodName(foodName, favourite) {
     if (typeof (favourite) == UNDEFINED) favourite = true;
-    var rowMenu = $(".detail_order_menu[menu_id=" + menuId + "]");
+    var rowMenu = findRowMenuByName(foodName);
     if (favourite) {
         rowMenu.addClass('food_is_favourite');
     }
@@ -533,7 +531,7 @@ function showFavouriteFoods() {
 
     $.each(favourites, function(index, food) {
         showFavouriteFoodByFoodObject(food, true);
-    })
+    });
 }
 
 function foodName_click(event) {
@@ -544,7 +542,6 @@ function foodName_click(event) {
     var foodName = foodNameElement.html();
 
     var food = {
-        id:menuId,
         foodName:foodName
     };
 
@@ -560,20 +557,40 @@ function foodName_click(event) {
     resetFavourites();
 }
 
+function findRowMenuByName(searchFoodName) {
+    var rowMenus = $(".detail_order_menu[menu_id]");
+
+    var found = false;
+    var foundRow = null;
+    var foundMenuId = 0;
+    $.each(rowMenus, function(index,rowMenu) {
+        var cellFood = $('.table_order_monan', rowMenu);
+        var foodName = $('.detail_order_food_name', cellFood).html();
+        if (foodName == searchFoodName) {
+            foundRow = $(rowMenus[index]);
+            foundMenuId = $(rowMenus[index]).attr('menu_id');
+            return false;
+        }
+    });
+
+    return $(".detail_order_menu[menu_id=" + foundMenuId + "]");
+};
+
 //food = {id,foodName}
 function showFavouriteFoodByFoodObject(food, show) {
     if (typeof (show) == UNDEFINED) show = true;
-    var rowMenu = $(".detail_order_menu[menu_id=" + food.id + "]");
+    var rowMenu = findRowMenuByName(food.foodName);
+
     var cellFood = $('.table_order_monan', rowMenu);
     var foodName = $('.detail_order_food_name', cellFood).html();
     if (foodName == food.foodName) {
         var favouriteIcon = $(".favourite_food", cellFood);
         if (show) {
-            setFavouriteClassForRowById(food.id, true);
+            setFavouriteClassForRowByFoodName(food.foodName, true);
             favouriteIcon.show();
         }
         else {
-            setFavouriteClassForRowById(food.id, false);
+            setFavouriteClassForRowByFoodName(food.foodName, false);
             favouriteIcon.hide();
         }
     }
