@@ -21,7 +21,7 @@ if (empty($methodName)) {
 
 $returnMessage = new ResponseMessage();
 if ($methodName == 'UpdateMenuByDate') {
-    UpdateMenuByDate();
+//    UpdateMenuByDate();
 } elseif ($methodName == 'GetUsersByGroupCode') {
     GetUsersByGroupCode();
 
