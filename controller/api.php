@@ -13,17 +13,25 @@ if (isset($postedData->methodName)) {
     $methodName = $postedData->methodName;
 }
 
-//support get method
+//support get method or original Post method
 if (empty($methodName)) {
-    //try the get
-    $methodName = CommonFunction::getGetValue('methodName');
+    $methodName = CommonFunction::getPostValue('methodName');
+    if (empty($methodName)) {
+        //try the get
+        $methodName = CommonFunction::getGetValue('methodName');
+    }
 }
 
+
+
 $returnMessage = new ResponseMessage();
-if ($methodName == 'UpdateMenuByDate') {
-//    UpdateMenuByDate();
+if ($methodName == 'UpdateMenuByDate_FromComNhaViet') {
+    UpdateMenuByDate_FromComNhaViet();
 } elseif ($methodName == 'GetUsersByGroupCode') {
     GetUsersByGroupCode();
+
+} elseif ($methodName == 'GetMenuOfToday') {
+    GetMenuOfToday();
 
 } elseif ($methodName == 'OrderForUser') {
     OrderForUser();
@@ -34,36 +42,38 @@ if ($methodName == 'UpdateMenuByDate') {
 } elseif ($methodName == 'CheckGroupByGroupCode') {
     CheckGroupByGroupCode();
 }
-
-
 else if ($methodName == 'test') {
     test();
 }
+else {
+    //check the original POST
+
+
+}
 
 function test() {
-    var_dump('test');
+    echo 'Test/OK';
 }
 
 //change: the menu return has one more column call short_food_name
 //change: menu is get from server side instead
-function UpdateMenuByDate() {
-
+//change: this function is not used to get the menu, use GetMenuOfToday instead. This function is to update the menu only
+//this use original POST instead
+function UpdateMenuByDate_FromComNhaViet() {
     global $returnMessage;
     global $postedData;
+    $postedData = CommonFunction::getPostValue('data');
+    $postedMenuItems = $postedData['menuItems'];
+    //menuItem = array("menuName"=>'',"price")
     $extraPrice = '25000';
     $price = '30000';
     $day = CommonFunction::convertDayOfWeek();
-    $menuItems = $postedData->data->menuItems;
-
-    //change: do not use menu from client, use from server
-    $menuNames = (new MenuController())->GetMenuFromComNhaViet();
 
     $menuItems = array();
-    foreach ($menuNames as $menuName) {
+    foreach ($postedMenuItems as $postedMenuItem) {
         $item = new stdClass();
-        $item->menuName = $menuName;
+        $item->menuName = $postedMenuItem["menuName"];
         $item->price = $price;
-
         $menuItems[] = $item;
     }
 
@@ -74,20 +84,7 @@ function UpdateMenuByDate() {
     foreach ($menuItems as $item) {
         $menu->insertAll($i, $item->menuName, $day, $item->price, $extraPrice);
         $i++;
-
-        $menuRows = $menu->findByFoodName($item->menuName);
-        $result = array_merge($result, $menuRows);
     }
-
-    //    $result = $menu->findByDay($day);
-    //    $result = $menu->findAll();
-
-    foreach ($result as &$menuItem) {
-        $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
-    }
-
-    if (empty($result)) $result = array();
-    $returnMessage->data->menuItems = $result;
     echo json_encode($returnMessage);
 }
 
@@ -243,3 +240,24 @@ function CheckGroupByGroupCode() {
     echo json_encode($returnMessage);
 }
 
+function GetMenuOfToday() {
+    global $returnMessage;
+    global $postedData;
+    $extraPrice = '25000';
+    $price = '30000';
+    $day = CommonFunction::convertDayOfWeek();
+
+
+    //    $result = $menu->findByDay($day);
+    //    $result = $menu->findAll();
+
+    $menuRows = (new Menu())->findAll();
+
+    foreach ($menuRows as &$menuItem) {
+        $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
+    }
+
+    if (empty($menuRows)) $menuRows = array();
+    $returnMessage->data->menuItems = $menuRows;
+    echo json_encode($returnMessage);
+}
