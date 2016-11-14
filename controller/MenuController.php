@@ -9,7 +9,7 @@ class MenuController extends BaseController {
     public function GetMenuFromComNhaViet() {
         $page = file_get_contents(COM_NHA_VIET_URL);
 
-        $separator = '<div class="menutheongay"';
+        $separator = '<div class="menutheongay';
         $menuToEnd = explode($separator, $page)[1];
 
         $separator = '<div style="clear:both"></div>';
