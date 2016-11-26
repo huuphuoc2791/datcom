@@ -1,10 +1,10 @@
 
 RewriteEngine On
     RewriteBase /
-    RewriteRule ^api$    datcom/controller/api.php    [NC,L]
+    RewriteRule ^api$    sandbox_datcom/controller/api.php    [NC,L]
 
     #guid template = [a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}
-    RewriteRule ^group-management/([a-z0-9]+)/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})$    datcom/management/group-management.php?groupCode=$1&hash=$2    [NC,L]
-    RewriteRule ^link-group$ datcom/management/link.php
-    RewriteRule ^create-group$ datcom/management/create-group.php
-    RewriteRule ^([a-zA-Z0-9]{40})$ datcom/index.php?order_code=$1
+    RewriteRule ^group-management/([a-z0-9]+)/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})$    sandbox_datcom/management/group-management.php?groupCode=$1&hash=$2    [NC,L]
+    RewriteRule ^link-group$ sandbox_datcom/management/link.php
+    RewriteRule ^create-group$ sandbox_datcom/management/create-group.php
+    RewriteRule ^([a-zA-Z0-9]{40})$ sandbox_datcom/index.php?order_code=$1

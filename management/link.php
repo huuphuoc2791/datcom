@@ -29,8 +29,8 @@ if (!empty($groupCode)) {
     }
 
     //$link = 'http://localhost/datcom/group-management/';
-    $link = ROOT_URL . '/datcom/group-management/';
-    $orderLink = ROOT_URL . "/datcom/$orderHash";
+    $link = ROOT_URL . '/sandbox_datcom/group-management/';
+    $orderLink = ROOT_URL . "/sandbox_datcom/$orderHash";
 }
 
 if($groupCode==''){
