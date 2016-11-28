@@ -1,6 +1,7 @@
 
 RewriteEngine On
     RewriteBase /
+
     RewriteRule ^api$    controller/api.php    [NC,L]
 
     #guid template = [a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}

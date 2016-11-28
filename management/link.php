@@ -29,6 +29,7 @@ if (!empty($groupCode)) {
     }
 
     //$link = 'http://localhost/datcom/group-management/';
+
     $link = ROOT_URL . '/group-management/';
     $orderLink = ROOT_URL . "/$orderHash";
 }
