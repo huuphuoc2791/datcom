@@ -8,12 +8,10 @@
 function UpdateMenuByDate()
 {
 
-    global $returnMessage;
-    global $postedData;
     $extraPrice = '25000';
     $price = '30000';
     $day = CommonFunction::convertDayOfWeek();
-    $menuItems = $postedData->data->menuItems;
+    $returnMessage = new ResponseMessage();
 
     //change: do not use menu from client, use from server
     $menuNames = (new MenuController())->GetMenuFromComNhaViet();
@@ -34,19 +32,22 @@ function UpdateMenuByDate()
     foreach ($menuItems as $item) {
         $menu->insertAll($i, $item->menuName, $day, $item->price, $extraPrice);
         $i++;
-
-        $menuRows = $menu->findByFoodName($item->menuName);
-        $result = array_merge($result, $menuRows);
     }
 
-    //    $result = $menu->findByDay($day);
-    //    $result = $menu->findAll();
+    $menuRows = (new Menu())->findAll();
 
-    foreach ($result as &$menuItem) {
+    foreach ($menuRows as &$menuItem) {
         $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
     }
 
-    if (empty($result)) $result = array();
-    $returnMessage->data->menuItems = $result;
+    if (empty($menuRows)) $menuRows = array();
+    $returnMessage->data->menuItems = $menuRows;
+
     echo json_encode($returnMessage);
 }
+
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
+
+include_once 'common/autoload.php';
+
+UpdateMenuByDate();
