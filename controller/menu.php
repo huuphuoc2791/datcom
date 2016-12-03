@@ -27,7 +27,6 @@ function UpdateMenuByDate()
 
     $menu = new Menu();
     $menu->deleteAll();
-    $result = array();
     $i = 1;
     foreach ($menuItems as $item) {
         $menu->insertAll($i, $item->menuName, $day, $item->price, $extraPrice);
@@ -46,8 +45,14 @@ function UpdateMenuByDate()
     echo json_encode($returnMessage);
 }
 
+function deleteOrder()
+{
+    (new Order())->deleteAll();
+}
+
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include_once 'common/autoload.php';
 
 UpdateMenuByDate();
+deleteOrder();
