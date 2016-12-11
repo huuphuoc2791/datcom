@@ -10,3 +10,5 @@ RewriteEngine On
     RewriteRule ^create-group$ management/create-group.php
     RewriteRule ^([a-zA-Z0-9]{40})$ index.php?order_code=$1
     RewriteRule ^info$ phpinfo.php
+    RewriteRule ^addmenu$ menu.php
+    RewriteRule ^loadmenu$ controller/menu.php

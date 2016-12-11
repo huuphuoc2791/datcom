@@ -1,8 +1,0 @@
-<IfModule mod_rewrite.c>
-Options +FollowSymLinks
-Options -Indexes
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^datcom/$    datcom/app/index.php    [NC,L]
-    RewriteRule ^api$    datcom/controller/api.php    [NC,L]
-</IfModule>
