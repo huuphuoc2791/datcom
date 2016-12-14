@@ -22,11 +22,10 @@ DC.Data.Menu = {
     },
 
     /*-- UpdateMenuByDate --*/
-    //change the method here
     UpdateMenuByDate: function(menuData, callback) {
         //menuData = {menuDate,menuItems ([menu:{menuName}])}
         var request = new RequestMessage();
-        request.methodName = 'GetMenuOfToday';
+        request.methodName = 'UpdateMenuByDate';
         request.data = menuData;
 
         DC.Data.Common.httpRequest(
