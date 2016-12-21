@@ -106,7 +106,7 @@ class CommonFunction
     {
         $totalOfWord = explode(' ', $str);
         $sub_str = $totalOfWord[0] . " " . $totalOfWord[1] . " " . $totalOfWord[2];
-        $spe_char = array("khổ qua", "rô ti", "phi lê", "bạc má");
+        $spe_char = array("khổ qua", "rô ti", "phi lê", "bạc má","diêu hồng","nấu tiêu","lúc lắc");
         foreach ($spe_char as $value) {
             if (strpos($sub_str, $value) !== false)
                 return true;
