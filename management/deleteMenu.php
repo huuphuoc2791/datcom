@@ -9,7 +9,7 @@ ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_
 header("Access-Control-Allow-Origin: *"); //add this header for CORS
 header("Access-Control-Allow-Headers: Content-Type"); //add this header for CORS
 
-include_once 'common/autoload.php';
+include_once '../common/autoload.php';
 
 
 function deleteMenu()

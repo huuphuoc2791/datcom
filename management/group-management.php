@@ -1,7 +1,7 @@
 <?php
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
-include 'common/autoload.php';
+include '../common/autoload.php';
 $isInvalidLink = false;
 if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
     $error = 'Invalid link';
