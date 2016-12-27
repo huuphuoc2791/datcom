@@ -48,6 +48,6 @@ function UpdateMenuByDate()
 
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
-include_once 'common/autoload.php';
+include_once '../common/autoload.php';
 
 UpdateMenuByDate();
