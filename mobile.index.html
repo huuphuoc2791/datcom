@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--    <meta http-equiv="refresh" content="10" />-->
+    <title>Đặt cơm</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/datcom/view/images/foods.png"/>
+    <link rel="image_src" href="/datcom/view/images/foods.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Bootstrap CSS Local -->
+    <!--<link rel="stylesheet" href="../datcom/shared_resource/bootstrap/bootstrap.css">-->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js"></script>-->
+<!--    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <!--<![endif]&ndash;&gt;-->
+
+    <!-- awesome css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <!-- awesome css local -->
+    <!--<link rel="stylesheet" href="../datcom/shared_resource/awesome/font-awesome.min.css">-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- jQuery local -->
+    <!--<script src="../datcom/shared_resource/jquery/jquery-1.10.2.min.js"></script>-->
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- Bootstrap JavaScript Local -->
+    <!--<script src="../datcom/shared_resource/bootstrap/bootstrap.min.js"></script>-->
+
+    <script src="/common/common.js"></script>
+    <script src="/view/js/DC.Config.js"></script>
+    <script src="/view/js/DC.Data.Common.js"></script>
+    <script src="/view/js/DC.Data.js"></script>
+    <script src="/view/js/RequestMessage.js"></script>
+    <script src="/view/mobile/js/HomeGroup.js"></script>
+    <script src="/view/mobile/js/ChooseUsername.js"></script>
+    <script src="/view/mobile/js/ChooseFoods.js"></script>
+</head>
+<body>
+<div id="rootDiv" class="container">
+</div>
+<script>
+    var Context = {};
+    Context.MOBILE_URL = '/view/mobile/';
+
+    var QueryStringData = PMCommonFunction.GetQueryItemsFromUrl();
+    Context.orderCode = PMCommonFunction.GetQueryItem(QueryStringData,'order_code');
+
+    $(document).ready(function() {
+        Context.rootDiv = $("#rootDiv");
+
+        //if no order code, allow the user to input. but temporary, only support the order code
+        if (Context.orderCode == '') {
+            switchToStatusNoCode();
+            return;
+        }
+
+        //has code, check valid
+        DC.Data.Group.CheckGroupByOrderCode({
+            groupOrderCode:Context.orderCode
+        }, function(checkResult) {
+            if (checkResult.data.found == false) {
+                switchToInvalidCode();
+                return;
+            }
+
+            //valid code
+            Context.Group = checkResult.data.Group;
+            loadHomeGroup();
+            return;
+
+
+
+        });
+    });
+    
+    function switchToStatusNoCode() {
+        $("#rootDiv").html('No code, please ask administrator.');
+    }
+    function switchToInvalidCode() {
+        $("#rootDiv").html('Invalid code, please ask administrator.');
+    }
+    function loadHomeGroup() {
+        Context.rootDiv.load(Context.MOBILE_URL + "homeGroup.html", function() {
+            new DC.HomeGroup({}, function(home) {
+                Context.HomeScreen = home;
+            });
+        });
+    }
+
+</script>
+</body>
+</html>

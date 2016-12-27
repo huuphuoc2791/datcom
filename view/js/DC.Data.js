@@ -174,6 +174,24 @@ DC.Data.Group = {
             }
         );
     },
+    CheckGroupByOrderCode: function(groupData, callback) {
+        //groupData = {groupOrderCode}
+        var request = new RequestMessage();
+        request.methodName = 'CheckGroupByOrderCode';
+        request.data = groupData;
+
+        DC.Data.Common.httpRequest(
+            request,
+            function(data) {
+                if (typeof (callback) === "function") {
+                    callback(data);
+                }
+            },
+            function(data) {
+                console.log("Error in request:" + "CheckGroupByOrderCode");
+            }
+        );
+    },
 
 
 }

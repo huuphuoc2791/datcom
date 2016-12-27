@@ -1,0 +1,24 @@
+<div class="row chooseUsername">
+</div>
+<script id="chooseUsername_user_template1" type="text/template">
+    <tr class="chooseUsername_user_item_wrapper">
+        <td class="chooseUsername_user_username">${username}</td>
+        <td class="chooseUsername_user_fullname">${fullname}</td>
+    </tr>
+</script>
+
+<script id="chooseUsername_user_template" type="text/template">
+    <div class="chooseUsername_userItem_wrapper" user_name="${username}" style="float: left;text-align: center; margin-right: 20px; margin-bottom: 20px;">
+        <span class="glyphicon glyphicon-user chooseUsername_user_userIcon"></span>
+        <br/>
+        <span style="display: block;margin-top: -20px;">${username}</span>
+    </div>
+</script>
+<style>
+    .chooseUsername_user_userIcon {
+        height: 100px;
+        width: 100px;
+        font-size: 70px;
+    }
+</style>
+

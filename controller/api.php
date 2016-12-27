@@ -6,6 +6,9 @@ header("Access-Control-Allow-Headers: Content-Type"); //add this header for CORS
 
 include_once 'common/autoload.php';
 
+
+
+
 $postedData = json_decode(file_get_contents('php://input'));
 
 $methodName = '';
@@ -41,6 +44,8 @@ if ($methodName == 'UpdateMenuByDate_FromComNhaViet') {
     CheckGroupPassword();
 } elseif ($methodName == 'CheckGroupByGroupCode') {
     CheckGroupByGroupCode();
+} elseif ($methodName == 'CheckGroupByOrderCode') {
+    CheckGroupByOrderCode();
 }
 else if ($methodName == 'test') {
     test();
@@ -236,6 +241,23 @@ function CheckGroupByGroupCode() {
 
     $groupRows = (new Group())->findByGroupCode($groupCode);
 
+    $returnMessage->data->found = !empty($groupRows);
+    echo json_encode($returnMessage);
+}
+function CheckGroupByOrderCode() {
+    global $returnMessage;
+    global $postedData;
+
+    $groupCode = $postedData->data->groupOrderCode;
+
+    $groupRows = (new Group())->findByOrderCode($groupCode);
+
+    if (!empty($groupRows)) {
+        $returnMessage->data->Group = $groupRows[0];
+
+        //clear password
+        $returnMessage->data->Group['password'] = '';
+    }
     $returnMessage->data->found = !empty($groupRows);
     echo json_encode($returnMessage);
 }
