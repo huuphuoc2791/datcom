@@ -1,7 +1,7 @@
 <?php
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
-include 'common/autoload.php';
+include '../common/autoload.php';
 $isInvalidLink = false;
 if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
     $error = 'Invalid link';
@@ -243,9 +243,13 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                         class="fa fa-link"></span>&nbsp;Tạo link mới
                 </button>
 
-                <a class="btn btn-success" href="<?= ROOT_URL ?>/datcom/?groupCode=<?= $groupCode ?>"><span
+                <a class="btn btn-success" href="<?= ROOT_URL ?>/<?= $group['order_code'] ?>"><span
                         class="fa fa-cutlery"></span>&nbsp;Đặt món
                 </a>
+                <a class="btn btn-success" href="<?= ROOT_URL ?>/addmenu"><span
+                        class="fa fa-cutlery"></span>&nbsp;Thêm thực đơn
+                </a>
+
             </div>
         </form>
 
