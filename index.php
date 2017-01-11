@@ -2,19 +2,6 @@
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include 'common/autoload.php';
-$password = CommonFunction::guid();
-
-$password1 =  Group::EncodePassword($password);
-
-for ($i=1;$i<=100;$i++) {
-    CommonFunction::guid();
-}
-
-$password2 =  Group::EncodePassword($password);
-
-var_dump($password1,$password2);
-exit();
-
 $orderCode = CommonFunction::getGetValue('order_code');
 if (!empty($orderCode)) {
     $groupRows = (new Group())->findByOrderCode($orderCode);
