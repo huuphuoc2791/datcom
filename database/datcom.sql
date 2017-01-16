@@ -154,3 +154,19 @@ ALTER TABLE `group` ADD `password`  VARCHAR (40) NULL DEFAULT NULL; /* password 
 
 /*--- add one more hash code for order ---*/
 ALTER TABLE `group` ADD `order_code`  VARCHAR (40) NULL DEFAULT NULL; /* code will be stored as sha1 */
+
+
+/*-- write log --*/
+CREATE TABLE `order_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `device_guid` varchar(36) NOT NULL, /* guid data */
+  `order_date` DATE,
+  `order_time` TIME,
+  `user_name` VARCHAR(255),
+  `group_code` VARCHAR(255),
+  `main_menu_name` VARCHAR(255),
+  `sub_menu_names` VARCHAR(1000),
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET = utf8;
+
+/*-- END write log --*/

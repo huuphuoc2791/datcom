@@ -5,7 +5,8 @@ RewriteEngine On
     RewriteRule ^api$    controller/api.php    [NC,L]
 
     #guid template = [a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}
-    RewriteRule ^group-management/([a-z0-9]+)/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})$    management/group-management.php?groupCode=$1&hash=$2    [NC,L]
+        RewriteRule ^group-management/([a-z0-9]+)/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})$    management/group-management.php?groupCode=$1&hash=$2    [NC,L]
+        RewriteRule ^group-logs/([a-z0-9]+)/([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})$    management/group-logs.php?groupCode=$1&hash=$2    [NC,L]
     RewriteRule ^link-group$ management/link.php
     RewriteRule ^create-group$ management/create-group.php
     RewriteRule ^([a-zA-Z0-9]{40})$ index.php?order_code=$1

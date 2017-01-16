@@ -249,6 +249,9 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                 <a class="btn btn-success" href="<?= ROOT_URL ?>/addmenu"><span
                         class="fa fa-cutlery"></span>&nbsp;Thêm thực đơn
                 </a>
+                <a class="btn btn-success" href="<?= ROOT_URL ?>/group-logs/<?= $groupCode ?>/<?= $group['hash'] ?>" target="_blank"><span
+                        class="fa fa-pencil-square-o"></span>&nbsp;Xem log
+                </a>
 
             </div>
         </form>
