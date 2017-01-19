@@ -36,7 +36,7 @@ function UpdateMenuByDate()
     $menuRows = (new Menu())->findAll();
 
     foreach ($menuRows as &$menuItem) {
-        $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
+        $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name'],false);
     }
 
     if (empty($menuRows)) $menuRows = array();

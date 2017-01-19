@@ -28,7 +28,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                 $guid = CommonFunction::guid();
                 (new Group())->updateHashByGroupId($groupId, $guid);
 
-                header("Location: " . "/datcom/group-management/$groupCode/$guid");
+                header("Location: " . "/group-management/$groupCode/$guid");
                 exit;
             }
 
