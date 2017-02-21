@@ -26,5 +26,5 @@ $priceExtra = CommonFunction::getPostValue('priceExtra');
 if($foodName!=null){
     addMenu($foodName, $price, $priceExtra);
 }
-header('Location: http://datcom.localhost/addmenu');
+header('Location: '.ROOT_URL.'/addmenu');
 ?>

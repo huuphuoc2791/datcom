@@ -102,11 +102,20 @@ class CommonFunction
 
     }
 
+    function compare2Items($str1, $str2)
+    {
+        if (strcmp($str1, $str2) == 0) {
+
+        }
+
+
+    }
+
     function contains($str)
     {
         $totalOfWord = explode(' ', $str);
         $sub_str = $totalOfWord[0] . " " . $totalOfWord[1] . " " . $totalOfWord[2];
-        $spe_char = array("khổ qua", "rô ti", "phi lê", "bạc má","diêu hồng","nấu tiêu","lúc lắc");
+        $spe_char = array("khổ qua", "rô ti", "phi lê", "bạc má", "diêu hồng", "nấu tiêu", "lúc lắc");
         foreach ($spe_char as $value) {
             if (strpos($sub_str, $value) !== false)
                 return true;
@@ -114,17 +123,22 @@ class CommonFunction
         return false;
     }
 
-    public static function splitWordToSMS($str)
+    //numberWord uses to split $numberWord words from MenuItem.
+    public static function splitWordToSMS($str, $isChecked, $numberWord = 2)
     {
         $str = mb_strtolower($str);
         $convertViToEN = self::convert_vi_to_en($str);
         $totalOfWord = explode(' ', $convertViToEN);
-
-        if (self::contains($str)) {
-            $result = $totalOfWord[0] . " " . $totalOfWord[1] . " " . $totalOfWord[2];
+        if ($isChecked == false) {
+            if (self::contains($str)) {
+                $result = $totalOfWord[0] . " " . $totalOfWord[1] . " " . $totalOfWord[2];
+            } else {
+                $result = $totalOfWord[0] . " " . $totalOfWord[1];
+            }
         } else {
-            $result = $totalOfWord[0] . " " . $totalOfWord[1];
+            $result = $totalOfWord[0] . " " . $totalOfWord[1] . " " . $totalOfWord[2];
         }
+
         return $result;
     }
 

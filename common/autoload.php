@@ -27,6 +27,7 @@ spl_autoload_register(
                 'AppController' => 'controller/AppController.php',
                 'BaseController' => 'controller/BaseController.php',
                 'MenuController' => 'controller/MenuController.php',
+                'GroupController' => 'controller/GroupController.php',
             );
         }
         $cn = trim($class);

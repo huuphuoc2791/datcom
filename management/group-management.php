@@ -28,7 +28,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                 $guid = CommonFunction::guid();
                 (new Group())->updateHashByGroupId($groupId, $guid);
 
-                header("Location: " . "/datcom/group-management/$groupCode/$guid");
+                header("Location: " . "/group-management/$groupCode/$guid");
                 exit;
             }
 
@@ -248,6 +248,9 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                 </a>
                 <a class="btn btn-success" href="<?= ROOT_URL ?>/addmenu"><span
                         class="fa fa-cutlery"></span>&nbsp;Thêm thực đơn
+                </a>
+                <a class="btn btn-success" href="<?= ROOT_URL ?>/group-logs/<?= $groupCode ?>/<?= $group['hash'] ?>" target="_blank"><span
+                        class="fa fa-pencil-square-o"></span>&nbsp;Xem log
                 </a>
 
             </div>

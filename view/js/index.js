@@ -7,7 +7,9 @@ var SUB_ITEM_CLASS = 'menu_detail_item_sub';
 var MAIN_SUB_ITEM_ALL_CLASS = MAIN_ITEM_CLASS + ' ' + SUB_ITEM_CLASS;
 var PHONE_NUMBER = '0902702566';
 var ADMIN_PHONE_NUMBER = '0907121981';
-$(document).ready(function() {
+var Context = Context || {};
+//this function is called after some prepare data is already set
+var ready = function() {
     //event
     $("input[name=selectGroup]").on('click', function(event) {
         $("form")[0].submit();
@@ -82,6 +84,9 @@ $(document).ready(function() {
     $('#requestGroupPopup').on('shown.bs.modal', function() {
         $("#requestGroup_GroupCode").focus();
     });
+};
+$(document).ready(function() {
+    checkAndSaveDeviceGuid(ready);
 });
 
 function checkConfirmPasswordIsShown() {
@@ -869,4 +874,13 @@ function startAutoSync(time) {
             startAutoSync(time);
         });
     }, time);
+}
+
+//callback the result of this method
+function checkAndSaveDeviceGuid(callback) {
+    if (typeof (localStorage.deviceGuid) == UNDEFINED) localStorage.deviceGuid = PMCommonFunction.generateUUID();
+
+    var guid = localStorage.deviceGuid;
+    Context.DeviceGuid = guid;
+    PMCommonFunction.RunCallback(callback);
 }

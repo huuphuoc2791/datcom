@@ -18,5 +18,5 @@ function deleteMenu()
     $menu->deleteAll();
 }
 deleteMenu();
-header('Location: http://datcom.localhost/addmenu');
+header('Location: '.ROOT_URL.'/addmenu');
 die();

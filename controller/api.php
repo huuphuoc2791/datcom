@@ -129,17 +129,53 @@ function GetUsersByGroupCode() {
 function OrderForUser() {
     global $returnMessage;
     global $postedData;
+
     $order = new Order();
     $userId = $postedData->data->userId;
+    $userRows = (new User())->findById($userId);
+    $deviceGuid = $postedData->DeviceGuid;
+
+    if (!empty($userRows)) {
+        $user = $userRows[0];
+        $userName = $user['username'];
+        $groupId = $user['group_id'];
+        $groupCode = (new Group())->findById($groupId)[0]['code'];
+    }
     $order->deleteByUserId($userId);
     $menuItems = $postedData->data->menuItems;
+
+    $mainMenuId = 0;
+    $subMenuIds = '';
     foreach ($menuItems as $item) {
         $gui = CommonFunction::guid(true, false);
         $order->insert($gui, $userId, $item->menuId, !$item->isMainItem);
+
+        if ($item->isMainItem) {
+            $mainMenuId = $item->menuId;
+        }
+        else {
+            $subMenuIds .= "{$item->menuId},";
+        }
     }
+
+    $mainMenuName = '';
+    $subMenuNames = '';
+
+    if ($mainMenuId) {
+        $mainMenuName = CommonFunction::splitWordToSMS((new Menu())->findById($mainMenuId)[0]['food_name']);
+    }
+
+    if ($subMenuIds) {
+        $subMenuIds = explode(',',$subMenuIds);
+        foreach ($subMenuIds as $subMenuId) {
+            if ($subMenuId) {
+                $subMenuNames .= CommonFunction::splitWordToSMS((new Menu())->findById($subMenuId)[0]['food_name']) . ',';
+            }
+        }
+    }
+    $order->writeLogOrder($deviceGuid,$userName,$groupCode,$mainMenuName,$subMenuNames);
+
     echo json_encode($returnMessage);
-
-
 }
 
 //function UpdateFullName()
@@ -275,8 +311,10 @@ function GetMenuOfToday() {
 
     $menuRows = (new Menu())->findAll();
 
-    foreach ($menuRows as &$menuItem) {
-        $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
+    if (!empty($menuRows)) {
+        foreach ($menuRows as &$menuItem) {
+            $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
+        }
     }
 
     if (empty($menuRows)) $menuRows = array();
