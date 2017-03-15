@@ -170,3 +170,10 @@ CREATE TABLE `order_logs` (
 ) DEFAULT CHARSET = utf8;
 
 /*-- END write log --*/
+
+CREATE TABLE `load_menu_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loaded_date` DATE,
+  `loaded_time` TIME,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET = utf8;

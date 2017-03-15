@@ -13,3 +13,4 @@ RewriteEngine On
     RewriteRule ^info$ phpinfo.php
     RewriteRule ^addmenu$ menu.php
     RewriteRule ^loadmenu$ controller/menu.php
+    RewriteRule ^mobile/$ view/mobile/index.html

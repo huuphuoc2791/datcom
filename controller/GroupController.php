@@ -11,7 +11,8 @@ class GroupController extends AppController
             $hash = CommonFunction::getGetValue('hash');
 
             //check hash and group code
-            $groupRows = (new Group())->findByGroupCodeAndHash($groupCode, $hash);
+            $Group = new Group();
+            $groupRows = $Group->findByGroupCodeAndHash($groupCode, $hash);
 
             if (empty($groupRows)) {
                 $this->data->code = 1;
@@ -24,6 +25,7 @@ class GroupController extends AppController
 
 
         $this->data->group = $groupRows[0];
-        $this->data->logs = (new Order())->getTodayLogOrderByGroupCode($groupCode);
+        $Order = new Order();
+        $this->data->logs = $Order->getTodayLogOrderByGroupCode($groupCode);
     }
 }

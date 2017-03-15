@@ -1,53 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: huuphuoc
- * Date: 11/14/16
- * Time: 21:29
- */
-function UpdateMenuByDate()
-{
-
-    $extraPrice = '25000';
-    $price = '30000';
-    $day = CommonFunction::convertDayOfWeek();
-    $returnMessage = new ResponseMessage();
-
-    //change: do not use menu from client, use from server
-    $menuNames = (new MenuController())->GetMenuFromComNhaViet();
-
-    $menuItems = array();
-    foreach ($menuNames as $menuName) {
-        $item = new stdClass();
-        $item->menuName = $menuName;
-        $item->price = $price;
-
-        $menuItems[] = $item;
-    }
-
-    $menu = new Menu();
-    $menu->deleteAll();
-    $result = array();
-    $i = 1;
-    foreach ($menuItems as $item) {
-        $menu->insertAll($i, $item->menuName, $day, $item->price, $extraPrice);
-        $i++;
-    }
-
-    $menuRows = (new Menu())->findAll();
-
-    foreach ($menuRows as &$menuItem) {
-        $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name'],false);
-    }
-
-    if (empty($menuRows)) $menuRows = array();
-    $returnMessage->data->menuItems = $menuRows;
-
-    echo json_encode($returnMessage);
-}
-
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '../' . PATH_SEPARATOR . '../../' . PATH_SEPARATOR . '../../../');
 
 include_once '../common/autoload.php';
 
-UpdateMenuByDate();
+//this file might not be used any more because the function to load the menu of today does this
+$MenuController = new MenuController();
+$MenuController->CheckAndUpdateMenuForToday();
+
+$returnMessage = $MenuController->LoadMenuForToday();
+$index = 0;
+foreach ($returnMessage->data->menuItems as &$menuItem) {
+    $menuItem['food_name'] = CommonFunction::convert_vi_to_en($menuItem['food_name']);
+}
+
+echo json_encode($returnMessage);

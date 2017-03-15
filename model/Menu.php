@@ -83,6 +83,21 @@ class Menu
         $db->executeStatement($query);
     }
 
+    public function getLogsForToday() {
+        $db = new DBHelper();
+        $query = "select * from load_menu_logs WHERE loaded_date = current_date";
+        $result = $db->executeStatement($query);
+        return $result;
+
+    }
+
+    public function insertLoadedLogsForToday()
+    {
+        $db = new DBHelper();
+        $query = "insert into load_menu_logs(loaded_date, loaded_time) VALUES (CURRENT_DATE , CURRENT_TIME )";
+        $db->executeStatement($query);
+    }
+
 }
 
 ?>

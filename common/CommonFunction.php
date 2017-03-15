@@ -4,36 +4,30 @@ class CommonFunction
 {
 
     //function chinh de tao session ban dau
-    public static function getPostValue($name)
-    {
+    public static function getPostValue($name) {
         if (isset($_POST[$name])) return $_POST[$name];
         return "";
     }
 
-    public static function getGetValue($name)
-    {
+    public static function getGetValue($name) {
         if (isset($_GET[$name])) return $_GET[$name];
         return "";
     }
 
-    public static function GetSessionValue($name)
-    {
+    public static function GetSessionValue($name) {
         if (isset($_SESSION[$name])) return $_SESSION[$name];
         return NULL;
     }
 
-    public static function CheckPostSend()
-    {
+    public static function CheckPostSend() {
         return count($_POST) != 0;
     }
 
-    public static function CheckGetSend()
-    {
+    public static function CheckGetSend() {
         return count($_GET) != 0;
     }
 
-    public static function getDayOfWeek()
-    {
+    public static function getDayOfWeek() {
         $pTimezone = "Asia/Ho_Chi_Minh";
         $userDateTimeZone = new DateTimeZone($pTimezone);
         $UserDateTime = new DateTime("now", $userDateTimeZone);
@@ -42,8 +36,7 @@ class CommonFunction
 
     }
 
-    public static function convertDayOfWeek()
-    {
+    public static function convertDayOfWeek() {
         $DayOfWeek = array(
             "Mon" => "Thứ 2",
             "Tue" => "Thứ 3",
@@ -58,8 +51,7 @@ class CommonFunction
 
     }
 
-    public static function guid($hasHyphens = true, $hasBraces = false)
-    {
+    public static function guid($hasHyphens = true, $hasBraces = false) {
         if (function_exists('com_create_guid')) {
             return com_create_guid();
         } else {
@@ -82,8 +74,7 @@ class CommonFunction
         }
     }
 
-    public static function convert_vi_to_en($str)
-    {
+    public static function convert_vi_to_en($str) {
         $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", 'a', $str);
         $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", 'e', $str);
         $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", 'i', $str);
@@ -102,8 +93,7 @@ class CommonFunction
 
     }
 
-    function compare2Items($str1, $str2)
-    {
+    function compare2Items($str1, $str2) {
         if (strcmp($str1, $str2) == 0) {
 
         }
@@ -111,8 +101,7 @@ class CommonFunction
 
     }
 
-    function contains($str)
-    {
+    function contains($str) {
         $totalOfWord = explode(' ', $str);
         $sub_str = $totalOfWord[0] . " " . $totalOfWord[1] . " " . $totalOfWord[2];
         $spe_char = array("khổ qua", "rô ti", "phi lê", "bạc má", "diêu hồng", "nấu tiêu", "lúc lắc");
@@ -124,9 +113,8 @@ class CommonFunction
     }
 
     //numberWord uses to split $numberWord words from MenuItem.
-    public static function splitWordToSMS($str, $isChecked, $numberWord = 2)
-    {
-        $str = mb_strtolower($str);
+    public static function splitWordToSMS($str, $isChecked = true, $numberWord = 2) {
+        $str = mb_strtolower($str, 'UTF-8');
         $convertViToEN = self::convert_vi_to_en($str);
         $totalOfWord = explode(' ', $convertViToEN);
         if ($isChecked == false) {
@@ -142,14 +130,110 @@ class CommonFunction
         return $result;
     }
 
-    public static function vnToUpper($str)
-    {
-        return (new BASIC_String())->upper($str);
+    /***
+     * this method is to create the array of one food name ['trung','chien','sao'] --> ['trung chien','sao']
+     * @param $arrNames
+     * @return the array includes the merge names
+     */
+    public static function updateArrayOneFoodInDictionary($arrNames) {
+        $dictionary = array('ba roi', 'kho qua', 'bac ma', 'cu sen', 'phi le', 'dieu hong');
+
+        //copy to new array
+        $newNames = array();
+        foreach ($arrNames as $arrName) {
+            $newNames[] = $arrName;
+        }
+
+        foreach ($dictionary as $dictionaryName) {
+            $countWords = count(explode(' ', $dictionaryName));
+
+            $i = 0;
+            while ($i <= count($newNames) - 1 - $countWords) {
+                $checkedName = '';
+                for ($j = 0; $j < $countWords; $j++) {
+                    $checkedName .= $arrNames[$i + $j] . ' ';
+                }
+                $checkedName = trim($checkedName);
+
+                if ($checkedName == $dictionaryName) {
+                    //update the array
+                    $newNames[$i] = $checkedName;
+                    for ($k = $i + 1; $k <= count($newNames) - 1 - $countWords; $k++) {
+                        $newNames[$k] = $newNames[$k + $countWords - 1];
+                    }
+
+                    for ($m = 1; $m <= $countWords - 1; $m++) {
+                        unset($newNames[count($newNames) - 1]);
+                    }
+                } else {
+                    $i++;
+                }
+            }
+        }
+
+        return $newNames;
+
     }
 
-    public static function vnToLower($str)
-    {
-        return (new BASIC_String())->lower($str);
+    public static function splitWordToSMSWithCount($str, $count = 2) {
+        $str = mb_strtolower($str, 'UTF-8');
+        $convertViToEN = self::convert_vi_to_en($str);
+        $totalOfWord = explode(' ', $convertViToEN);
+
+        $totalOfWord = self::updateArrayOneFoodInDictionary($totalOfWord);
+
+        $result = '';
+        for ($i = 0; $i < $count; $i++) {
+            $result .= $totalOfWord[$i] . ' ';
+        }
+
+        $result = trim($result);
+
+        return $result;
+    }
+
+    public static function vnToUpper($str) {
+        $BASIC_String = new BASIC_String();
+        return $BASIC_String->upper($str);
+    }
+
+    public static function vnToLower($str) {
+        $BASIC_String = new BASIC_String();
+        return $BASIC_String->lower($str);
+    }
+
+    /***
+     * @param $names the list of the full name
+     * @return the short name following the business: try with 2 words. Then if 2 or more names are still the same, work on that
+     */
+    public static function createMenuShortName($names, $count = null) {
+        if (empty($count)) $count = 2;
+        $newNames = array();
+        foreach ($names as $name) {
+            $newNames[] = CommonFunction::splitWordToSMSWithCount($name, $count);
+        }
+
+        //travel the name if any duplicate
+        for ($i = 0; $i < count($names); $i++) {
+            $duplicateNeedChangeIndexes = array();
+            $duplicateNeedChangeNames = array();
+            for ($j = $i + 1; $j < count($names); $j++) {
+                if ($newNames[$j] == $newNames[$i]) {
+                    $duplicateNeedChangeIndexes[] = $j;
+                    $duplicateNeedChangeNames[] = $names[$j];
+                }
+            }
+
+            if (!empty($duplicateNeedChangeIndexes)) {
+                //has duplicate, start change it
+                $newChangedDuplicateNames = self::createMenuShortName($duplicateNeedChangeNames, $count + 1);
+                for ($k = 0; $k < count($newChangedDuplicateNames); $k++) {
+                    $newNames[$duplicateNeedChangeIndexes[$k]] = $newChangedDuplicateNames[$k];
+                }
+            }
+        }
+
+        return $newNames;
     }
 }
 
@@ -165,19 +249,16 @@ class BASIC_String
     var $arrayUpper;
     var $arrayLower;
 
-    function __construct()
-    {
+    function __construct() {
         $this->arrayUpper = explode('|', preg_replace("/\n|\t|\r/", "", $this->upper));
         $this->arrayLower = explode('|', preg_replace("/\n|\t|\r/", "", $this->lower));
     }
 
-    function lower($str)
-    {
+    function lower($str) {
         return str_replace($this->arrayUpper, $this->arrayLower, $str);
     }
 
-    function upper($str)
-    {
+    function upper($str) {
         return str_replace($this->arrayLower, $this->arrayUpper, $str);
     }
 }

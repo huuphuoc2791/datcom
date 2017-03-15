@@ -132,14 +132,17 @@ function OrderForUser() {
 
     $order = new Order();
     $userId = $postedData->data->userId;
-    $userRows = (new User())->findById($userId);
+
+    $User = new User();
+    $userRows = $User->findById($userId);
     $deviceGuid = $postedData->DeviceGuid;
 
     if (!empty($userRows)) {
         $user = $userRows[0];
         $userName = $user['username'];
         $groupId = $user['group_id'];
-        $groupCode = (new Group())->findById($groupId)[0]['code'];
+        $Group = new Group();
+        $groupCode = $Group->findById($groupId)[0]['code'];
     }
     $order->deleteByUserId($userId);
     $menuItems = $postedData->data->menuItems;
@@ -161,15 +164,16 @@ function OrderForUser() {
     $mainMenuName = '';
     $subMenuNames = '';
 
+    $Menu = new Menu();
     if ($mainMenuId) {
-        $mainMenuName = CommonFunction::splitWordToSMS((new Menu())->findById($mainMenuId)[0]['food_name']);
+        $mainMenuName = CommonFunction::splitWordToSMS($Menu->findById($mainMenuId)[0]['food_name']);
     }
 
     if ($subMenuIds) {
         $subMenuIds = explode(',',$subMenuIds);
         foreach ($subMenuIds as $subMenuId) {
             if ($subMenuId) {
-                $subMenuNames .= CommonFunction::splitWordToSMS((new Menu())->findById($subMenuId)[0]['food_name']) . ',';
+                $subMenuNames .= CommonFunction::splitWordToSMS($Menu->findById($subMenuId)[0]['food_name']) . ',';
             }
         }
     }
@@ -264,7 +268,8 @@ function CheckGroupPassword() {
     $password = $postedData->data->password;
 
     $password = Group::EncodePassword($password);
-    $groupRows = (new Group())->findByGroupCodeAndPassword($groupCode, $password);
+    $Group = new Group();
+    $groupRows = $Group->findByGroupCodeAndPassword($groupCode, $password);
 
     $returnMessage->data->passwordMatched = !empty($groupRows);
     echo json_encode($returnMessage);
@@ -274,8 +279,8 @@ function CheckGroupByGroupCode() {
     global $postedData;
 
     $groupCode = $postedData->data->groupCode;
-
-    $groupRows = (new Group())->findByGroupCode($groupCode);
+    $Group = new Group();
+    $groupRows = $Group->findByGroupCode($groupCode);
 
     $returnMessage->data->found = !empty($groupRows);
     echo json_encode($returnMessage);
@@ -286,7 +291,8 @@ function CheckGroupByOrderCode() {
 
     $groupCode = $postedData->data->groupOrderCode;
 
-    $groupRows = (new Group())->findByOrderCode($groupCode);
+    $Group = new Group();
+    $groupRows = $Group->findByOrderCode($groupCode);
 
     if (!empty($groupRows)) {
         $returnMessage->data->Group = $groupRows[0];
@@ -298,26 +304,16 @@ function CheckGroupByOrderCode() {
     echo json_encode($returnMessage);
 }
 
+/***
+ * load the menu of today for the users to choose
+ * change: before get for today, check and load from server if needed
+ */
 function GetMenuOfToday() {
     global $returnMessage;
-    global $postedData;
-    $extraPrice = '25000';
-    $price = '30000';
-    $day = CommonFunction::convertDayOfWeek();
 
+    $MenuController = new MenuController();
+    $MenuController->CheckAndUpdateMenuForToday();
 
-    //    $result = $menu->findByDay($day);
-    //    $result = $menu->findAll();
-
-    $menuRows = (new Menu())->findAll();
-
-    if (!empty($menuRows)) {
-        foreach ($menuRows as &$menuItem) {
-            $menuItem['short_food_name'] = CommonFunction::splitWordToSMS($menuItem['food_name']);
-        }
-    }
-
-    if (empty($menuRows)) $menuRows = array();
-    $returnMessage->data->menuItems = $menuRows;
+    $returnMessage = $MenuController->LoadMenuForToday();
     echo json_encode($returnMessage);
 }

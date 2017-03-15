@@ -13,7 +13,8 @@ include_once '../common/autoload.php';
 $code = CommonFunction::getPostValue('code');
 $name =CommonFunction::getPostValue('name');
 $hash =CommonFunction::guid(true,false);
-(new Group())->insert($code,$name,$hash);
+$Group = new Group();
+$Group->insert($code,$name,$hash);
 
 ?>
 

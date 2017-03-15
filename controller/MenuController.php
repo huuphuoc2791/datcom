@@ -3,6 +3,9 @@ class MenuController extends BaseController {
     public function __construct() {
         if (!defined('COM_NHA_VIET_URL')) {
             define('COM_NHA_VIET_URL','http://comnhaviet.net/');
+//            define('COM_NHA_VIET_URL','http://comnhaviet.net/thuc-don/danh-muc/thu-hai-584.html');
+//            define('COM_NHA_VIET_URL','http://comnhaviet.net/thuc-don/danh-muc/thu-ba-579.html');
+
         }
     }
 
@@ -45,5 +48,79 @@ class MenuController extends BaseController {
         $menuName = trim($menuName,'"');
         $menuName = CommonFunction::vnToUpper(substr($menuName,0,1)) . CommonFunction::vnToLower(substr($menuName,1));
         return $menuName;
+    }
+
+    /***
+     * check if menu of today is loaded or not:
+     *  if not -> load from comnhaviet, this is also to clear the old data of the users
+     *  if yes -> do nothing but load the menu from database
+     *
+     * change: do not need to load the menu from database, this function is only to update the menu (load from comnhaviet then insert if needed)
+     */
+    public function CheckAndUpdateMenuForToday()
+    {
+        //check if today is loaded or not
+        $Menu = new Menu();
+        $logRows = $Menu->getLogsForToday();
+        $returnMessage = new ResponseMessage();
+
+        if (empty($logRows)) {
+            //not load today --> load then insert log
+            $extraPrice = '25000';
+            $price = '30000';
+            $day = CommonFunction::convertDayOfWeek();
+
+            //change: do not use menu from client, use from server
+            $menuNames = $this->GetMenuFromComNhaViet();
+
+            $menuItems = array();
+            foreach ($menuNames as $menuName) {
+                $item = new stdClass();
+                $item->menuName = $menuName;
+                $item->price = $price;
+
+                $menuItems[] = $item;
+            }
+
+            $Menu->deleteAll();
+            $result = array();
+            $i = 1;
+            foreach ($menuItems as $item) {
+                $Menu->insertAll($i, $item->menuName, $day, $item->price, $extraPrice);
+                $i++;
+            }
+
+            $Order = new Order();
+            $Order->deleteAll();
+
+            $Menu->insertLoadedLogsForToday();
+        }
+        return;
+
+
+    }
+
+    public function LoadMenuForToday() {
+        $Menu = new Menu();
+        $returnMessage = new ResponseMessage();
+
+        $menuRows = $Menu->findAll();
+
+        $names = array();
+        foreach ($menuRows as &$menuItem) {
+            $names[] = $menuItem['food_name'];
+        }
+
+        $names = CommonFunction::createMenuShortName($names);
+        $index = 0;
+        foreach ($menuRows as &$menuItem) {
+            $menuItem['short_food_name'] = $names[$index++];
+        }
+
+
+        if (empty($menuRows)) $menuRows = array();
+        $returnMessage->data->menuItems = $menuRows;
+
+        return $returnMessage;
     }
 }

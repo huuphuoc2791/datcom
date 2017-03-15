@@ -10,7 +10,10 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
     $hash = CommonFunction::getGetValue('hash');
 
     //check hash and group code
-    $groupRows = (new Group())->findByGroupCodeAndHash($groupCode, $hash);
+    $Group = new Group();
+    $User = new User();
+    $Order = new Order();
+    $groupRows = $Group->findByGroupCodeAndHash($groupCode, $hash);
 
     if (empty($groupRows)) {
         $error = 'Invalid link';
@@ -26,7 +29,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
             if (isset($_POST['changeLink'])) {
                 //change link -> update database then redirect to new link
                 $guid = CommonFunction::guid();
-                (new Group())->updateHashByGroupId($groupId, $guid);
+                $Group->updateHashByGroupId($groupId, $guid);
 
                 header("Location: " . "/group-management/$groupCode/$guid");
                 exit;
@@ -36,16 +39,16 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
             if (isset($_POST['updateGroup'])) {
                 $groupName = CommonFunction::getPostValue('groupName');
                 $password = CommonFunction::getPostValue('password');
-                (new Group())->updateWithoutHash($groupId, $groupName, $groupCode);
+                $Group->updateWithoutHash($groupId, $groupName, $groupCode);
 
                 //check if the admin change the password or not
                 if (!empty($password)) {
                     $password = Group::EncodePassword($password);
-                    (new Group())->updatePasswordByGroupId($groupId,$password);
+                    $Group->updatePasswordByGroupId($groupId,$password);
                 }
 
                 //get group again
-                $groupRows = (new Group())->findByGroupCodeAndHash($groupCode, $hash);
+                $groupRows = $Group->findByGroupCodeAndHash($groupCode, $hash);
                 $group = $groupRows[0];
                 $groupId = $group['id'];
                 $groupName = $group['name'];
@@ -63,7 +66,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
             //update user
             if (isset($_POST['save'])) {
                 //get this user
-                $userRows = (new User())->findById($userId);
+                $userRows = $User->findById($userId);
                 if (empty($userRows)) {
                     $error = 'Invalid data';
                 } else {
@@ -74,7 +77,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                     } else {
                         //update $test =
                         $username = $userRows[0]['username'];
-                        (new User())->update($userId, $username, $fullname, $groupId, $email, $phone);
+                        $User->update($userId, $username, $fullname, $groupId, $email, $phone);
                         $success = 'Tài khoản được cập nhật thành công';
                     }
                 }
@@ -83,7 +86,7 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
             //remove user
             if (isset($_POST['remove'])) {
                 //get this user
-                $userRows = (new User())->findById($userId);
+                $userRows = $User->findById($userId);
                 if (empty($userRows)) {
                     $error = 'Invalid data';
                 } else {
@@ -93,10 +96,10 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
                         $error = 'Invalid data';
                     } else {
                         //remove from order
-                        (new Order())->deleteByUserId($userId);
+                        $Order->deleteByUserId($userId);
 
                         //remove from user
-                        (new User())->delete($userId);
+                        $User->delete($userId);
 
                         $success = 'Xóa thành công';
 
@@ -107,18 +110,18 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
             //add user
             if (isset($_POST['add'])) {
                 //find if the username is used or not
-                $userRows = (new User())->findByUsernameAndGroupId($username, $groupId);
+                $userRows = $User->findByUsernameAndGroupId($username, $groupId);
                 if (!empty($userRows)) {
                     //exists
                     $error = 'Tài khoản đã được đăng ký';
                 } else {
                     //can insert
-                    (new User())->insert($username, $fullname, $groupId, $email, $phone);
+                    $User->insert($username, $fullname, $groupId, $email, $phone);
                     $success = 'Thêm thành công';
                 }
             }
         }
-        $users = (new User())->findByGroupId($group['id']);
+        $users = $User->findByGroupId($group['id']);
     }
 }
 
@@ -153,11 +156,11 @@ if (!isset($_GET['groupCode']) || !isset($_GET['hash'])) {
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
 
-    <script src="/datcom/common/common.js"></script>
-    <script src="/datcom/view/js/DC.Config.js"></script>
-    <script src="/datcom/view/js/DC.Data.Common.js"></script>
-    <script src="/datcom/view/js/DC.Data.js"></script>
-    <script src="/datcom/view/js/RequestMessage.js"></script>
+    <script src="/common/common.js"></script>
+    <script src="/view/js/DC.Config.js"></script>
+    <script src="/view/js/DC.Data.Common.js"></script>
+    <script src="/view/js/DC.Data.js"></script>
+    <script src="/view/js/RequestMessage.js"></script>
 
     <!-- js of page(s) -->
     <script>

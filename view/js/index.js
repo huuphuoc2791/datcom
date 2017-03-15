@@ -792,16 +792,18 @@ function fillOrderedItemForUsers(callback) {
             var isMainItem = item.extra_food != '1';
             var checkbox = getCheckboxByMenuIdAndUserId(menuId, userId);
 
-            //check this checkbox
-            $(checkbox).attr('checked', 'checked');
-            checkbox[0].checked = true;
+            if (checkbox.length > 0) {
+                //check this checkbox
+                $(checkbox).attr('checked', 'checked');
+                checkbox[0].checked = true;
 
-            //set main or sub
-            if (isMainItem) {
-                setMainItemByCheckbox(checkbox);
-            }
-            else {
-                setSubItemByCheckbox(checkbox);
+                //set main or sub
+                if (isMainItem) {
+                    setMainItemByCheckbox(checkbox);
+                }
+                else {
+                    setSubItemByCheckbox(checkbox);
+                }
             }
         });
     });
